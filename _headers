@@ -1,0 +1,30 @@
+/ocr/*
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
+  Cache-Control: public, max-age=31536000, immutable
+
+/mediapipe/*
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/font-boot.js
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/theme-boot.js
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' blob: https://*.r2.cloudflarestorage.com https://*.amazonaws.com https://www.googleapis.com https://graph.microsoft.com https://login.microsoftonline.com https://*.sharepoint.com https://api.onedrive.com https://*.files.1drv.com wss: ws://localhost:8787 https://uip-laravel-production.up.railway.app https://accounts.google.com/gsi/; frame-src 'self' blob: http://*.localhost:8787 https://*.localhost:8787 https://excalidraw.com https://threejs.org https://uip-run.vercel.app https://accounts.google.com/gsi/ https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com; worker-src 'self' blob:; object-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: camera=(self), microphone=(self), display-capture=(self), geolocation=(self), clipboard-read=(self), clipboard-write=(self), fullscreen=(self), picture-in-picture=(self), autoplay=(self), screen-wake-lock=(self), web-share=(self), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
