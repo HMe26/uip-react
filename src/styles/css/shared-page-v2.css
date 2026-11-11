@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Shared-link page (/s/:token) — v2 layer (loaded LAST, after drive-share-fix.css)
+   1) Copy / Search buttons in the code viewer, find bar for Word / PowerPoint previews, CodeMirror search panel
+   2) Always-visible filter for the item list
+   3) Phone + tablet polish: the viewer header buttons no longer wrap ("Downloa-d"), the code toolbar wraps
+      instead of hiding its buttons off-screen, the filter / view / hide-list tools stack neatly.
+   Logical properties only, so Arabic (RTL) and English (LTR) mirror automatically.
+   ========================================================================== */
+
+/* ---------- 1a. code viewer toolbar ---------- */
+.shp .shp-code__bar { flex-wrap: wrap; overflow: visible; row-gap: 6px; }
+.shp .shp-code__bar > * { flex: 0 0 auto; }
+.shp .shp-code__bar > strong { flex: 0 1 auto; max-width: 100%; }
+.shp .shp-code__bar > i { flex: 1 1 4px; }
+.shp .shp-code__bar button { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 11px; }
+.shp .shp-code__bar button span { color: inherit; display: inline; }
+.shp .shp-code__bar .shp-code__copy { background: var(--zb-accent-soft); color: var(--zb-accent); font-weight: 650; }
+.shp .shp-code__bar .shp-code__copy.is-done { background: rgba(34, 160, 90, .16); color: #1c8a4e; }
+.shp .shp-code__bar .shp-code__copy.is-fail { background: rgba(220, 70, 70, .16); color: #c63a3a; }
+[data-theme="dark"] .shp .shp-code__bar .shp-code__copy.is-done { color: #5fd491; }
+[data-theme="dark"] .shp .shp-code__bar .shp-code__copy.is-fail { color: #ff8c8c; }
+
+/* ---------- 1b. CodeMirror search panel: touch friendly, no iOS zoom ---------- */
+.shp-code .cm-panels { font-family: inherit; }
+.shp-code .cm-panel.cm-search { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 34px 8px 10px; }
+.shp-code .cm-panel.cm-search br { display: none; }
+.shp-code .cm-panel.cm-search input.cm-textfield { flex: 1 1 150px; min-width: 0; height: 34px; font-size: 16px; margin: 0; border-radius: 8px; }
+.shp-code .cm-panel.cm-search button.cm-button { height: 34px; margin: 0; border-radius: 8px; padding: 0 10px; }
+.shp-code .cm-panel.cm-search label { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; margin: 0; }
+.shp-code .cm-panel.cm-search button[name="close"] { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; font-size: 20px; line-height: 1; }
+
+/* ---------- 1c. find bar over Word / PowerPoint previews ---------- */
+.shp-sheet--doc { position: relative; }
+.shp-find { position: sticky; top: 0; z-index: 8; height: 0; display: flex; justify-content: flex-end; padding: 8px 10px 0; pointer-events: none; }
+.shp-find__box {
+  pointer-events: auto; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; height: 40px; padding: 0 6px 0 10px; border-radius: 12px;
+  background: var(--bg-surface); color: var(--text-secondary); border: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 26px -12px rgba(20, 28, 70, .45);
+}
+.shp-find__box input { flex: 1 1 120px; min-width: 0; width: 180px; height: 32px; border: 0; outline: 0; background: transparent; color: var(--text-primary); font: inherit; font-size: 16px; }
+.shp-find__box button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 32px; height: 32px; padding: 0 8px; border: 0; border-radius: 9px;
+  background: transparent; color: var(--text-primary); font: inherit; font-size: 13px; font-weight: 650; cursor: pointer;
+}
+.shp-find__box button:hover:not(:disabled) { background: rgba(var(--color-primary-rgb), .12); }
+.shp-find__box button:disabled { opacity: .4; cursor: default; }
+.shp-find__box .shp-find__btn { padding: 0 10px 0 8px; }
+.shp-find__n { font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text-secondary); }
+.shp-find.is-open { padding-inline: 8px; }
+.shp-find.is-open .shp-find__box { width: min(100%, 420px); }
+::highlight(shp-find) { background-color: rgba(255, 213, 0, .5); color: inherit; }
+::highlight(shp-find-cur) { background-color: #ff8a1f; color: #111; }
+
+/* ---------- 2. item list: filter + tools ---------- */
+.shp__find { flex: 1 1 150px; min-width: 0; }
+.shp__find input { flex: 1; min-width: 0; width: 100%; }
+.shp__bar-tools { flex: 0 1 auto; min-width: 0; }
+.shp__main:has(.shp__list):has(.shp__viewer) .shp__bar-tools { flex-basis: 100%; }
+
+/* ---------- 3. phones + small tablets ---------- */
+@media (max-width: 760px) {
+  /* viewer header: title row, then three buttons that never break their label */
+  .shp .shp__viewer .shp__head { padding-inline: 12px; gap: 8px; }
+  .shp .shp__viewer .shp__vtitle { flex: 1 1 100%; }
+  .shp .shp__viewer .shp__head .shp__actions { width: 100%; display: flex; flex-wrap: wrap; gap: 6px; }
+  .shp .shp__viewer .shp__head .shp__actions .btn {
+    flex: 1 1 auto; min-width: 0; min-height: 40px; padding-inline: 10px; gap: 6px; white-space: nowrap; justify-content: center; font-size: 13px;
+  }
+  .shp .shp__viewer .shp__head .shp__actions .btn span { white-space: nowrap; }
+
+  /* list tools: filter on its own full row, view switch + hide list beside each other */
+  .shp__bar { gap: 8px; }
+  .shp__bar .shp__crumbs { flex: 1 1 100%; }
+  .shp__bar-tools { flex: 1 1 100%; }
+  .shp__find { flex: 1 1 100%; order: -1; height: 40px; }
+  .shp__find input { width: 100%; font-size: 16px; }
+  .shp__seg button { height: 38px; width: 40px; }
+  .shp__fold { height: 40px; }
+  .shp__bar-tools .shp__fold { margin-inline-start: auto; }
+  .shp__fold span { display: inline; }
+
+  /* code toolbar: filename row, then the buttons */
+  .shp .shp-code__bar { padding: 8px 10px; gap: 6px; }
+  .shp .shp-code__bar > strong { flex: 1 1 100%; max-width: 100%; }
+  .shp .shp-code__bar > i { display: none; }
+  .shp .shp-code__bar > span { display: inline; flex: 1 1 100%; order: 1; }
+  .shp .shp-code__bar > button, .shp .shp-code__bar > .shp-theme { order: 2; }
+  .shp .shp-code__bar button { height: 36px; padding: 0 12px; }
+  .shp .shp-code__bar .shp-code__find, .shp .shp-code__bar .shp-code__copy { flex: 1 1 auto; justify-content: center; }
+  .shp-find { padding-inline: 8px; }
+  .shp-find.is-open .shp-find__box { width: 100%; }
+  .shp-find__box input { width: auto; }
+}
+@media (max-width: 380px) {
+  .shp .shp-code__bar .shp-code__find span, .shp .shp-code__bar .shp-code__copy span { display: none; }
+  .shp .shp-code__bar .shp-code__find, .shp .shp-code__bar .shp-code__copy { flex: 0 0 auto; min-width: 40px; padding-inline: 10px; }
+}
+
+/* tablets (portrait + landscape): a bit more air, tools in one row */
+@media (min-width: 761px) and (max-width: 1023.98px) {
+  .shp .shp__viewer .shp__head .shp__actions .btn { white-space: nowrap; }
+  .shp__find { flex: 0 1 240px; }
+  .shp__find input { width: 100%; }
+  .shp .shp-code__bar > strong { flex: 0 1 auto; max-width: 34%; }
+}

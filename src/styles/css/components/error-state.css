@@ -1,0 +1,96 @@
+/* components/error-state.css
+   Item 21 — inline error/failure card (app/Views/components/error-state.php).
+   Same shape as empty-state.css on purpose (icon + title + desc + cta) but
+   tinted with --color-danger so a failure never reads as "no results yet". */
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-4);
+  color: var(--text-secondary);
+}
+
+.error-state__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-full);
+  background: rgba(240, 85, 90, 0.12);
+  border: 1px solid rgba(240, 85, 90, 0.25);
+  color: var(--color-danger);
+}
+
+.error-state__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-h3);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.error-state__desc {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  max-width: 38ch;
+  margin: 0;
+}
+
+.error-state__cta { margin-top: var(--space-3); }
+.error-state__cta .btn svg { margin-inline-end: 4px; }
+
+/* sm — inline, e.g. a widget whose fetch() rejected inside a dashboard card */
+.error-state--sm {
+  padding: var(--space-4) var(--space-3);
+  gap: var(--space-1);
+}
+.error-state--sm .error-state__icon { width: 36px; height: 36px; margin-bottom: var(--space-1); }
+.error-state--sm .error-state__title { font-size: var(--text-small); font-weight: 600; }
+.error-state--sm .error-state__desc { font-size: var(--text-caption); }
+
+/* md — default, a dashboard/section card slot */
+.error-state--md { padding: var(--space-7) var(--space-4); }
+
+/* lg — whole standalone page: 404 / 403 / 500, wrapped in a glass card by
+   the page templates in app/Views/errors/*.php (same pattern as
+   errors/maintenance.php's .maintenance-card). */
+.error-state--lg {
+  padding: var(--space-8) var(--space-4);
+  gap: var(--space-3);
+}
+.error-state--lg .error-state__icon { width: 76px; height: 76px; margin-bottom: var(--space-3); }
+.error-state--lg .error-state__title { font-size: var(--text-h2); }
+.error-state--lg .error-state__desc { max-width: 44ch; font-size: var(--text-body); }
+
+/* Full-page wrapper used by errors/404.php, 403.php, 500.php */
+.error-page-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: linear-gradient(135deg, var(--uip-indigo-100) 0%, #F1F2FA 60%);
+}
+.error-page-card {
+  max-width: 480px;
+  width: 100%;
+}
+.error-page-card .error-state__cta { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+.error-page-code {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-danger);
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+}
+
+[dir="rtl"] .error-state__title,
+[dir="rtl"] .error-state__desc { text-align: center; }

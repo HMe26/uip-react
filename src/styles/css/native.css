@@ -1,0 +1,18 @@
+/* [ANDROID] Android app (Capacitor) only - every rule is scoped to html.is-native. */
+/* ---- Android app (Capacitor) ---------------------------------------------
+   The WebView already sits between the status bar and the gesture bar, so the
+   safe-area padding above must not be added a second time. */
+html.is-native body { padding-top: 0; }
+html.is-native .auth-skip { display: none; }
+html.is-native { -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+html.is-native body { -webkit-user-select: none; user-select: none; }
+html.is-native input, html.is-native textarea, html.is-native [contenteditable], html.is-native pre, html.is-native code { -webkit-user-select: text; user-select: text; }
+
+/* Performance: backdrop-filter blur is very expensive on the Android WebView (every scroll frame re-blurs what is behind). */
+html.is-native *, html.is-native *::before, html.is-native *::after { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html.is-native .msg-list, html.is-native .msg-thread { contain: content; -webkit-overflow-scrolling: touch; }
+
+/* [ANDROID-PERF] Less work for the WebView while scrolling: no smooth-scroll JS-like easing, cheaper text, cheaper shadows on long lists. */
+html.is-native { scroll-behavior: auto !important; text-rendering: optimizeSpeed; }
+html.is-native .ambient-bg, html.is-native [class*="backdrop-glow"], html.is-native [class*="aurora"]:not([class*="swatch"]):not([class*="wall"]) { display: none !important; }
+html.is-native * { text-shadow: none !important; }

@@ -1,0 +1,108 @@
+/* Shared page (/s/:token): light, colourful floating bubbles + small entrance animations.
+   Loaded last; out-ranks the older blurred-blob rules in drive-share-pro.css. */
+.shp .shp__bubbles { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; contain: strict; }
+.shp .shp__bubbles i,
+[data-theme="dark"] .shp .shp__bubbles i {
+  position: absolute; top: auto; bottom: -90px; inset-inline-end: auto; inset-inline-start: var(--x, 50%);
+  width: var(--s, 40px); height: var(--s, 40px); border-radius: 50%; display: block; filter: none;
+  background: radial-gradient(circle at 30% 28%, hsl(var(--h, 235) 90% 80% / .55), hsl(var(--h, 235) 85% 60% / .16) 62%, transparent 72%);
+  border: 1px solid hsl(var(--h, 235) 85% 70% / .35); opacity: 0;
+  box-shadow: inset 0 0 12px hsl(var(--h, 235) 90% 85% / .25);
+  animation: shp-float var(--d, 24s) linear var(--dl, 0s) infinite;
+}
+[data-theme="dark"] .shp .shp__bubbles i { background: radial-gradient(circle at 30% 28%, hsl(var(--h, 235) 90% 70% / .4), hsl(var(--h, 235) 85% 55% / .1) 62%, transparent 72%); border-color: hsl(var(--h, 235) 85% 75% / .25); }
+@keyframes shp-float {
+  0%   { transform: translate3d(0, 0, 0) scale(.9); opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translate3d(calc(var(--sw, 26px) * -1), -55vh, 0) scale(1.05); }
+  90%  { opacity: .85; }
+  100% { transform: translate3d(var(--sw, 26px), -115vh, 0) scale(.95); opacity: 0; }
+}
+
+/* soft colour wash behind everything */
+.shp .shp__bubbles::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(520px 320px at 12% 8%, hsl(250 90% 70% / .12), transparent 70%),
+    radial-gradient(480px 300px at 92% 14%, hsl(190 90% 60% / .11), transparent 70%),
+    radial-gradient(520px 340px at 70% 100%, hsl(320 85% 70% / .09), transparent 70%);
+  animation: shp-wash 18s ease-in-out infinite alternate;
+}
+@keyframes shp-wash { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, 14px, 0) scale(1.04); } }
+
+/* animated gradient line under the header */
+/* The header must ALWAYS paint above the cards. `.shp__top`/`.shp__main` get `z-index: 1` again from drive-share.css when the
+   bundler orders that file after drive-share-fix.css, so pin it with a selector that wins whatever the load order is. */
+.shp > .shp__top { position: sticky; top: 0; z-index: 50; }
+.shp > .shp__main { position: relative; z-index: 1; }
+.shp > .shp__veil { z-index: 60; }
+.shp .shp__top::after {
+  content: ""; position: absolute; inset-inline: 0; bottom: -1px; height: 2px; pointer-events: none;
+  background: linear-gradient(90deg, #6366f1, #22d3ee, #f472b6, #6366f1); background-size: 300% 100%;
+  animation: shp-line 8s linear infinite; opacity: .85;
+}
+@keyframes shp-line { to { background-position: 300% 0; } }
+
+/* gentle entrance for the cards */
+.shp .shp__card { animation: shp-in .45s cubic-bezier(.2, .8, .2, 1) both; }
+.shp .shp__card:nth-of-type(2) { animation-delay: .08s; }
+.shp .shp__card:nth-of-type(3) { animation-delay: .16s; }
+@keyframes shp-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.shp .shp__hero-ico { animation: shp-bob 4.5s ease-in-out infinite; }
+@keyframes shp-bob { 50% { transform: translateY(-3px); } }
+.shp .shp__tool { transition: transform .15s, background .15s, border-color .15s; }
+.shp .shp__tool:hover { transform: translateY(-1px) rotate(-4deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .shp .shp__bubbles i, [data-theme="dark"] .shp .shp__bubbles i { animation: none; opacity: .5; bottom: auto; top: var(--y, 40%); }
+  .shp .shp__bubbles::after, .shp .shp__top::after, .shp .shp__card, .shp .shp__hero-ico { animation: none; }
+}
+@media (max-width: 599.98px) { .shp .shp__bubbles i:nth-child(n + 9) { display: none; } }
+
+/* ==========================================================================
+   Robustness for every file type and screen (phone / tablet / laptop / ultra-wide, notch, old browsers)
+   ========================================================================== */
+/* nothing may widen the page; `clip` (unlike `hidden`) keeps the sticky header working */
+.shp { overflow-x: clip; max-width: 100vw; }
+.shp__main { width: 100%; min-width: 0; }
+.shp__main > *, .shp__card, .shp__preview, .shp__viewer { min-width: 0; max-width: 100%; }
+
+/* media never exceeds its box, whatever its intrinsic size */
+.shp__preview img, .shp__preview video, .shp__preview canvas, .shp__preview svg, .shp__preview iframe, .shp__preview audio { max-width: 100%; }
+.shp__preview audio { width: 100%; }
+.shp__preview video { height: auto; }
+.shp__preview pre, .shp__preview table { max-width: 100%; }
+
+/* long names / chips / paths wrap instead of pushing the layout */
+.shp__title, .shp__vtitle, .shp__item-name, .shp__who-name { overflow-wrap: anywhere; }
+.shp__chips { min-width: 0; }
+.shp__chip { max-width: 100%; }
+
+/* browsers without dynamic-viewport units: the viewer height would otherwise be invalid and collapse */
+@supports not (height: 100dvh) {
+  .shp { --shp-view-h: max(460px, calc(100vh - 210px)); }
+  @media (max-width: 760px) { .shp { --shp-view-h: max(420px, calc(100vh - 150px)); } }
+}
+
+/* notch / rounded corners / home indicator */
+.shp__top { padding-inline: max(clamp(12px, 4vw, 28px), env(safe-area-inset-left), env(safe-area-inset-right)); padding-top: env(safe-area-inset-top); }
+.shp__foot { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+@media (orientation: landscape) and (max-height: 520px) {
+  .shp { --shp-view-h: max(300px, calc(100dvh - 120px)); }
+  .shp__top { padding-block: 4px; }
+}
+
+/* finger-sized header buttons on touch screens */
+@media (pointer: coarse) { .shp__tool { min-width: 40px; min-height: 40px; } }
+
+/* very small phones */
+@media (max-width: 359.98px) {
+  .shp__who-lbl { display: none; }
+  .shp__tools { gap: 6px; }
+}
+
+/* ultra-wide: keep the reading column sensible, centre the viewer */
+@media (min-width: 1800px) { .shp__main:has(.shp__viewer), .shp__main:has(.shp-zip) { max-width: 1600px; } }
+
+/* print / reduced data: no decoration */
+@media print { .shp__bubbles { display: none; } }

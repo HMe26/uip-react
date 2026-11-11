@@ -1,0 +1,75 @@
+/* Bio notes: speech bubble under the chat header (pointing at the photo) + 8 designs + editor. */
+
+.bio-b {
+  --bio-bg: var(--bg-surface); --bio-fg: var(--text-primary); --bio-bd: var(--border-subtle); --bio-tail: var(--bio-bg);
+  --bio-sh: 0 10px 24px -12px rgba(20, 28, 70, .5);
+  position: relative; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 8px 15px; border-radius: 20px;
+  background: var(--bio-bg); color: var(--bio-fg); border: 1px solid var(--bio-bd); box-shadow: var(--bio-sh);
+  font-size: 13.5px; line-height: 1.5; font-weight: 600; isolation: isolate;
+}
+.bio-b__text { min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+
+/* tail pointing up at the photo */
+.bio-b.has-tail::before {
+  content: ""; position: absolute; top: -6px; inset-inline-start: 26px; width: 13px; height: 13px; z-index: -1;
+  background: var(--bio-tail); border: 1px solid var(--bio-bd); border-bottom: 0; border-inline-end: 0; transform: rotate(45deg); border-radius: 3px 0 0 0;
+}
+[dir="rtl"] .bio-b.has-tail::before { transform: rotate(45deg) scaleX(-1); }
+
+/* designs */
+.bio-b--classic { --bio-bg: var(--bg-surface); }
+.bio-b--mint { --bio-bg: linear-gradient(135deg, #d9f99d, #a7f3d0); --bio-fg: #14532d; --bio-bd: rgba(20, 83, 45, .12); --bio-tail: #cdf8b3; }
+.bio-b--sunset { --bio-bg: linear-gradient(135deg, #ffd6a5, #ffadad 55%, #ff8fab); --bio-fg: #5b1a2b; --bio-bd: rgba(91, 26, 43, .1); --bio-tail: #ffc6a4; }
+.bio-b--ocean { --bio-bg: linear-gradient(135deg, #38bdf8, #6366f1); --bio-fg: #fff; --bio-bd: rgba(255, 255, 255, .22); --bio-tail: #4aa8f5; }
+.bio-b--lavender { --bio-bg: linear-gradient(135deg, #e9d5ff, #fbcfe8); --bio-fg: #4a1d6e; --bio-bd: rgba(74, 29, 110, .1); --bio-tail: #eed3fb; }
+.bio-b--night { --bio-bg: linear-gradient(135deg, #1e1b4b, #312e81); --bio-fg: #e0e7ff; --bio-bd: rgba(165, 180, 252, .3); --bio-tail: #232068; --bio-sh: 0 10px 26px -10px rgba(30, 27, 75, .9); }
+.bio-b--glass { --bio-bg: rgba(255, 255, 255, .55); --bio-fg: var(--text-primary); --bio-bd: rgba(255, 255, 255, .7); --bio-tail: rgba(255, 255, 255, .55); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); }
+[data-theme="dark"] .bio-b--glass { --bio-bg: rgba(40, 44, 64, .55); --bio-bd: rgba(255, 255, 255, .16); --bio-tail: rgba(40, 44, 64, .75); }
+.bio-b--spark { --bio-bg: linear-gradient(135deg, #fde68a, #fbbf24); --bio-fg: #5a3a00; --bio-bd: rgba(120, 80, 0, .15); --bio-tail: #fcd34d; overflow: hidden; }
+.bio-b--spark::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, .55) 50%, transparent 65%); background-size: 250% 100%;
+  animation: bioShine 3.4s ease-in-out infinite;
+}
+
+/* chat header placement */
+.msg-thread__header { position: relative; }
+.bio-hdr { position: relative; flex-shrink: 0; z-index: 1; padding: 8px 14px 4px; max-width: 100%; pointer-events: none; animation: bioIn .32s cubic-bezier(.2, .9, .3, 1.2); transform-origin: 34px -6px; }
+.bio-hdr__bubble { pointer-events: auto; cursor: pointer; padding-inline-end: 15px; max-width: min(100%, 420px); }
+.bio-b__edit { border: 0; background: rgba(0, 0, 0, .12); color: inherit; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; cursor: pointer; flex: none; line-height: 1; }
+.bio-b__edit:hover { background: rgba(0, 0, 0, .22); }
+@media (max-width: 760px) { .bio-hdr { padding-inline: 8px; } }
+
+/* contact info panel */
+.msg-info__hero .bio-b { margin-top: 10px; align-self: center; }
+
+/* editor */
+.bio-ed { display: flex; flex-direction: column; gap: 12px; padding: 4px 2px; }
+.bio-ed__preview { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; padding: 14px; border-radius: 14px; background: var(--glass-bg); }
+.bio-ed__label, .bio-ed__h { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin: 0; }
+.bio-ed__field { display: flex; align-items: flex-start; gap: 8px; padding: 6px; border-radius: 14px; border: 1px solid var(--border-subtle); background: var(--bg-surface); transition: border-color .15s, box-shadow .15s; }
+.bio-ed__field:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .14); }
+/* the text box and the emoji button sit side by side, so the emoji can never cover what is typed */
+html body .bio-ed__field textarea { flex: 1 1 auto; min-width: 0; width: auto; min-height: 60px; padding: 8px 10px; margin: 0; border: 0; border-radius: 10px; background: transparent; box-shadow: none; outline: 0; resize: none; font: inherit; font-size: 14px; line-height: 1.6; color: var(--text-primary); }
+html body .bio-ed__field textarea:focus { border: 0; box-shadow: none; outline: 0; }
+.bio-ed__emoji { position: static; flex: none; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border-radius: 50%; border: 0; background: var(--glass-bg); font-size: 19px; line-height: 1; cursor: pointer; transition: background .15s, box-shadow .15s; }
+.bio-ed__emoji:hover { background: rgba(var(--color-primary-rgb), .12); }
+.bio-ed__emoji.is-on { box-shadow: inset 0 0 0 2px var(--color-primary); }
+.bio-ed__picker { border: 1px solid var(--border-subtle); border-radius: 14px; overflow: hidden; max-height: 300px; }
+.bio-ed__presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.bio-ed__chip { border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-primary); border-radius: 999px; padding: 5px 12px; font-size: 12.5px; cursor: pointer; }
+.bio-ed__chip:hover { background: var(--glass-bg); }
+.bio-ed__foot { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.bio-ed__foot .cs-count { margin-inline-end: auto; }
+.bio-ed__foot .cs-count.is-max { color: var(--danger, #d92d4a); }
+
+.bio-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 10px; }
+.bio-picker__item { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 8px 8px; border-radius: 14px; border: 1.5px solid var(--border-subtle); background: var(--bg-surface); cursor: pointer; color: var(--text-secondary); font-size: 12px; min-width: 0; }
+.bio-picker__item:hover { background: var(--glass-bg); }
+.bio-picker__item.is-on { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 72, 48, 240), .16); color: var(--text-primary); }
+.bio-b--mini { font-size: 12px; padding: 6px 11px; max-width: 100%; box-shadow: none; }
+.bio-b--mini .bio-b__text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: normal; }
+
+@keyframes bioIn { from { opacity: 0; transform: translateY(-6px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes bioShine { 0%, 40% { background-position: 150% 0; } 100% { background-position: -100% 0; } }
+@media (prefers-reduced-motion: reduce) { .bio-hdr, .bio-b--spark::after { animation: none; } }

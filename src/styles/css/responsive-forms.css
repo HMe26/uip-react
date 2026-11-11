@@ -1,0 +1,63 @@
+/* responsive-forms.css — loaded LAST. Filter bars / toolbars on tablets and phones.
+   Before: every field kept its desktop width (search, date and score inputs of ~90–200px) and wrapped in an
+   uneven ragged layout, leaving half-empty rows. Now fields sit on a tidy grid and fill their cell;
+   buttons span the row. Desktop (>1100px) is untouched. */
+@media (max-width: 1100px) {
+  .adm-filter-form {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; align-items: end;
+  }
+  .adm-filter-form > .form-group, .adm-filter-form > select, .adm-filter-form > .btn { min-width: 0; }
+  .adm-filter-form .form-input, .adm-filter-form select, .adm-filter-form input {
+    width: 100% !important; max-width: none !important; min-width: 0; box-sizing: border-box;
+  }
+  .adm-filter-form input[type="date"] { min-width: 0; }
+  /* Search gets the full row; the action buttons (Filter / Reset) too. */
+  .adm-filter-form > .form-group:first-child { grid-column: 1 / -1; }
+  .adm-filter-form > .form-group:last-child:has(.btn) { grid-column: 1 / -1; }
+  .adm-filter-form .btn { height: 42px; }
+  .adm-filter-form > .form-group:last-child:has(.btn) .btn { flex: 1 1 0; justify-content: center; }
+  .adm-filter-form .form-label { font-size: 12.5px; text-transform: none; letter-spacing: 0; }
+
+  /* Export strip under the filters: label on its own line, controls fill the row */
+  .adm-export-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; }
+  .adm-export-row > .adm-muted { flex: 1 1 100%; }
+  .adm-export-row > form.adm-filter-form { flex: 1 1 100%; grid-template-columns: minmax(0, 1fr) auto; }
+  .adm-export-row > form.adm-filter-form > .form-group { grid-column: 1 / -1; }
+  .adm-export-row > form.adm-filter-form > select { width: 100% !important; }
+  .adm-export-row > form.adm-filter-form > .btn,
+  .adm-export-row > form.adm-filter-form > span .btn { justify-content: center; }
+}
+
+/* Phones: two columns where fields are short (dates, scores), one column otherwise */
+@media (max-width: 480px) {
+  .adm-filter-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .adm-filter-form > .form-group:nth-child(2),
+  .adm-filter-form > .form-group:nth-child(3) { grid-column: 1 / -1; }
+  .adm-export-row > form.adm-filter-form { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .adm-export-row > form.adm-filter-form > .btn { width: 100%; }
+}
+
+/* ---- Tablet KPI tiles: 2 or 3 per row, never one orphan ---- */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .app-shell--admin .adm-kpis { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+}
+
+/* ---- Export strip: select + Export + Preview sit on one tidy row on tablets, stack on phones ---- */
+@media (max-width: 1100px) {
+  .adm-export-row > form.adm-filter-form { grid-template-columns: minmax(0, 1fr) auto auto; }
+  .adm-export-row > form.adm-filter-form > select { grid-column: 1; }
+  .adm-export-row > form.adm-filter-form .btn { white-space: nowrap; padding-inline: 14px; }
+}
+@media (max-width: 480px) {
+  .adm-export-row > form.adm-filter-form { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .adm-export-row > form.adm-filter-form > select { grid-column: 1 / -1; }
+}
+
+/* ---- Row-action cell inside table cards: the button already says "Actions" — no second label, no 40px clip ---- */
+@media (max-width: 900px) {
+  table[data-rt] > tbody > tr > td.adm-actions::before,
+  .adm-table tbody td.adm-actions::before { display: none !important; }
+  table[data-rt] td.adm-actions .btn, .adm-table td.adm-actions .btn { width: auto !important; min-width: 40px; height: auto; min-height: 40px; padding-inline: 14px; }
+  table[data-rt] td.adm-actions, .adm-table td.adm-actions { justify-content: stretch !important; }
+  table[data-rt] td.adm-actions > .btn:only-child { width: 100% !important; justify-content: center; }
+}

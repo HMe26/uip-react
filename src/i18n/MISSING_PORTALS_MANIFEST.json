@@ -1,0 +1,432 @@
+{
+  "data-analysis": [
+    {
+      "dict": "data-analysis/advanced-analytics/index.js",
+      "source_php_view": "data-analysis/advanced-analytics/index.php",
+      "keys": 16,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/advanced-analytics/show.js",
+      "source_php_view": "data-analysis/advanced-analytics/show.php",
+      "keys": 25,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/ai-insights/index.js",
+      "source_php_view": "data-analysis/ai-insights/index.php",
+      "keys": 40,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/dashboard.js",
+      "source_php_view": "data-analysis/dashboard.php",
+      "keys": 24,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/dashboards/_widget.js",
+      "source_php_view": "data-analysis/dashboards/_widget.php",
+      "keys": 11,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/dashboards/builder.js",
+      "source_php_view": "data-analysis/dashboards/builder.php",
+      "keys": 19,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/dashboards/index.js",
+      "source_php_view": "data-analysis/dashboards/index.php",
+      "keys": 20,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/dashboards/show.js",
+      "source_php_view": "data-analysis/dashboards/show.php",
+      "keys": 6,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/data-quality/index.js",
+      "source_php_view": "data-analysis/data-quality/index.php",
+      "keys": 15,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/explorer/index.js",
+      "source_php_view": "data-analysis/explorer/index.php",
+      "keys": 7,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/explorer/show.js",
+      "source_php_view": "data-analysis/explorer/show.php",
+      "keys": 38,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/exports.js",
+      "source_php_view": "data-analysis/exports.php",
+      "keys": 35,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/forecasting/index.js",
+      "source_php_view": "data-analysis/forecasting/index.php",
+      "keys": 5,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/forecasting/show.js",
+      "source_php_view": "data-analysis/forecasting/show.php",
+      "keys": 15,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/kpis/index.js",
+      "source_php_view": "data-analysis/kpis/index.php",
+      "keys": 36,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/notifications.js",
+      "source_php_view": "data-analysis/notifications.php",
+      "keys": 2,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/profile.js",
+      "source_php_view": "data-analysis/profile.php",
+      "keys": 5,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/query-builder/index.js",
+      "source_php_view": "data-analysis/query-builder/index.php",
+      "keys": 45,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/report-files/create.js",
+      "source_php_view": "data-analysis/report-files/create.php",
+      "keys": 12,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/report-files/index.js",
+      "source_php_view": "data-analysis/report-files/index.php",
+      "keys": 19,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/report-files/print.js",
+      "source_php_view": "data-analysis/report-files/print.php",
+      "keys": 15,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/report-files/replace.js",
+      "source_php_view": "data-analysis/report-files/replace.php",
+      "keys": 7,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/report-files/show.js",
+      "source_php_view": "data-analysis/report-files/show.php",
+      "keys": 37,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/reports.js",
+      "source_php_view": "data-analysis/reports.php",
+      "keys": 29,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/search-results.js",
+      "source_php_view": "data-analysis/search-results.php",
+      "keys": 19,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/segments.js",
+      "source_php_view": "data-analysis/segments.php",
+      "keys": 13,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/settings.js",
+      "source_php_view": "data-analysis/settings.php",
+      "keys": 35,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/two-factor-recovery-codes.js",
+      "source_php_view": "data-analysis/two-factor-recovery-codes.php",
+      "keys": 2,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/two-factor-setup.js",
+      "source_php_view": "data-analysis/two-factor-setup.php",
+      "keys": 11,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "data-analysis/workspace.js",
+      "source_php_view": "data-analysis/workspace.php",
+      "keys": 12,
+      "suggested_react_page": null
+    }
+  ],
+  "security": [
+    {
+      "dict": "security/alerts.js",
+      "source_php_view": "security/alerts.php",
+      "keys": 20,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/dashboard.js",
+      "source_php_view": "security/dashboard.php",
+      "keys": 22,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/incident-show.js",
+      "source_php_view": "security/incident-show.php",
+      "keys": 21,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/incidents.js",
+      "source_php_view": "security/incidents.php",
+      "keys": 12,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/logs-print.js",
+      "source_php_view": "security/logs-print.php",
+      "keys": 15,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/logs.js",
+      "source_php_view": "security/logs.php",
+      "keys": 39,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/notifications.js",
+      "source_php_view": "security/notifications.php",
+      "keys": 2,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/policies.js",
+      "source_php_view": "security/policies.php",
+      "keys": 89,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/profile.js",
+      "source_php_view": "security/profile.php",
+      "keys": 4,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/report-files/create.js",
+      "source_php_view": "security/report-files/create.php",
+      "keys": 12,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/report-files/index.js",
+      "source_php_view": "security/report-files/index.php",
+      "keys": 19,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/report-files/print.js",
+      "source_php_view": "security/report-files/print.php",
+      "keys": 15,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/report-files/replace.js",
+      "source_php_view": "security/report-files/replace.php",
+      "keys": 7,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/report-files/show.js",
+      "source_php_view": "security/report-files/show.php",
+      "keys": 24,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/reports.js",
+      "source_php_view": "security/reports.php",
+      "keys": 9,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/sessions.js",
+      "source_php_view": "security/sessions.php",
+      "keys": 5,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/settings.js",
+      "source_php_view": "security/settings.php",
+      "keys": 45,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/two-factor-recovery-codes.js",
+      "source_php_view": "security/two-factor-recovery-codes.php",
+      "keys": 2,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/two-factor-setup.js",
+      "source_php_view": "security/two-factor-setup.php",
+      "keys": 11,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "security/vulnerabilities.js",
+      "source_php_view": "security/vulnerabilities.php",
+      "keys": 15,
+      "suggested_react_page": null
+    }
+  ],
+  "supervisor": [
+    {
+      "dict": "supervisor/dashboard.js",
+      "source_php_view": "supervisor/dashboard.php",
+      "keys": 4,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "supervisor/notifications.js",
+      "source_php_view": "supervisor/notifications.php",
+      "keys": 2,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "supervisor/project-grade.js",
+      "source_php_view": "supervisor/project-grade.php",
+      "keys": 15,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "supervisor/projects.js",
+      "source_php_view": "supervisor/projects.php",
+      "keys": 8,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "supervisor/settings.js",
+      "source_php_view": "supervisor/settings.php",
+      "keys": 26,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "supervisor/students.js",
+      "source_php_view": "supervisor/students.php",
+      "keys": 3,
+      "suggested_react_page": null
+    }
+  ],
+  "faculty": [
+    {
+      "dict": "faculty/academic-staff.js",
+      "source_php_view": "faculty/academic-staff.php",
+      "keys": 26,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/dashboard.js",
+      "source_php_view": "faculty/dashboard.php",
+      "keys": 26,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/graduation-edit.js",
+      "source_php_view": "faculty/graduation-edit.php",
+      "keys": 18,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/graduation-review.js",
+      "source_php_view": "faculty/graduation-review.php",
+      "keys": 19,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/graduation.js",
+      "source_php_view": "faculty/graduation.php",
+      "keys": 11,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/notifications.js",
+      "source_php_view": "faculty/notifications.php",
+      "keys": 2,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/profile.js",
+      "source_php_view": "faculty/profile.php",
+      "keys": 5,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/project-approval.js",
+      "source_php_view": "faculty/project-approval.php",
+      "keys": 13,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/project-view.js",
+      "source_php_view": "faculty/project-view.php",
+      "keys": 17,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/settings.js",
+      "source_php_view": "faculty/settings.php",
+      "keys": 38,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/students.js",
+      "source_php_view": "faculty/students.php",
+      "keys": 65,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/two-factor-recovery-codes.js",
+      "source_php_view": "faculty/two-factor-recovery-codes.php",
+      "keys": 2,
+      "suggested_react_page": null
+    },
+    {
+      "dict": "faculty/two-factor-setup.js",
+      "source_php_view": "faculty/two-factor-setup.php",
+      "keys": 11,
+      "suggested_react_page": null
+    }
+  ],
+  "academic-staff": [
+    {
+      "dict": "academic-staff/dashboard.js",
+      "source_php_view": "academic-staff/dashboard.php",
+      "keys": 9,
+      "suggested_react_page": null
+    }
+  ]
+}

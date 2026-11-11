@@ -1,0 +1,123 @@
+/* Admin → Meetings Control (pages/admin/AdminMeetingsControl.jsx + components/admin/meetingsControl/*) */
+.mtc-stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.mtc-muted { color: var(--text-secondary); font-size: 12.5px; }
+.mtc-banner { align-items: center; }
+.mtc-banner.st-alert--danger, .st-alert--danger.mtc-banner { background: rgba(var(--color-danger-rgb), .09); border-color: rgba(var(--color-danger-rgb), .28); }
+.st-alert--danger svg { color: var(--color-danger); }
+.mtc-link { background: none; border: 0; padding: 0; color: var(--color-primary); cursor: pointer; font: inherit; font-size: 12.5px; text-align: start; }
+.mtc-link:hover { text-decoration: underline; }
+.mtc-title { font-size: 14px; }
+.mtc-th { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; white-space: nowrap; }
+
+/* tabs */
+.mtc-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; padding: 6px; border: 1px solid var(--border-subtle); border-radius: 16px; background: var(--bg-surface); }
+.mtc-tab { border: 0; background: transparent; color: var(--text-secondary); padding: 9px 14px; border-radius: 11px; font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.mtc-tab:hover { color: var(--text-primary); background: var(--bg-canvas); }
+.mtc-tab.is-active { background: var(--color-primary); color: #fff; }
+
+.mtc-card { padding: 18px 20px; }
+.mtc-card__title { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 15px; font-weight: 700; }
+.mtc-card > p { margin: 0 0 12px; }
+.mtc-danger { border-color: rgba(var(--color-danger-rgb), .35); }
+.mtc-btn-danger { background: var(--color-danger); border: 1px solid var(--color-danger); color: #fff; }
+.mtc-btn-danger:disabled { opacity: .5; }
+.mtc-btn-danger-outline { color: var(--color-danger); border-color: rgba(var(--color-danger-rgb), .45); }
+
+.mtc-actions { display: flex; gap: 8px; align-items: center; }
+.mtc-actions--wrap { flex-wrap: wrap; }
+.mtc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.mtc-chip { padding: 5px 11px; border-radius: 999px; font-size: 12.5px; border: 1px solid var(--border-subtle); background: var(--bg-canvas); }
+.mtc-chip.is-on { color: var(--color-success, #19c8b6); }
+.mtc-chip.is-off { color: var(--text-secondary); opacity: .75; }
+.mtc-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mtc-num { width: 110px; }
+.mtc-range { font-size: 11.5px; }
+
+/* settings */
+.mtc-savebar { position: sticky; top: 8px; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 14px; border: 1px solid var(--border-subtle); border-radius: 14px; background: var(--bg-surface); box-shadow: 0 6px 18px rgba(0,0,0,.06); }
+.mtc-settings { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 4px 28px; }
+.mtc-setting { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 10px; border-bottom: 1px solid var(--border-subtle); border-radius: 10px; }
+.mtc-setting.is-changed { background: rgba(var(--color-primary-rgb), .07); }
+.mtc-setting--wide { grid-column: 1 / -1; flex-wrap: wrap; }
+.mtc-setting--wide .mtc-setting__control { flex: 1 1 320px; }
+.mtc-setting__text { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+.mtc-setting__label { font-size: 13.5px; font-weight: 600; }
+.mtc-setting__control { flex-shrink: 0; }
+.mtc-checks { display: flex; flex-wrap: wrap; gap: 8px; }
+.mtc-check { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border: 1px solid var(--border-subtle); border-radius: 999px; font-size: 12.5px; cursor: pointer; }
+.mtc-check.is-on { border-color: var(--color-primary); background: rgba(var(--color-primary-rgb), .08); }
+
+.mtc-switch { position: relative; width: 44px; height: 26px; border-radius: 999px; border: 0; background: var(--border-strong, #c4c9d4); cursor: pointer; transition: background .18s; padding: 0; flex-shrink: 0; }
+.mtc-switch.is-on { background: var(--color-primary); }
+.mtc-switch:disabled { opacity: .5; cursor: not-allowed; }
+.mtc-switch__knob { position: absolute; top: 3px; inset-inline-start: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: inset-inline-start .18s; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+.mtc-switch.is-on .mtc-switch__knob { inset-inline-start: 21px; }
+
+/* lists */
+.mtc-list { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; }
+.mtc-list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 2px; border-bottom: 1px solid var(--border-subtle); }
+.mtc-list li:last-child { border-bottom: 0; }
+.mtc-json { margin: 8px 0 0; padding: 10px; max-width: 420px; overflow: auto; font-size: 11.5px; background: var(--bg-canvas); border-radius: 10px; text-align: left; }
+
+/* meetings list */
+.mtc-filters { flex-wrap: wrap; align-items: center; }
+.mtc-filters select, .mtc-filters .form-select { width: auto; flex: 0 1 170px; min-width: 130px; }
+.mtc-filters .mtc-date { flex: 0 1 150px; }
+.mtc-filters .adm-filters__search { flex: 1 1 260px; }
+.mtc-date { max-width: 150px; }
+.mtc-flags { display: inline-flex; gap: 8px; align-items: center; color: var(--text-secondary); }
+.mtc-flags .is-off { opacity: .45; }
+.mtc-row-actions { white-space: nowrap; text-align: end; }
+.mtc-row-actions .btn + .btn { margin-inline-start: 6px; }
+.mtc-row-deleted { opacity: .7; }
+
+/* one meeting = its own page (was a side drawer) */
+.mtc-page { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 1200px; margin-inline: auto; min-width: 0; }
+.mtc-back { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; }
+.mtc-page .adm-table td { white-space: normal; }
+.mtc-page .mtc-block { min-width: 0; }
+/* legacy drawer rules (unused) */
+.mtc-drawer-overlay { position: fixed; inset: 0; z-index: 1200; background: rgba(8, 12, 24, .5); display: flex; justify-content: flex-end; }
+.mtc-drawer { width: min(860px, 100%); height: 100%; overflow-y: auto; background: var(--bg-canvas); padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: -12px 0 40px rgba(0,0,0,.25); }
+[dir="rtl"] .mtc-drawer-overlay { justify-content: flex-start; }
+[dir="rtl"] .mtc-drawer { box-shadow: 12px 0 40px rgba(0,0,0,.25); }
+.mtc-drawer__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.mtc-drawer__title { margin: 0 0 6px; font-size: 19px; font-weight: 800; overflow-wrap: anywhere; }
+.mtc-drawer__sub { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mtc-drawer__body { display: flex; flex-direction: column; gap: 14px; }
+.mtc-block { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 16px 18px; min-width: 0; }
+.mtc-block__title { display: flex; align-items: center; gap: 7px; margin: 0 0 12px; font-size: 14.5px; font-weight: 700; }
+.mtc-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.mtc-facts > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mtc-facts strong { font-size: 13.5px; overflow-wrap: anywhere; }
+.mtc-announce { display: flex; gap: 8px; margin-top: 12px; }
+.mtc-announce .form-input { flex: 1; }
+.mtc-subtabs { margin: 0; }
+.mtc-person-actions { display: flex; flex-wrap: wrap; gap: 5px; }
+.mtc-form { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 14px; }
+.mtc-field { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; }
+.mtc-field > span { color: var(--text-secondary); font-weight: 600; }
+.mtc-field--wide { grid-column: 1 / -1; }
+
+@media (max-width: 640px) {
+  .mtc-drawer { padding: 14px; }
+  .mtc-settings { grid-template-columns: 1fr; }
+  .mtc-btn-txt { display: none; }
+  .mtc-announce { flex-direction: column; }
+  .mtc-date { max-width: none; flex: 1 1 130px; }
+}
+
+/* people table inside the drawer: let the action buttons wrap instead of forcing a horizontal scroll */
+.mtc-person-actions { min-width: 230px; max-width: 340px; }
+@media (max-width: 768px) { .mtc-person-actions { min-width: 0; max-width: none; } .mtc-page { gap: 12px; } }
+.mtc-person-actions .btn { height: 30px; padding-inline: 9px; }
+
+/* clickable event rows */
+.mtc-row-click { cursor: pointer; }
+.mtc-row-click:hover td, .mtc-row-click:focus-visible td { background: color-mix(in srgb, var(--primary, #4f46e5) 6%, transparent); }
+
+/* Video servers (Cloudflare SFU) tab */
+.mtc-sfu-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.mtc-secret { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.mtc-ok { color: var(--success, #15803d); font-size: 0.85rem; }
+.mtc-bad { color: var(--danger, #b91c1c); font-size: 0.85rem; }

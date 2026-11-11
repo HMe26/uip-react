@@ -1,0 +1,57 @@
+/* UIPE AI chat: brand, quoted code ("Attach selection"), quick actions, edit-last-question. Colours come from --zb-* (workbench theme). */
+.zb-ai__brandico { background: linear-gradient(135deg, var(--zb-accent), color-mix(in srgb, var(--zb-accent) 45%, #a855f7)); color: #fff; }
+.zb-chat__who { display: block; margin-bottom: 3px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: var(--zb-muted); }
+
+.zb-chat__hello { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.zb-chat__hello h3 { margin: 0; font-size: 16px; color: var(--zb-strong); }
+.zb-chat__bigico { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; color: #fff; background: linear-gradient(135deg, var(--zb-accent), color-mix(in srgb, var(--zb-accent) 45%, #a855f7)); }
+.zb-chat__tip { display: flex; align-items: flex-start; gap: 6px; padding: 8px 10px; border-radius: 10px; background: var(--zb-accent-soft); color: var(--zb-text); font-size: 12px; }
+.zb-chat__tip svg { flex: none; margin-top: 3px; }
+
+.zb-chat__ubox { align-self: flex-end; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; max-width: 92%; }
+.zb-chat__ubox .zb-chat__user { max-width: 100%; }
+.zb-chat__edit { opacity: 0; transition: opacity .12s; }
+.zb-chat__ubox:hover .zb-chat__edit, .zb-chat__edit:focus-visible { opacity: 1; }
+@media (hover: none) { .zb-chat__edit { opacity: 1; } }
+
+/* quoted code */
+.zb-ref { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--zb-line); border-radius: 10px; overflow: hidden; background: color-mix(in srgb, var(--zb-bg) 88%, transparent); color: var(--zb-text); text-align: start; }
+.zb-ref.is-live { border-style: dashed; border-color: color-mix(in srgb, var(--zb-accent) 60%, var(--zb-line)); }
+.zb-ref__head { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: var(--zb-bar); color: var(--zb-muted); font-size: 11.5px; }
+.zb-ref__where { flex: 1; min-width: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: start; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.zb-ref__where:hover:not(:disabled) { color: var(--zb-accent); }
+.zb-ref__where b { margin-inline-start: 4px; color: var(--zb-accent); font-weight: 600; }
+.zb-ref__x { display: inline-grid; place-items: center; width: 18px; height: 18px; padding: 0; border: 0; border-radius: 5px; background: none; color: var(--zb-muted); cursor: pointer; }
+.zb-ref__x:hover { background: var(--zb-hover); color: var(--zb-danger); }
+.zb-ref__code { margin: 0; padding: 6px 9px; font: 11.5px/1.5 ui-monospace, 'JetBrains Mono', Consolas, monospace; white-space: pre; overflow: hidden; text-overflow: ellipsis; color: var(--zb-text); max-height: 4.8em; }
+.zb-chat__refs { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.zb-chat__user .zb-ref { background: rgba(0, 0, 0, .22); border-color: rgba(255, 255, 255, .22); color: inherit; }
+.zb-chat__user .zb-ref__head { background: rgba(0, 0, 0, .18); color: inherit; opacity: .9; }
+.zb-chat__user .zb-ref__code, .zb-chat__user .zb-ref__where b { color: inherit; }
+
+.zb-chat__quotes { display: flex; flex-direction: column; gap: 6px; max-height: 190px; overflow-y: auto; }
+.zb-ref-live { display: flex; flex-direction: column; gap: 6px; }
+.zb-ref-live > .zb-btn { align-self: flex-start; }
+.zb-chat__quick { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---- "Ask about this": select a part of an answer, then ask only about it ---- */
+.zb-ai.zb-chat { position: relative; }
+.zb-ask-float { position: absolute; z-index: 30; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border: 1px solid color-mix(in srgb, var(--zb-accent) 55%, var(--zb-line)); border-radius: 999px; background: var(--zb-bg); color: var(--zb-strong); font-size: 12px; font-weight: 600; white-space: nowrap; cursor: var(--cur-pointer, pointer); box-shadow: 0 6px 18px rgba(0, 0, 0, .28); }
+.zb-ask-float:hover { background: var(--zb-accent-soft); border-color: var(--zb-accent); }
+.zb-ask-float svg { color: var(--zb-accent); }
+.zb-chat__botbody { user-select: text; -webkit-user-select: text; }
+.zb-chat__qchip { display: flex; align-items: flex-start; gap: 8px; padding: 7px 8px 7px 10px; border-inline-start: 3px solid var(--zb-accent); border-radius: 8px; background: var(--zb-accent-soft); color: var(--zb-text); font-size: 12px; line-height: 1.5; }
+.zb-chat__qchip > svg { flex: none; margin-top: 3px; color: var(--zb-accent); }
+.zb-chat__qchip > span { flex: 1; min-width: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; white-space: pre-wrap; }
+.zb-chat__qchip > button { flex: none; display: inline-grid; place-items: center; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--zb-muted); cursor: pointer; }
+.zb-chat__qchip > button:hover { background: rgba(0, 0, 0, .12); color: var(--zb-strong); }
+.zb-chat__uquote { margin: 0 0 6px; padding: 5px 9px; border-inline-start: 3px solid rgba(255, 255, 255, .55); border-radius: 6px; background: rgba(0, 0, 0, .2); color: inherit; opacity: .92; font-size: 12px; line-height: 1.5; max-height: 96px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* ---- conversation list: select several and delete them ---- */
+.zb-hist__tools { flex: none; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 6px 10px; border-bottom: 1px solid var(--zb-line); font-size: 12px; color: var(--zb-muted); }
+.zb-hist__tools .zb-btn { height: 26px; padding: 0 10px; }
+.zb-hist__all { display: inline-flex; align-items: center; gap: 6px; cursor: var(--cur-pointer, pointer); color: var(--zb-text); }
+.zb-hist__count { margin-inline-end: auto; }
+.zb-hist__err { flex-basis: 100%; color: var(--zb-danger, #d1242f); }
+.zb-hist__chk, .zb-hist__all input { width: 15px; height: 15px; margin: 0 6px; flex: none; accent-color: var(--zb-accent); cursor: var(--cur-pointer, pointer); }
+.zb-hist__item.is-picked { background: var(--zb-accent-soft); border-color: color-mix(in srgb, var(--zb-accent) 45%, var(--zb-line)); }

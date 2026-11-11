@@ -1,0 +1,32 @@
+/* Keep language + theme + bell + avatar all visible on very narrow phones.
+   Loaded last so it wins over portal-specific topbar rules. */
+@media (max-width: 480px) {
+  .topbar { padding-inline: var(--space-3); gap: 6px; }
+  .topbar__actions { gap: 2px; flex-shrink: 0; }
+  .topbar__icon-btn { width: 38px; height: 38px; }
+  .topbar__title, .topbar h1, .topbar h2 { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1rem; }
+}
+
+/* ---- Phones: the topbar must never overflow. -------------------------------------------------------
+   Before: the breadcrumb/title was flex-shrink:0 (dashboard-fit.css), so it overflowed its box and was
+   painted ON TOP of the action icons; the avatar also carried name + role + chevron. Now the left group
+   (menu + title) is the only thing that shrinks, and it truncates with an ellipsis. */
+@media (max-width: 640px) {
+  .topbar { padding-inline: 10px !important; gap: 4px !important; overflow: hidden; }
+  .topbar > div:first-child { gap: 4px !important; flex: 1 1 0; min-width: 0; overflow: hidden; }
+  .topbar__crumbs, .topbar__title { flex: 0 1 auto; min-width: 0; overflow: hidden; }
+  .topbar__crumbs strong, .topbar__title h1 { display: block; min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+  .topbar__title p { display: none; }
+  .topbar__actions { flex: 0 0 auto; gap: 0 !important; }
+  .topbar__icon-btn { width: 36px !important; height: 36px !important; }
+  .topbar__user-text, .topbar__actions .dropdown__item > svg { display: none !important; }
+  .topbar__actions .dropdown__item { padding: 2px !important; }
+  .app-shell--insight .topbar__avatar { width: 34px !important; height: 34px !important; }
+  .app-shell--insight .topbar__actions > *:last-child { margin-inline-start: 2px; padding-inline-start: 4px; border-inline-start: 0; }
+  .topbar__ask-ai { padding: 0 !important; width: 36px; height: 36px; justify-content: center; }
+  .topbar__ask-ai span { display: none !important; }
+}
+/* very narrow phones: the colour-theme picker is the least-needed icon, so it steps aside. */
+@media (max-width: 480px) {
+  .topbar__actions .dropdown:has(.topbar__palette-btn) { display: none; }
+}

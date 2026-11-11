@@ -1,0 +1,159 @@
+/* ==========================================================================
+   staff-portal.css — Academic Staff Portal design (Light + Dark).
+   Scoped to .app-shell--staff (roles academic_staff and supervisor). Shell,
+   sidebar, buttons, panels, tables, pills, steppers… are shared with the Student
+   portal (student-portal.css generalises its selectors to both shells); this
+   file only supplies the palette and the few staff-specific differences.
+
+   Light palette sampled from the design: canvas #F6F7FC · sidebar #FBFCFF ·
+   primary #4353FF · active nav #E8EAFF. Dark is derived from the same hues.
+   ========================================================================== */
+
+.app-shell--staff {
+
+  --bg-canvas: #F6F7FC;
+  --bg-surface: #FFFFFF;
+  --bg-sidebar: #FBFCFF;
+  --bg-muted: #F1F3FA;
+  --text-primary: #131526;
+  --text-secondary: #6B7089;
+  --border-subtle: #E8ECF8;
+  --border-strong: #D6DBEE;
+
+  --color-primary: #4353FF;
+  --color-primary-hover: #3342E6;
+  --color-primary-rgb: 67, 83, 255;
+  --color-on-primary: #FFFFFF;
+  --color-success: #12A37A;  --color-success-rgb: 18, 163, 122;
+  --color-warning: #C98500;  --color-warning-rgb: 228, 163, 43;
+  --color-danger:  #E5484D;  --color-danger-rgb: 229, 72, 77;
+  --st-info: #4353FF;
+
+  --st-radius: 18px;
+  --st-radius-sm: 12px;
+  --st-shadow: 0 1px 2px rgba(19, 21, 38, .04);
+  --st-tint: rgba(var(--color-primary-rgb), .1);
+  --insight-radius: var(--st-radius);
+  --insight-shadow: var(--st-shadow);
+  --insight-tint: var(--st-tint);
+  --sidebar-width: 248px;
+  font-family: var(--font-body-ltr);
+}
+[dir="rtl"] .app-shell--staff { font-family: var(--font-body-rtl); }
+
+[data-theme="dark"] .app-shell--staff {
+  --bg-canvas: #0D0E14;
+  --bg-surface: #151722;
+  --bg-sidebar: #11121A;
+  --bg-muted: #1B1D2A;
+  --text-primary: #F1F2F8;
+  --text-secondary: #9A9EB5;
+  --border-subtle: rgba(255, 255, 255, .08);
+  --border-strong: rgba(255, 255, 255, .15);
+
+  --color-primary: #6676FF;
+  --color-primary-hover: #8290FF;
+  --color-primary-rgb: 102, 118, 255;
+  --color-success: #3DD6A5;  --color-success-rgb: 61, 214, 165;
+  --color-warning: #F0B24A;  --color-warning-rgb: 240, 178, 74;
+  --color-danger:  #FF7378;  --color-danger-rgb: 255, 115, 120;
+  --st-info: #8290FF;
+  --st-shadow: none;
+  --st-tint: rgba(var(--color-primary-rgb), .18);
+}
+
+/* The staff design keeps the floating AI button (bottom-right, gradient). */
+.app-shell--staff .ai-fab { display: flex !important; background: linear-gradient(135deg, var(--color-primary), #2EA8FF); }
+
+/* Topbar: hamburger + wide search on the left, actions on the right (as designed). */
+.app-shell--staff .topbar__search { width: min(420px, 100%); flex: 0 1 420px; height: 42px; border-radius: 12px; }
+.app-shell--staff .topbar > div:first-child { flex: 1 1 auto; }
+.topbar__count {
+  position: absolute; top: 3px; inset-inline-end: 1px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px;
+  background: var(--color-primary); color: var(--color-on-primary); font-size: 10.5px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+/* show the signed-in person's name only in the sidebar card (the design's topbar has just the avatar) */
+.app-shell--staff .topbar__user-text { display: none; }
+
+/* Sidebar: user card pinned to the bottom, separated by a rule. */
+.sidebar__user--bottom { margin: 8px 2px 0; padding: 12px 10px 4px; border-radius: 0; background: none; border-top: 1px solid var(--border-subtle); }
+.app-shell--staff .sidebar__brand { border-bottom: 1px solid var(--border-subtle); margin-bottom: 4px; padding-bottom: 14px; }
+.app-shell--staff .sidebar__link.is-active { background: var(--st-tint); }
+
+/* Legacy pages keep their own header; the new pages use .stf-head below. */
+.app-shell--staff .page-header__title { display: block; }
+.app-shell--staff .page-header { display: flex !important; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
+.app-shell--staff .page-header__title h1 { font-size: 24px; font-weight: 800; letter-spacing: -.01em; }
+
+/* ---- Page header: breadcrumb + big title + subtitle + actions ---- */
+.stf-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 4px; }
+.stf-head__main { min-width: 0; }
+.stf-crumbs { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 6px; }
+.stf-crumbs a { color: inherit; text-decoration: none; }
+.stf-crumbs a:hover { color: var(--color-primary); }
+.stf-crumbs strong { color: var(--text-primary); font-weight: 600; }
+.stf-eyebrow { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; margin-bottom: 4px; }
+.stf-head h1 { margin: 0; font-size: 30px; line-height: 1.15; font-weight: 800; letter-spacing: -.02em; font-family: var(--font-display); }
+.stf-head p { margin: 6px 0 0; font-size: 14px; color: var(--text-secondary); }
+.stf-head__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ---- KPI card: number + label on the left, tinted icon tile on the right ---- */
+.stf-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.stf-kpis--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .stf-kpis, .stf-kpis--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .stf-kpis, .stf-kpis--3 { grid-template-columns: 1fr; } }
+.stf-kpi { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 22px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); box-shadow: var(--st-shadow); min-width: 0; }
+.stf-kpi__value { font-size: 34px; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; font-family: var(--font-display); }
+.stf-kpi__label { margin-top: 6px; font-size: 13.5px; color: var(--text-secondary); }
+.stf-kpi__icon { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--st-tint); color: var(--color-primary); }
+.stf-kpi__icon--warn { background: rgba(var(--color-warning-rgb), .16); color: var(--color-warning); }
+.stf-kpi__icon--good { background: rgba(var(--color-success-rgb), .15); color: var(--color-success); }
+.stf-kpi__icon--bad { background: rgba(var(--color-danger-rgb), .14); color: var(--color-danger); }
+
+/* ---- Attention rows (coloured left rule) ---- */
+.stf-attn { list-style: none; margin: 0; padding: 0; }
+.stf-attn > li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border-subtle); }
+.stf-attn > li:last-child { border-bottom: none; }
+.stf-attn__main { display: flex; gap: 14px; min-width: 0; }
+.stf-attn__rule { width: 3px; border-radius: 3px; background: var(--color-warning); flex-shrink: 0; align-self: stretch; }
+.stf-attn__rule--bad { background: var(--color-danger); }
+.stf-attn strong { display: block; font-size: 14.5px; font-weight: 700; }
+.stf-attn span { display: block; font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ---- Person cell + avatar ---- */
+.stf-person { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.stf-avatar { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; background: var(--color-primary); }
+.stf-avatar:nth-child(odd) { background: var(--color-primary); }
+.stf-person strong { display: block; font-size: 14px; font-weight: 700; }
+.stf-person small { display: block; font-size: 12px; color: var(--text-secondary); }
+
+/* ---- Table container with toolbar ---- */
+.stf-table-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); overflow: hidden; box-shadow: var(--st-shadow); }
+.stf-toolbar { display: flex; gap: 12px; flex-wrap: wrap; padding: 16px 18px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); }
+.stf-bar { height: 5px; width: 54px; border-radius: 999px; background: var(--bg-muted); overflow: hidden; margin-top: 6px; }
+.stf-bar > span { display: block; height: 100%; background: var(--color-primary); border-radius: 999px; }
+.stf-bar--good > span { background: var(--color-success); }
+.stf-bar--warn > span { background: var(--color-warning); }
+
+/* Dark: table header + hover surfaces */
+[data-theme="dark"] .app-shell--staff .st-table th { background: var(--bg-muted); }
+.app-shell--staff .sidebar__user--bottom { border: none; border-top: 1px solid var(--border-subtle); border-radius: 0; background: none; box-shadow: none; }
+
+/* security-portal.css paints the active nav item as a flat surface in dark mode for every
+   "insight" shell; the Student and Staff designs keep the tinted primary highlight. */
+[data-theme="dark"] .app-shell--insight:is(.app-shell--student, .app-shell--staff) .sidebar__link.is-active {
+  background: var(--st-tint); color: var(--color-primary); box-shadow: none;
+}
+[data-theme="dark"] .app-shell--insight:is(.app-shell--student, .app-shell--staff) .sidebar__link.is-active svg { color: var(--color-primary); }
+
+/* Numbered pagination under staff tables (StaffPagination in components/staff/stfUi.jsx) */
+.stf-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 16px; border-top: 1px solid var(--border-subtle); }
+.stf-pager__info { color: var(--text-secondary); font-size: 13px; font-variant-numeric: tabular-nums; }
+.stf-pager__nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.stf-pager__btn { min-width: 36px; height: 36px; padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-primary); border-radius: 10px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; cursor: var(--cur-pointer, pointer); transition: background .15s, border-color .15s, color .15s; }
+.stf-pager__btn:hover:not(:disabled):not(.is-active) { background: var(--st-tint, rgba(0,0,0,.04)); border-color: var(--color-primary); }
+.stf-pager__btn.is-active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; cursor: var(--cur-default, default); }
+.stf-pager__btn:disabled { opacity: .45; cursor: not-allowed; }
+.stf-pager__gap { padding: 0 4px; color: var(--text-secondary); }
+@media (max-width: 560px) { .stf-pager { justify-content: center; } .stf-pager__info { width: 100%; text-align: center; } }

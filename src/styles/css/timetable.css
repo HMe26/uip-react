@@ -1,0 +1,37 @@
+/* timetable.css — جدول المحاضرات (tt-*). Token driven, RTL/LTR safe (logical properties only). */
+.tt-week { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; padding: 4px 16px 18px; }
+.tt-day { display: flex; flex-direction: column; gap: 8px; min-width: 0; background: var(--bg-muted, rgba(0,0,0,.02)); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 10px; }
+.tt-day.is-today { border-color: var(--color-primary); box-shadow: 0 0 0 1px rgba(var(--color-primary-rgb), .25) inset; }
+.tt-day__head { display: flex; align-items: center; justify-content: space-between; gap: 6px; font-weight: 700; font-size: 13px; color: var(--text-primary); }
+.tt-day__head small { font-weight: 600; font-size: 11px; color: var(--color-primary); }
+.tt-day__empty { font-size: 12px; color: var(--text-secondary); padding: 10px 4px; text-align: center; opacity: .8; }
+
+.tt-card { position: relative; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-inline-start: 4px solid var(--tt-accent, var(--color-primary)); border-radius: 10px; padding: 9px 10px; display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; }
+.tt-card--section { --tt-accent: var(--color-success); }
+.tt-card--lab { --tt-accent: var(--color-warning); }
+.tt-card--tutorial { --tt-accent: #8b5cf6; }
+.tt-card.has-clash { border-color: rgba(var(--color-danger-rgb), .55); background: rgba(var(--color-danger-rgb), .05); }
+.tt-card__time { font-weight: 800; font-size: 12.5px; color: var(--text-primary); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: plaintext; }
+.tt-card__title { font-weight: 700; color: var(--text-primary); line-height: 1.35; overflow-wrap: anywhere; }
+.tt-card__code { font-size: 11px; font-weight: 700; color: var(--color-primary); letter-spacing: .03em; }
+.tt-card__meta { display: flex; align-items: center; gap: 5px; color: var(--text-secondary); font-size: 11.5px; overflow-wrap: anywhere; }
+.tt-card__kind { align-self: flex-start; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+.tt-card__clash { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--color-danger); }
+.tt-card__actions { display: flex; gap: 4px; margin-top: 4px; }
+
+.tt-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 16px; }
+.tt-toolbar .ex-select { width: auto; min-width: 150px; max-width: 100%; }
+.tt-toolbar__grow { flex: 1 1 auto; }
+.tt-time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tt-days { display: flex; flex-wrap: wrap; gap: 6px; }
+.tt-days button { border: 1px solid var(--border-strong, var(--border-subtle)); background: var(--bg-surface); color: var(--text-primary); border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.tt-days button.is-on { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+@media (max-width: 640px) {
+  .tt-week { grid-template-columns: 1fr; padding-inline: 12px; }
+  .tt-toolbar .ex-select { flex: 1 1 100%; }
+}
+@media print {
+  .tt-toolbar, .tt-card__actions { display: none !important; }
+  .tt-week { grid-template-columns: repeat(4, 1fr); }
+}

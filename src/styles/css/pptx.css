@@ -1,0 +1,87 @@
+/* ────────────────────────────────────────────────────────────
+   PowerPoint editor — components/editor/Pptx*.jsx
+   Ribbon (.pxr), slide panel, stage, selection handles, text editor.
+   Uses the --ed-* variables from editor.css; RTL-safe (logical properties).
+   ──────────────────────────────────────────────────────────── */
+.px { flex: 1; min-height: 0; display: flex; position: relative; }
+.px__thumbs { width: 168px; flex: none; overflow: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; background: var(--ed-panel); border-inline-end: 1px solid var(--ed-line); }
+.px__tw { border-radius: 8px; } .px__tw.is-over { box-shadow: 0 -3px 0 var(--ed-accent); }
+.px__thumb { position: relative; display: block; width: 100%; border: 2px solid transparent; border-radius: 6px; padding: 0; background: none; cursor: pointer; overflow: hidden; }
+.px__thumb:hover { border-color: rgba(255,255,255,.25); } .px__thumb.is-on { border-color: var(--ed-accent); }
+.px__thumb .px__slide { box-shadow: none; pointer-events: none; }
+.px__thumb > b { position: absolute; inset-block-end: 3px; inset-inline-start: 5px; font-size: 11px; color: #fff; background: rgba(0,0,0,.6); border-radius: 4px; padding: 0 6px; z-index: 2; }
+.px__main { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.px__stage { flex: 1; min-height: 0; overflow: auto; display: flex; background: #0b0f19; padding: 20px; outline: none; }
+.px__fit { margin: auto; flex: none; }
+.px__wrap { position: relative; }
+.px__slide { position: relative; background: #fff; box-shadow: 0 10px 40px rgba(0,0,0,.55); overflow: hidden; user-select: none; -webkit-user-select: none; }
+.px__sh { position: absolute; }
+.px__shape { overflow: visible; } .px__pic { overflow: hidden; }
+.px--ed .px__sh { touch-action: none; cursor: default; } .px--ed .px__sh:hover { outline: 1px solid rgba(110,168,255,.7); outline-offset: 0; }
+.px__geo { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.px__tb { position: absolute; inset: 0; display: flex; flex-direction: column; box-sizing: border-box; overflow: visible; word-break: break-word; }
+.px__p { white-space: pre-wrap; word-break: break-word; }
+.px__ghost { position: absolute; inset-inline: 0; opacity: .38; padding-inline: inherit; pointer-events: none; font-style: italic; }
+.px__sh img { width: 100%; height: 100%; object-fit: fill; display: block; }
+.px__tbl table { border-collapse: collapse; width: 100%; height: 100%; table-layout: fixed; }
+.px__tbl td { border: 1px solid #94a3b8; padding: .35cqw .8cqw; overflow: hidden; vertical-align: top; }
+.px__tbl td.is-cell { outline: 2px solid var(--ed-accent, #6ea8ff); outline-offset: -2px; }
+.px__prev { background: #e9edf3; padding: 8px; border-radius: 10px; }
+
+/* rich text editor, in place on the slide */
+.px__rt { outline: none; cursor: text; user-select: text; -webkit-user-select: text; min-height: 1.2em; caret-color: currentColor; white-space: pre-wrap; word-break: break-word; }
+.px__rt > div { position: relative; line-height: 1.2; min-height: 1.15em; }
+.px__rt > div[data-bu]::before { content: attr(data-bu); position: absolute; inset-inline-start: var(--bu-x, 0); }
+.px__rt:focus { background: rgba(110,168,255,.08); }
+
+/* selection */
+.px__sel { position: absolute; border: 1.5px solid var(--ed-accent, #6ea8ff); pointer-events: none; box-sizing: border-box; }
+.px__sel.is-editing { border-style: dashed; }
+.px__edge { position: absolute; pointer-events: auto; cursor: move; touch-action: none; }
+.px__edge--t, .px__edge--b { inset-inline: 0; height: 10px; } .px__edge--t { top: -5px; } .px__edge--b { bottom: -5px; }
+.px__edge--l, .px__edge--r { inset-block: 0; width: 10px; } .px__edge--l { left: -5px; } .px__edge--r { right: -5px; }
+.px__h { position: absolute; width: 11px; height: 11px; margin: -6px 0 0 -6px; background: #fff; border: 1.5px solid var(--ed-accent, #6ea8ff); border-radius: 2px; pointer-events: auto; touch-action: none; z-index: 2; box-sizing: border-box; }
+.px__h--nw { left: 0; top: 0; cursor: nwse-resize; } .px__h--n { left: 50%; top: 0; cursor: ns-resize; } .px__h--ne { left: 100%; top: 0; cursor: nesw-resize; }
+.px__h--e { left: 100%; top: 50%; cursor: ew-resize; } .px__h--se { left: 100%; top: 100%; cursor: nwse-resize; } .px__h--s { left: 50%; top: 100%; cursor: ns-resize; }
+.px__h--sw { left: 0; top: 100%; cursor: nesw-resize; } .px__h--w { left: 0; top: 50%; cursor: ew-resize; }
+.px__rot { position: absolute; left: 50%; top: -30px; width: 13px; height: 13px; margin-left: -6.5px; border-radius: 50%; background: #fff; border: 1.5px solid var(--ed-accent, #6ea8ff); cursor: grab; pointer-events: auto; touch-action: none; z-index: 2; box-sizing: border-box; }
+.px__rot::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1.5px; height: 17px; margin-left: -.75px; background: var(--ed-accent, #6ea8ff); }
+.px__guide { position: absolute; background: #ff4fd8; pointer-events: none; z-index: 3; }
+.px__guide--v { top: 0; bottom: 0; width: 1px; } .px__guide--h { left: 0; right: 0; height: 1px; }
+
+.px__notes { flex: none; height: 96px; resize: vertical; border: 0; border-top: 1px solid var(--ed-line); background: var(--ed-panel); color: var(--ed-text); padding: 10px 14px; font: inherit; font-size: 13px; outline: none; }
+.px__status { display: flex; gap: 16px; align-items: center; padding: 5px 12px; font-size: 11.5px; color: var(--ed-muted); border-top: 1px solid var(--ed-line); background: var(--ed-panel); white-space: nowrap; overflow: hidden; }
+.px__toast { position: absolute; inset-inline: 0; bottom: 14px; margin-inline: auto; width: max-content; max-width: min(560px, 90%); background: #7f1d1d; color: #fff; padding: 9px 16px; border-radius: 10px; font-size: 13px; box-shadow: 0 8px 30px rgba(0,0,0,.4); z-index: 20; }
+.px__present { position: fixed; inset: 0; z-index: 2147483000; background: #000; display: flex; align-items: center; justify-content: center; outline: none; cursor: none; }
+.px__present .px__slide { box-shadow: none; }
+.px__present-n { position: absolute; inset-inline-end: 14px; bottom: 10px; font-size: 12px; color: rgba(255,255,255,.4); }
+
+/* ribbon */
+.pxr { background: var(--ed-panel); border-bottom: 1px solid var(--ed-line); }
+.pxr__tabs { display: flex; align-items: center; gap: 2px; padding: 4px 10px 0; overflow-x: auto; scrollbar-width: none; }
+.pxr__tabs > button[role="tab"] { background: none; border: 0; color: var(--ed-muted); font: inherit; font-weight: 600; padding: 7px 14px; border-radius: 8px 8px 0 0; cursor: pointer; border-bottom: 2px solid transparent; }
+.pxr__tabs > button[role="tab"]:hover { color: var(--ed-text); } .pxr__tabs > button[aria-selected="true"] { color: var(--ed-text); border-bottom-color: var(--ed-accent); background: rgba(255,255,255,.05); }
+.pxr__body { display: flex; align-items: stretch; gap: 0; padding: 6px 8px 4px; overflow-x: auto; overflow-y: hidden; min-height: 66px; }
+.pxr__g { display: flex; flex-direction: column; justify-content: space-between; padding-inline: 8px; border-inline-end: 1px solid var(--ed-line); flex: none; }
+.pxr__g:last-child { border-inline-end: 0; }
+.pxr__row { display: flex; align-items: center; gap: 3px; min-height: 32px; flex-wrap: nowrap; }
+.pxr__lbl { font-size: 10.5px; color: var(--ed-muted); text-align: center; margin-top: 3px; white-space: nowrap; }
+.pxr__b { gap: 5px; } .pxr__b > span { font-size: 12px; }
+.pxr__pw { display: inline-flex; }
+.pxr__sel, .pxr__num { background: rgba(255,255,255,.07); border: 1px solid var(--ed-line); border-radius: 7px; color: var(--ed-text); font: inherit; font-size: 12px; padding: 5px 6px; outline: none; height: 30px; }
+.pxr__sel option { color: #111; } .pxr__sel:focus, .pxr__num:focus { border-color: var(--ed-accent); } .pxr__sel:disabled { opacity: .45; }
+.pxr__fld { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ed-muted); }
+.pxr__cur { width: 14px; height: 4px; border-radius: 2px; border: 1px solid var(--ed-line); }
+.pxr__pop { position: absolute; z-index: 60; background: #1b2234; border: 1px solid var(--ed-line); border-radius: 12px; box-shadow: 0 16px 48px rgba(0,0,0,.55); padding: 10px; min-width: 150px; max-width: 280px; color: var(--ed-text); }
+.pxr__pal small { display: block; font-size: 10.5px; color: var(--ed-muted); margin: 4px 0 4px; }
+.pxr__sws { display: grid; grid-template-columns: repeat(10, 22px); gap: 3px; }
+.pxr__sw { width: 22px; height: 22px; border-radius: 5px; border: 1px solid rgba(255,255,255,.22); cursor: pointer; padding: 0; } .pxr__sw:hover { transform: scale(1.12); }
+.pxr__none, .pxr__list button { display: block; width: 100%; text-align: start; background: none; border: 0; color: var(--ed-text); font: inherit; font-size: 12.5px; padding: 7px 10px; border-radius: 7px; cursor: pointer; margin-top: 6px; }
+.pxr__list button { margin: 0; } .pxr__none:hover, .pxr__list button:hover:not(:disabled) { background: rgba(255,255,255,.09); } .pxr__list button.is-on { color: var(--ed-accent); } .pxr__list button:disabled { opacity: .4; }
+.pxr__list { display: flex; flex-direction: column; min-width: 170px; max-height: 300px; overflow: auto; }
+.pxr__custom { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; font-size: 12px; gap: 10px; } .pxr__custom input { width: 38px; height: 26px; padding: 0; border: 0; background: none; cursor: pointer; }
+.pxr__shapes { display: grid; grid-template-columns: repeat(4, 48px); gap: 4px; }
+.pxr__shapes button { height: 38px; background: none; border: 1px solid transparent; border-radius: 8px; color: var(--ed-text); cursor: pointer; display: grid; place-items: center; } .pxr__shapes button:hover { background: rgba(255,255,255,.09); border-color: var(--ed-line); }
+.pxr__tg { display: grid; gap: 3px; } .pxr__tg i { width: 22px; height: 22px; border: 1px solid rgba(255,255,255,.25); border-radius: 3px; cursor: pointer; } .pxr__tg i.is-on { background: var(--ed-accent); border-color: var(--ed-accent); }
+.pxr__tgrid small { display: block; margin-top: 8px; text-align: center; color: var(--ed-muted); font-size: 12px; }
+@media (max-width: 760px) { .px__thumbs { display: none; } .px__status span:last-child { display: none; } }

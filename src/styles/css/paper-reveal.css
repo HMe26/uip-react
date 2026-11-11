@@ -1,0 +1,83 @@
+/* Crumpled-paper page reveal (components/PaperReveal.jsx). transform/opacity only. */
+.pr {
+  --paper: #f3efe6; --paper-hi: 255, 255, 255; --paper-lo: 90, 70, 40;
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; perspective: 1100px; contain: strict;
+}
+[data-theme="dark"] .pr { --paper: #1a1c26; --paper-hi: 255, 255, 255; --paper-lo: 0, 0, 0; }
+.pr--cover { pointer-events: auto; }
+.pr--open { pointer-events: none; }
+.pr--soft.pr--cover { animation: pr-in .14s ease-out; }
+@keyframes pr-in { from { opacity: 0; } to { opacity: 1; } }
+
+.pr__base { position: absolute; inset: 0; background: var(--noise), var(--paper); }
+.pr--open .pr__base { animation: pr-fade .18s linear forwards; }
+.pr__facets, .pr__creases { position: absolute; inset: 0; }
+.pr__creases { pointer-events: none; opacity: .55; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23000' stroke-opacity='.16' stroke-width='.18' vector-effect='non-scaling-stroke'%3E%3Cpath d='M47 51 0 0M47 51 46 0M47 51 100 0M47 51 100 54M47 51 100 100M47 51 57 100M47 51 0 100M47 51 0 44M22 25 38 12M70 24 82 40M70 77 82 70M24 75 14 62M30 40 58 36M58 66 74 52'/%3E%3C/g%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.pr--open .pr__creases { animation: pr-fade .2s linear forwards; }
+
+.pr__f { position: absolute; inset: 0; will-change: transform, opacity; backface-visibility: hidden;
+  background: linear-gradient(var(--a, 135deg), rgba(var(--paper-hi), var(--hi, .18)), rgba(var(--paper-lo), var(--lo, .12))), var(--noise), var(--paper); }
+.pr--open .pr__f { animation: pr-fold .72s cubic-bezier(.65, 0, .35, 1) var(--d, 0s) forwards; }
+@keyframes pr-fold {
+  to { transform: translate3d(var(--tx, 0), var(--ty, 0), 0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(.7); opacity: 0; }
+}
+@keyframes pr-fade { to { opacity: 0; } }
+
+/* 8 irregular facets fanned from a slightly off-centre point (the "crumple") */
+.pr__f--1 { clip-path: polygon(47% 51%, 0 0, 46% 0);        transform-origin: 25% 0;   --a: 160deg; --hi: .22; --lo: .06; --rx: 80deg;  --ty: -30%; --d: 0s; }
+.pr__f--2 { clip-path: polygon(47% 51%, 46% 0, 100% 0);     transform-origin: 75% 0;   --a: 200deg; --hi: .05; --lo: .2;  --rx: 80deg;  --ty: -30%; --d: .05s; }
+.pr__f--3 { clip-path: polygon(47% 51%, 100% 0, 100% 54%);  transform-origin: 100% 25%;--a: 250deg; --hi: .2;  --lo: .08; --ry: 80deg;  --tx: 30%;  --d: .09s; }
+.pr__f--4 { clip-path: polygon(47% 51%, 100% 54%, 100% 100%); transform-origin: 100% 75%; --a: 300deg; --hi: .04; --lo: .22; --ry: 80deg; --tx: 30%;  --d: .13s; }
+.pr__f--5 { clip-path: polygon(47% 51%, 100% 100%, 57% 100%); transform-origin: 78% 100%; --a: 20deg;  --hi: .18; --lo: .1;  --rx: -80deg; --ty: 30%;  --d: .09s; }
+.pr__f--6 { clip-path: polygon(47% 51%, 57% 100%, 0 100%);  transform-origin: 28% 100%; --a: 340deg; --hi: .06; --lo: .2;  --rx: -80deg; --ty: 30%;  --d: .05s; }
+.pr__f--7 { clip-path: polygon(47% 51%, 0 100%, 0 44%);     transform-origin: 0 72%;   --a: 70deg;  --hi: .2;  --lo: .07; --ry: -80deg; --tx: -30%; --d: .02s; }
+.pr__f--8 { clip-path: polygon(47% 51%, 0 44%, 0 0);        transform-origin: 0 22%;   --a: 110deg; --hi: .05; --lo: .18; --ry: -80deg; --tx: -30%; --d: .13s; }
+
+.pr__brand { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 18px; }
+.pr__brand img { display: block; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .18)); animation: pr-pop .5s cubic-bezier(.2, .8, .2, 1) both; }
+.pr--soft .pr__brand img { animation: none; }
+.pr__bar { display: block; width: 120px; height: 3px; border-radius: 3px; overflow: hidden; background: rgba(var(--paper-lo), .18); }
+.pr__bar b { display: block; width: 40%; height: 100%; border-radius: 3px; background: var(--color-primary, #515FFF); animation: pr-bar 1s ease-in-out infinite; }
+.pr--open .pr__brand { animation: pr-fade .22s linear forwards; }
+@keyframes pr-pop { from { opacity: 0; transform: translateY(8px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes pr-bar { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+[dir="rtl"] .pr__bar b { animation-name: pr-bar-rtl; }
+@keyframes pr-bar-rtl { 0% { transform: translateX(100%); } 100% { transform: translateX(-250%); } }
+
+@media (max-width: 640px) { .pr { perspective: 700px; } .pr__bar { width: 96px; } }
+@media (prefers-reduced-motion: reduce) { .pr { display: none; } }
+html[data-motion="off"] .pr { display: none; }
+
+/* ---- Scroll reveal (hooks/usePaperScroll.js) ------------------------------------------------------------------
+   Each landing section is covered by a crumpled sheet (.pf) that UNFOLDS as you scroll it into view: the hook writes
+   --p (0 -> 1, eased) on the section and every facet derives its own progress from it, so the fold follows the wheel
+   (scrubbed, reversible-free: once open it stays open). transform + opacity only; the sheet is removed when done. */
+@property --p { syntax: '<number>'; inherits: true; initial-value: 0; }
+.pr-sec {
+  --paper: #f3efe6; --paper-hi: 255, 255, 255; --paper-lo: 90, 70, 40;
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  position: relative; --p: 0; transition: --p .32s cubic-bezier(.2, .7, .2, 1);
+}
+[data-theme="dark"] .pr-sec { --paper: #1a1c26; --paper-lo: 0, 0, 0; }
+.pf { position: absolute; inset: 6px 0; z-index: 6; pointer-events: none; overflow: hidden; border-radius: 30px; perspective: 1300px; contain: layout paint;
+  box-shadow: 0 30px 60px -30px rgba(40, 30, 10, calc(.35 * (1 - var(--p)))); }
+.pf__sheet { position: absolute; inset: 0; }
+.pf__f { position: absolute; inset: 0; will-change: transform, opacity; backface-visibility: hidden;
+  --d: 0; --tx: 0%; --ty: 0%; --rx: 0deg; --ry: 0deg;
+  --fp: min(1, max(0, calc((var(--p) - var(--d)) / (1 - var(--d)))));
+  transform: translate3d(calc(var(--tx) * var(--fp)), calc(var(--ty) * var(--fp)), 0) rotateX(calc(var(--rx) * var(--fp))) rotateY(calc(var(--ry) * var(--fp))) scale(calc(1 - .32 * var(--fp)));
+  opacity: calc(1 - var(--fp) * var(--fp) * var(--fp));
+  background: linear-gradient(var(--a, 135deg), rgba(var(--paper-hi), var(--hi, .18)), rgba(var(--paper-lo), var(--lo, .12))), var(--noise), var(--paper); }
+.pf__f--1 { clip-path: polygon(47% 51%, 0 0, 46% 0);        transform-origin: 25% 0;    --a: 160deg; --hi: .22; --lo: .06; --rx: 85deg;  --ty: -34%; --d: 0; }
+.pf__f--2 { clip-path: polygon(47% 51%, 46% 0, 100% 0);     transform-origin: 75% 0;    --a: 200deg; --hi: .05; --lo: .2;  --rx: 85deg;  --ty: -34%; --d: .08; }
+.pf__f--3 { clip-path: polygon(47% 51%, 100% 0, 100% 54%);  transform-origin: 100% 25%; --a: 250deg; --hi: .2;  --lo: .08; --ry: 85deg;  --tx: 34%;  --d: .14; }
+.pf__f--4 { clip-path: polygon(47% 51%, 100% 54%, 100% 100%); transform-origin: 100% 75%; --a: 300deg; --hi: .04; --lo: .22; --ry: 85deg; --tx: 34%; --d: .2; }
+.pf__f--5 { clip-path: polygon(47% 51%, 100% 100%, 57% 100%); transform-origin: 78% 100%; --a: 20deg;  --hi: .18; --lo: .1;  --rx: -85deg; --ty: 34%;  --d: .14; }
+.pf__f--6 { clip-path: polygon(47% 51%, 57% 100%, 0 100%);  transform-origin: 28% 100%; --a: 340deg; --hi: .06; --lo: .2;  --rx: -85deg; --ty: 34%;  --d: .08; }
+.pf__f--7 { clip-path: polygon(47% 51%, 0 100%, 0 44%);     transform-origin: 0 72%;    --a: 70deg;  --hi: .2;  --lo: .07; --ry: -85deg; --tx: -34%; --d: .03; }
+.pf__f--8 { clip-path: polygon(47% 51%, 0 44%, 0 0);        transform-origin: 0 22%;    --a: 110deg; --hi: .05; --lo: .18; --ry: -85deg; --tx: -34%; --d: .2; }
+.pf .pf__creases { position: absolute; inset: 0; pointer-events: none; opacity: calc(.6 * (1 - var(--p) * var(--p))); }
+.pr-sec.pr-done > .pf { display: none; }
+@media (prefers-reduced-motion: reduce) { .pf { display: none; } }
+html[data-motion="off"] .pf { display: none; }

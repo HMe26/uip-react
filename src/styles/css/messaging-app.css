@@ -1,0 +1,1054 @@
+/* ==========================================================================
+   UIPE Enterprise Messaging Ã¢â‚¬â€ Phase 30 (Global Upgrade)
+   Teams / Slack / Discord / LinkedIn-Messaging inspired chat shell.
+   Built entirely on the existing UIPE design tokens (variables.css) so it
+   inherits light/dark themes and glassmorphism automatically Ã¢â‚¬â€ no new
+   color system introduced. RTL handled via [dir="rtl"] overrides.
+   ========================================================================== */
+
+/* Bugfix (2026-08-07): every toggle-visibility panel below (thread-active,
+   lightbox, info panel, recording bar, reply/upload preview, mention/emoji
+   popovers, pinned bar, search bar/results, modal root, load-older button)
+   is shown/hidden purely via the HTML `hidden` boolean attribute from
+   messaging.js Ã¢â‚¬â€ there is no `.is-open`/`.is-visible` class toggling.
+   The browser's own UA stylesheet rule `[hidden] { display: none }` has
+   the same specificity as this file's own `display: flex/grid` class
+   rules below (e.g. `.msg-lightbox { display: flex; ... }`), and an
+   author stylesheet always wins that tie over the UA stylesheet Ã¢â‚¬â€ so
+   every one of those panels was rendering permanently visible/stacked
+   regardless of the `hidden` attribute. This single rule restores the
+   attribute's effect for every element under `.msg-app` and must stay
+   ahead of (or just simply override, via !important) any later
+   `display:` declaration in this file.
+   ========================================================================== */
+.msg-app [hidden] { display: none !important; }
+
+/* Bugfix (2026-08-07): the app shell chrome around .msg-app (breadcrumb,
+   <main> padding, page footer) is not fixed-height Ã¢â‚¬â€ it varies per portal
+   and per locale (Arabic labels wrap differently). The previous rule
+   guessed that chrome with a hardcoded "100dvh - topbar - 130px", which
+   under-counted the real chrome on most portals: .msg-app rendered a
+   little TALLER than the space actually left in the viewport, so the
+   whole page (not just the message list) grew past 100dvh and became
+   scrollable. That outer page-scroll is what read as "no scroll" Ã¢â‚¬â€
+   users scroll the page, the thread's own internal scroll never
+   engages, and the composer/footer drift in and out of view.
+   Fix: stop guessing a pixel offset. Pin the app shell to the viewport
+   only on messaging pages (via :has, scoped so every other page keeps
+   its normal, natural page scroll) and let .msg-app fill the real
+   remaining space with flexbox instead of arithmetic. */
+/* Bugfix (2026-08-08): switched from `.app-shell:has(.msg-app)` to a
+   plain class the server sets on <body> (see messaging/app.php's
+   $bodyClass + layouts/header.php) Ã¢â‚¬â€ :has() isn't supported in every
+   browser, and where it silently doesn't match, .msg-app got no height
+   constraint at all and grew with its content instead of staying pinned
+   to the viewport, which is what let the composer scroll out of view. */
+body.msg-page-active .app-shell { height: 100dvh; overflow: hidden; }
+body.msg-page-active .app-shell .app-shell__content { height: 100dvh; overflow: hidden; }
+body.msg-page-active main.app-shell__main {
+  display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+  padding-bottom: var(--space-4);
+}
+
+.msg-app {
+  --msg-rail-w: 320px;
+  --msg-info-w: 320px;
+  --msg-bubble-mine: var(--color-primary);
+  --msg-bubble-mine-text: #fff;
+  --msg-bubble-theirs: var(--bg-surface);
+  --msg-header-h: 64px;
+  --msg-radius: var(--radius-lg);
+
+  display: grid;
+  grid-template-columns: var(--msg-rail-w) 1fr;
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  margin: var(--space-4) calc(var(--space-6) * -1) 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-surface);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+}
+.msg-app.has-info { grid-template-columns: var(--msg-rail-w) 1fr var(--msg-info-w); }
+
+@media (max-width: 1000px) {
+  .msg-app { margin: var(--space-3) 0 0; }
+}
+
+/* Thin, unobtrusive scrollbars for the internal panes (rail / thread /
+   info) instead of the browser's default chunky bar Ã¢â‚¬â€ this is what
+   actually reads as "polished chat app" rather than "web page". */
+.msg-rail__list, .msg-thread__scroll, .msg-info__body, .msg-search-results {
+
+
+}
+.msg-rail__list::-webkit-scrollbar, .msg-thread__scroll::-webkit-scrollbar,
+.msg-info__body::-webkit-scrollbar, .msg-search-results::-webkit-scrollbar { width: 6px; }
+.msg-rail__list::-webkit-scrollbar-thumb, .msg-thread__scroll::-webkit-scrollbar-thumb,
+.msg-info__body::-webkit-scrollbar-thumb, .msg-search-results::-webkit-scrollbar-thumb {
+  background: var(--border-subtle); border-radius: var(--radius-full);
+}
+
+/* ---------------------------------------------------------------- rail */
+.msg-rail {
+  display: flex;
+  flex-direction: column;
+  border-inline-end: 1px solid var(--border-subtle);
+  background: var(--bg-canvas);
+  min-width: 0;
+}
+.msg-rail__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-4) var(--space-4) var(--space-2);
+}
+.msg-rail__title { font: 700 var(--text-h3)/1.2 var(--font-display); margin: 0; }
+.msg-rail__head-actions { display: flex; gap: var(--space-1); position: relative; }
+
+.msg-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: var(--radius-md);
+  border: none; background: transparent; color: var(--text-secondary);
+  cursor: var(--cur-pointer, pointer); transition: background var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+}
+.msg-icon-btn:hover { background: var(--glass-bg); color: var(--text-primary); }
+.msg-icon-btn--sm { width: 28px; height: 28px; }
+.msg-icon-btn[aria-pressed="true"], .msg-icon-btn.is-active { background: var(--color-primary); color: #fff; }
+.msg-icon-btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+/* Icon-only tap targets: 36px/28px are fine for a mouse pointer but
+   under the 44px comfortable-tap minimum, so grow the hit area on
+   touch without changing the visual/icon size (padding absorbs the
+   extra box, the icon inside stays the same). */
+@media (hover: none) and (pointer: coarse) {
+  .msg-icon-btn, .msg-icon-btn--sm {
+    width: var(--tap-target-min); height: var(--tap-target-min);
+  }
+}
+
+.msg-menu { position: relative; }
+.msg-menu__panel {
+  position: absolute;
+
+  top: 42px;
+  z-index: var(--z-dropdown);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow);
+  min-width: 200px;
+  padding: var(--space-2);
+  display: none;
+}
+.msg-menu__panel.is-open { display: block; }
+.msg-menu__item {
+  display: flex; align-items: center; gap: var(--space-2); width: 100%;
+  padding: var(--space-2) var(--space-3); border: none; background: none;
+  border-radius: var(--radius-sm); color: var(--text-primary); font-size: var(--text-small);
+  cursor: var(--cur-pointer, pointer); text-align: start;
+}
+.msg-menu__item:hover { background: var(--glass-bg); }
+
+.msg-rail__search {
+  display: flex; align-items: center; gap: var(--space-2);
+  margin: 0 var(--space-4) var(--space-3); padding: var(--space-2) var(--space-3);
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.msg-rail__search:focus-within { border-color: var(--color-primary); }
+.msg-rail__search input {
+  flex: 1; border: none; background: none; outline: none; color: var(--text-primary); font-size: var(--text-small);
+}
+.msg-search-results { overflow-y: auto; border-bottom: 1px solid var(--border-subtle); max-height: 45%; }
+.msg-search-results:empty { display: none; }
+
+.msg-rail__tabs {
+  display: flex; gap: var(--space-1); padding: 0 var(--space-4) var(--space-2);
+  overflow-x: auto; scrollbar-width: none; position: relative;
+  /* Bugfix (2026-08-07): the tab row (All/Unread/Favorites/Pinned/
+     Groups/Archived) is wider than the 320px rail and scrolls
+     horizontally, but with no scrollbar and no visual cue the last
+     tab just looked cut off mid-word ("GroÃ¢â‚¬Â¦") Ã¢â‚¬â€ read as a broken
+     layout rather than an intentionally scrollable row. A fade mask
+     on the trailing edge signals "more content this way" instead. */
+  mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+}
+[dir="rtl"] .msg-rail__tabs {
+  mask-image: linear-gradient(to left, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 24px), transparent 100%);
+}
+.msg-rail__tabs::-webkit-scrollbar { display: none; }
+.msg-tab {
+  flex-shrink: 0; padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
+  border: 1px solid transparent; background: transparent; color: var(--text-secondary);
+  font-size: var(--text-caption); font-weight: 600; cursor: var(--cur-pointer, pointer); white-space: nowrap;
+}
+.msg-tab:hover { background: var(--glass-bg); }
+.msg-tab.is-active { background: var(--color-primary); color: #fff; }
+
+.msg-rail__categories { display: flex; gap: var(--space-1); padding: 0 var(--space-4) var(--space-2); flex-wrap: wrap; }
+.msg-rail__categories:empty { display: none; }
+.msg-chip {
+  padding: 2px var(--space-2); border-radius: var(--radius-full); font-size: 11px; font-weight: 600;
+  background: var(--uip-indigo-100); color: var(--color-primary); cursor: var(--cur-pointer, pointer); border: none;
+}
+[data-theme="dark"] .msg-chip { background: rgba(var(--color-primary-rgb),.22); }
+.msg-chip.is-active { background: var(--color-primary); color: #fff; }
+
+.msg-rail__list { flex: 1; overflow-y: auto; padding-bottom: var(--space-3); }
+
+.msg-conv {
+  display: flex; align-items: center; gap: var(--space-3); width: 100%;
+  padding: var(--space-3) var(--space-4); border: none; background: none; cursor: var(--cur-pointer, pointer);
+  text-align: start; border-inline-start: 3px solid transparent; position: relative;
+}
+.msg-conv:hover { background: var(--glass-bg); }
+.msg-conv.is-active { background: var(--uip-indigo-100); border-inline-start-color: var(--color-primary); }
+[data-theme="dark"] .msg-conv.is-active { background: rgba(var(--color-primary-rgb),.16); }
+.msg-conv__meta { flex: 1; min-width: 0; }
+.msg-conv__row1 { display: flex; justify-content: space-between; gap: var(--space-2); align-items: baseline; }
+.msg-conv__name { min-width: 0; font-size: var(--text-small); font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-conv.is-unread .msg-conv__name { font-weight: 800; }
+.msg-conv__time { font-size: 11px; color: var(--text-secondary); flex-shrink: 0; }
+.msg-conv__row2 { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); margin-top: 2px; }
+.msg-conv__preview { flex: 1; min-width: 0; font-size: var(--text-caption); color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-conv.is-unread .msg-conv__preview { color: var(--text-primary); font-weight: 600; }
+.msg-conv__badges { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.msg-unread-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--color-primary); display: inline-block; }
+.msg-mini-icon { width: 13px; height: 13px; color: var(--text-secondary); }
+.msg-conv__pin { color: var(--color-accent); }
+
+.msg-empty-state { padding: var(--space-6) var(--space-4); text-align: center; color: var(--text-secondary); font-size: var(--text-small); }
+
+/* --------------------------------------------------------------- avatar */
+.msg-avatar {
+  position: relative; width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--color-primary), var(--uip-indigo-700));
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 15px; overflow: hidden; text-transform: uppercase;
+}
+.msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.msg-avatar--sm { width: 28px; height: 28px; font-size: 12px; }
+.msg-avatar--group { background: linear-gradient(135deg, var(--uip-teal-500), var(--uip-teal-600)); }
+.msg-presence-dot {
+  position: absolute; bottom: -1px; inset-inline-end: -1px; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--uip-slate-300); border: 2px solid var(--bg-canvas);
+}
+.msg-presence-dot.is-online { background: var(--color-success); }
+.msg-avatar-stack { display: flex; }
+.msg-avatar-stack .msg-avatar { margin-inline-start: -10px; border: 2px solid var(--bg-canvas); }
+.msg-avatar-stack .msg-avatar:first-child { margin-inline-start: 0; }
+
+/* --------------------------------------------------------------- thread */
+.msg-thread { display: flex; flex-direction: column; min-width: 0; background: var(--bg-surface); position: relative; }
+.msg-thread__empty {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3);
+  color: var(--text-secondary);
+}
+.msg-thread__empty-icon {
+  width: 72px; height: 72px; border-radius: 50%; background: var(--glass-bg); color: var(--color-primary);
+  display: flex; align-items: center; justify-content: center;
+}
+.msg-thread__active { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+
+.msg-thread__header {
+  height: var(--msg-header-h); flex-shrink: 0; display: flex; align-items: center; gap: var(--space-3);
+  padding: 0 var(--space-4); border-bottom: 1px solid var(--border-subtle);
+}
+.msg-thread__back { display: none; }
+@media (max-width: 760px) { .msg-thread__back { display: inline-flex; } }
+.msg-thread__peer { display: flex; align-items: center; gap: var(--space-3); flex: 1; min-width: 0; cursor: var(--cur-pointer, pointer); }
+.msg-thread__peer-meta { min-width: 0; display: flex; flex-direction: column; }
+.msg-thread__peer-meta strong { font-size: var(--text-small); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-thread__status { font-size: 12px; color: var(--text-secondary); }
+.msg-thread__status.is-online { color: var(--color-success); }
+.msg-thread__header-actions { display: flex; gap: 2px; }
+
+.msg-thread__pinned-bar {
+  display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4);
+  background: rgba(245, 165, 36,.12); border-bottom: 1px solid var(--border-subtle); font-size: var(--text-caption);
+  overflow-x: auto;
+}
+
+.msg-thread__scroll { flex: 1; overflow-y: auto; padding: var(--space-4); display: flex; flex-direction: column; }
+.msg-load-older {
+  align-self: center; margin-bottom: var(--space-3); padding: 6px var(--space-3); border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle); background: var(--bg-canvas); color: var(--text-secondary);
+  font-size: var(--text-caption); cursor: var(--cur-pointer, pointer);
+}
+.msg-messages { display: flex; flex-direction: column; gap: 2px; margin-top: auto; }
+
+.msg-day-sep { text-align: center; margin: var(--space-4) 0 var(--space-3); }
+.msg-day-sep span {
+  background: var(--bg-canvas); color: var(--text-secondary); font-size: 11px; font-weight: 600;
+  padding: 3px var(--space-3); border-radius: var(--radius-full); border: 1px solid var(--border-subtle);
+}
+
+.msg-row { display: flex; gap: var(--space-2); padding: 3px 0; max-width: 78%; position: relative; }
+.msg-row.is-mine { align-self: flex-end; flex-direction: row-reverse; }
+.msg-row .msg-avatar { margin-top: auto; visibility: hidden; }
+.msg-row.show-avatar .msg-avatar { visibility: visible; }
+.msg-row.is-mine .msg-avatar { display: none; }
+
+.msg-bubble-col { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.msg-sender-name { font-size: 12px; font-weight: 700; color: var(--color-primary); margin-inline-start: var(--space-3); }
+
+.msg-bubble {
+  position: relative; padding: var(--space-2) var(--space-3); border-radius: var(--msg-radius);
+  background: var(--msg-bubble-theirs); border: 1px solid var(--border-subtle); color: var(--text-primary);
+  font-size: var(--text-small); line-height: var(--leading-normal); word-break: break-word; white-space: pre-wrap;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+}
+.msg-row.is-mine .msg-bubble { background: var(--msg-bubble-mine); color: var(--msg-bubble-mine-text); border-color: transparent; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.msg-row.show-avatar:not(.is-mine) .msg-bubble { border-start-start-radius: 4px; }
+.msg-row.is-mine.show-avatar .msg-bubble { border-start-end-radius: 4px; }
+
+.msg-bubble a { color: inherit; text-decoration: underline; }
+.msg-bubble code { background: rgba(0,0,0,.08); padding: 1px 5px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; }
+.msg-row.is-mine .msg-bubble code { background: rgba(255,255,255,.2); }
+.msg-bubble pre { background: rgba(0,0,0,.08); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); overflow-x: auto; margin: var(--space-1) 0; }
+.msg-row.is-mine .msg-bubble pre { background: rgba(255,255,255,.15); }
+.msg-bubble .msg-mention { background: rgba(var(--color-primary-rgb),.15); color: var(--color-primary); border-radius: 4px; padding: 0 3px; font-weight: 600; }
+.msg-row.is-mine .msg-bubble .msg-mention { background: rgba(255,255,255,.25); color: #fff; }
+.msg-bubble .msg-hashtag { color: var(--color-primary); font-weight: 600; }
+.msg-row.is-mine .msg-bubble .msg-hashtag { color: #fff; text-decoration: underline; }
+
+.msg-bubble--deleted { font-style: italic; color: var(--text-secondary); background: transparent; border-style: dashed; }
+.msg-edited-tag { font-size: 10px; opacity: .7; margin-inline-start: 4px; }
+
+.msg-reply-quote {
+  display: flex; flex-direction: column; gap: 0; padding: 4px var(--space-2); margin-bottom: var(--space-1);
+  border-inline-start: 3px solid var(--color-primary); background: rgba(0,0,0,.04); border-radius: 4px; cursor: var(--cur-pointer, pointer);
+}
+.msg-row.is-mine .msg-reply-quote { background: rgba(255,255,255,.15); border-inline-start-color: #fff; }
+.msg-reply-quote strong { font-size: 11px; }
+.msg-reply-quote span { font-size: 11px; opacity: .85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.msg-forward-tag { font-size: 10px; opacity: .7; display: flex; align-items: center; gap: 3px; margin-bottom: 2px; }
+
+.msg-meta-row { display: flex; align-items: center; gap: 4px; margin-top: 2px; font-size: 10px; color: var(--text-secondary); }
+.msg-row.is-mine .msg-meta-row { justify-content: flex-end; }
+.msg-receipt-icon { width: 14px; height: 14px; }
+.msg-receipt-icon.is-read { color: var(--color-primary); }
+
+.msg-hover-actions {
+  position: absolute; top: -16px; inset-inline-end: 4px; display: none; gap: 2px;
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-full);
+  padding: 2px; box-shadow: var(--glass-shadow); z-index: 5;
+}
+.msg-row.is-mine .msg-hover-actions { inset-inline-end: unset; inset-inline-start: 4px; }
+.msg-row:hover .msg-hover-actions { display: flex; }
+.msg-hover-actions button {
+  width: 26px; height: 26px; border-radius: 50%; border: none; background: none; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center; cursor: var(--cur-pointer, pointer);
+}
+.msg-hover-actions button:hover { background: var(--glass-bg); color: var(--text-primary); }
+
+.msg-reactions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.msg-reaction-pill {
+  display: inline-flex; align-items: center; gap: 3px; padding: 1px 7px; border-radius: var(--radius-full);
+  background: var(--bg-canvas); border: 1px solid var(--border-subtle); font-size: 12px; cursor: var(--cur-pointer, pointer);
+}
+.msg-reaction-pill.is-mine { background: var(--uip-indigo-100); border-color: var(--color-primary); }
+[data-theme="dark"] .msg-reaction-pill.is-mine { background: rgba(var(--color-primary-rgb),.22); }
+.msg-reaction-picker {
+  position: absolute; bottom: 100%; margin-bottom: 4px; display: flex; gap: 2px; background: var(--bg-surface);
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-full); padding: 4px 6px; box-shadow: var(--glass-shadow);
+  z-index: 6;
+}
+.msg-reaction-picker button { border: none; background: none; font-size: 17px; cursor: var(--cur-pointer, pointer); padding: 2px; border-radius: 50%; }
+.msg-reaction-picker button:hover { background: var(--glass-bg); transform: scale(1.15); }
+
+/* attachments inside a bubble */
+.msg-attachments { display: flex; flex-direction: column; gap: var(--space-2); margin-top: var(--space-1); }
+.msg-attach-image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; max-width: 320px; }
+.msg-attach-image-grid img { width: 100%; height: 130px; object-fit: cover; border-radius: var(--radius-sm); cursor: var(--cur-pointer, pointer); }
+.msg-attach-image-grid.single { grid-template-columns: 1fr; }
+.msg-attach-image-grid.single img { height: 220px; }
+.msg-attach-video { max-width: 320px; border-radius: var(--radius-sm); overflow: hidden; position: relative; }
+.msg-attach-video video { width: 100%; display: block; background: #000; }
+/* Phase 31: duration badge over the ffmpeg-generated poster thumbnail,
+   hidden once playback starts so it doesn't sit on top of native controls. */
+.msg-attach-video__duration {
+  position: absolute; inset-inline-end: 8px; bottom: 8px;
+  background: rgba(0, 0, 0, 0.72); color: #fff;
+  font-size: 11px; line-height: 1; font-variant-numeric: tabular-nums;
+  padding: 3px 6px; border-radius: 4px; pointer-events: none;
+}
+.msg-attach-video video.is-playing ~ .msg-attach-video__duration { display: none; }
+.msg-attach-file {
+  display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2); border-radius: var(--radius-sm);
+  background: rgba(0,0,0,.05); text-decoration: none; color: inherit; min-width: 220px;
+}
+.msg-row.is-mine .msg-attach-file { background: rgba(255,255,255,.18); }
+.msg-attach-file__icon { width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--color-primary); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.msg-attach-file__meta { min-width: 0; flex: 1; }
+.msg-attach-file__name { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-attach-file__size { font-size: 10px; opacity: .75; }
+
+.msg-audio-player { display: flex; align-items: center; gap: var(--space-2); min-width: 220px; }
+.msg-audio-player button { width: 30px; height: 30px; border-radius: 50%; border: none; background: var(--color-primary); color: #fff; display: flex; align-items: center; justify-content: center; cursor: var(--cur-pointer, pointer); flex-shrink: 0; }
+.msg-row.is-mine .msg-audio-player button { background: rgba(255,255,255,.3); }
+.msg-waveform { flex: 1; height: 28px; display: flex; align-items: center; gap: 1px; cursor: var(--cur-pointer, pointer); }
+.msg-waveform span { width: 2px; background: currentColor; opacity: .4; border-radius: 1px; }
+.msg-waveform span.is-played { opacity: 1; }
+.msg-audio-speed { font-size: 10px; border: 1px solid currentColor; border-radius: var(--radius-full); padding: 1px 6px; background: none; color: inherit; cursor: var(--cur-pointer, pointer); opacity: .8; }
+
+/* poll message */
+.msg-poll { min-width: 240px; }
+.msg-poll__q { font-weight: 700; margin-bottom: var(--space-2); font-size: var(--text-small); }
+.msg-poll__opt { display: block; width: 100%; text-align: start; border: 1px solid currentColor; border-radius: var(--radius-sm); padding: 6px var(--space-2); margin-bottom: 4px; background: none; color: inherit; cursor: var(--cur-pointer, pointer); position: relative; overflow: hidden; font-size: 12px; }
+.msg-poll__opt-fill { position: absolute; inset-inline-start: 0; top: 0; bottom: 0; background: rgba(0,0,0,.08); z-index: 0; }
+.msg-row.is-mine .msg-poll__opt-fill { background: rgba(255,255,255,.2); }
+.msg-poll__opt-label { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: var(--space-2); }
+.msg-poll__opt.is-voted { border-width: 2px; }
+.msg-poll__total { font-size: 10px; opacity: .75; margin-top: 2px; }
+
+/* typing indicator */
+.msg-typing { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-2); font-size: 12px; color: var(--text-secondary); }
+.msg-typing-dots { display: inline-flex; gap: 2px; }
+.msg-typing-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--text-secondary); animation: msgTypingBounce 1.2s infinite ease-in-out; }
+.msg-typing-dots span:nth-child(2) { animation-delay: .15s; }
+.msg-typing-dots span:nth-child(3) { animation-delay: .3s; }
+@keyframes msgTypingBounce { 0%,60%,100%{transform:translateY(0);opacity:.5} 30%{transform:translateY(-4px);opacity:1} }
+
+/* ------------------------------------------------------------- composer */
+.msg-reply-preview, .msg-upload-preview {
+  display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--border-subtle); background: var(--bg-canvas); font-size: var(--text-caption);
+}
+.msg-reply-preview__body { flex: 1; min-width: 0; border-inline-start: 3px solid var(--color-primary); padding-inline-start: var(--space-2); overflow: hidden; }
+.msg-reply-preview__body strong { display: block; font-size: 11px; color: var(--color-primary); }
+.msg-reply-preview__body span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-secondary); }
+
+.msg-upload-preview { flex-wrap: wrap; }
+.msg-upload-item { position: relative; width: 64px; height: 64px; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-surface); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.msg-upload-item img { width: 100%; height: 100%; object-fit: cover; }
+.msg-upload-item__name { font-size: 8px; text-align: center; padding: 2px; word-break: break-all; }
+.msg-upload-item__remove { position: absolute; top: 1px; inset-inline-end: 1px; width: 16px; height: 16px; border-radius: 50%; background: rgba(0,0,0,.6); color: #fff; border: none; font-size: 10px; cursor: var(--cur-pointer, pointer); line-height: 1; }
+.msg-upload-item__progress { position: absolute; bottom: 0; inset-inline-start: 0; height: 3px; background: var(--color-primary); transition: width .2s; }
+
+.msg-composer { border-top: 1px solid var(--border-subtle); padding: var(--space-2) var(--space-3) var(--space-3); flex-shrink: 0; }
+.msg-composer__toolbar { display: flex; gap: 1px; margin-bottom: 2px; position: relative; }
+.msg-composer__record.is-recording { color: var(--color-danger); }
+
+.msg-composer__input-row { display: flex; align-items: flex-end; gap: var(--space-2); position: relative; }
+.msg-composer__input {
+  flex: 1; min-height: 40px; max-height: 160px; overflow-y: auto; padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--bg-canvas);
+  font-size: var(--text-small); line-height: var(--leading-normal); outline: none; color: var(--text-primary);
+}.msg-composer__input:empty::before { content: attr(data-placeholder); color: var(--text-secondary); }
+.msg-composer__input:focus { border-color: var(--color-primary); }
+
+.msg-send-btn {
+  width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--color-primary); color: #fff;
+  display: flex; align-items: center; justify-content: center; cursor: var(--cur-pointer, pointer); flex-shrink: 0;
+  transition: transform var(--duration-fast) var(--ease-standard), opacity var(--duration-fast);
+}
+.msg-send-btn:hover { transform: scale(1.06); }
+.msg-send-btn:disabled { opacity: .45; cursor: var(--cur-default, default); transform: none; }
+
+.msg-composer__popover-wrap { display: inline-flex; position: relative; }
+
+.msg-mention-popover, .msg-emoji-popover {
+  position: absolute; bottom: 100%; margin-bottom: 6px; inset-inline-start: 0; z-index: var(--z-dropdown);
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow); max-height: 260px; overflow-y: auto;
+}
+.msg-mention-popover { min-width: 240px; }
+.msg-mention-item { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); cursor: var(--cur-pointer, pointer); }
+.msg-mention-item:hover, .msg-mention-item.is-active { background: var(--glass-bg); }
+.msg-emoji-popover { width: 280px; padding: var(--space-2); display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; grid-auto-rows: min-content; }
+.msg-emoji-popover button { border: none; background: none; font-size: 18px; padding: 4px; border-radius: var(--radius-sm); cursor: var(--cur-pointer, pointer); }
+.msg-emoji-popover button:hover { background: var(--glass-bg); }
+.msg-popover__close {
+  grid-column: 1 / -1; display: flex; justify-content: flex-end; margin: -2px -2px 2px; padding: 4px !important;
+  color: var(--text-secondary); background: none; border: none; cursor: var(--cur-pointer, pointer); border-radius: var(--radius-sm);
+}
+.msg-popover__close:hover { background: var(--glass-bg); }
+
+/* -- GIFs & Stickers popover (message_type = 'gif' / 'sticker') -- */
+.msg-gif-sticker-popover {
+  position: absolute; bottom: 100%; margin-bottom: 6px; inset-inline-start: 0; z-index: var(--z-dropdown);
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+  box-shadow: var(--glass-shadow); width: 320px; max-height: 340px; display: flex; flex-direction: column; overflow: hidden;
+}
+.msg-gs-tabs { display: flex; align-items: center; border-bottom: 1px solid var(--border-subtle); flex: none; }
+.msg-gs-tabs .msg-popover__close { flex: none; margin: 0 4px; }
+.msg-gs-tab {
+  flex: 1; border: none; background: none; padding: var(--space-2) var(--space-3); cursor: var(--cur-pointer, pointer);
+  font-size: var(--text-small); font-weight: 600; color: var(--text-secondary);
+}
+.msg-gs-tab.active { color: var(--color-primary); box-shadow: inset 0 -2px 0 var(--color-primary); }
+.msg-gs-search {
+  margin: var(--space-2); width: calc(100% - var(--space-2) * 2); padding: 6px 10px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle); font-size: var(--text-small); background: var(--bg-canvas); color: var(--text-primary);
+}
+.msg-gs-grid {
+  flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 0 var(--space-2) var(--space-2);
+}
+.msg-gs-cell {
+  border: none; background: var(--glass-bg); border-radius: var(--radius-sm); padding: 0; cursor: var(--cur-pointer, pointer);
+  aspect-ratio: 1 / 1; overflow: hidden; display: flex; align-items: center; justify-content: center;
+}
+.msg-gs-cell img { width: 100%; height: 100%; object-fit: contain; }
+.msg-gs-cell:hover { outline: 2px solid var(--color-primary); }
+.msg-gs-loading, .msg-gs-empty {
+  grid-column: 1 / -1; text-align: center; padding: var(--space-4); font-size: var(--text-small); color: var(--text-secondary);
+}
+
+/* -- GIF / Sticker message bubbles: borderless media, not a text bubble -- */
+.msg-bubble--media { background: transparent; border: none; box-shadow: none; padding: 0; }
+.msg-row.is-mine .msg-bubble--media { background: transparent; }
+.msg-gif-img { max-width: 220px; max-height: 220px; border-radius: var(--radius-md); display: block; }
+.msg-sticker-img { width: 112px; height: 112px; display: block; }
+
+.msg-composer__recording { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-2); }
+.msg-rec-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--color-danger); animation: msgPulse 1s infinite; }
+@keyframes msgPulse { 50% { opacity: .3; } }
+.msg-waveform-live { flex: 1; height: 22px; background: repeating-linear-gradient(90deg, var(--color-primary) 0 2px, transparent 2px 4px); opacity: .5; border-radius: 3px; }
+
+/* ---------------------------------------------------------------- info */
+.msg-info { display: flex; flex-direction: column; border-inline-start: 1px solid var(--border-subtle); background: var(--bg-canvas); min-width: 0; }
+.msg-info__head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4); border-bottom: 1px solid var(--border-subtle); font-size: var(--text-small); }
+.msg-info__body { flex: 1; overflow-y: auto; padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-5); }
+.msg-info__section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary); margin-bottom: var(--space-2); }
+.msg-info__member { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) 0; }
+.msg-info__member-meta { flex: 1; min-width: 0; }
+.msg-info__member-meta strong { font-size: 13px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-info__member-role { font-size: 10px; color: var(--text-secondary); text-transform: capitalize; }
+.msg-info__toggle-row { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) 0; font-size: var(--text-small); }
+.msg-info__file { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) 0; font-size: 12px; }
+.msg-info__file img { width: 32px; height: 32px; object-fit: cover; border-radius: 4px; }
+
+.msg-switch { position: relative; width: 38px; height: 22px; border-radius: var(--radius-full); background: var(--border-subtle); border: none; cursor: var(--cur-pointer, pointer); flex-shrink: 0; }
+.msg-switch::after { content: ''; position: absolute; top: 2px; inset-inline-start: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: inset-inline-start var(--duration-fast); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+.msg-switch.is-on { background: var(--color-primary); }
+.msg-switch.is-on::after { inset-inline-start: 18px; }
+
+/* ------------------------------------------------------------ lightbox */
+.msg-lightbox { position: fixed; inset: 0; background: rgba(5,8,15,.92); z-index: calc(var(--z-toast, 600) + 100); display: flex; align-items: center; justify-content: center; flex-direction: column; }
+.msg-lightbox__close { position: absolute; top: var(--space-4); inset-inline-end: var(--space-4); color: #fff; }
+.msg-lightbox__nav { position: absolute; top: 50%; transform: translateY(-50%); color: #fff; width: 48px; height: 48px; }
+.msg-lightbox__nav--prev { inset-inline-start: var(--space-4); }
+.msg-lightbox__nav--next { inset-inline-end: var(--space-4); }
+.msg-lightbox__stage { max-width: 82vw; max-height: 76vh; display: flex; align-items: center; justify-content: center; }
+.msg-lightbox__stage img { max-width: 82vw; max-height: 76vh; object-fit: contain; transition: transform .2s; }
+.msg-lightbox__tools { display: flex; gap: var(--space-2); margin-top: var(--space-4); }
+.msg-lightbox__tools .msg-icon-btn { color: #fff; background: rgba(255,255,255,.1); }
+
+/* -------------------------------------------------------------- modals */
+.msg-modal-backdrop { position: fixed; inset: 0; background: rgba(5,8,15,.55); z-index: var(--z-modal); display: flex; align-items: center; justify-content: center; padding: var(--space-4); }
+.msg-modal { width: 100%; max-width: 460px; max-height: 82vh; overflow-y: auto; background: var(--bg-surface); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); }
+.msg-modal__head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4); border-bottom: 1px solid var(--border-subtle); }
+.msg-modal__head h3 { margin: 0; font-size: var(--text-h3); }
+.msg-modal__body { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); }
+.msg-modal__foot { display: flex; justify-content: flex-end; gap: var(--space-2); padding: var(--space-4); border-top: 1px solid var(--border-subtle); }
+.msg-modal input[type="text"], .msg-modal input[type="search"], .msg-modal textarea {
+  width: 100%; padding: var(--space-2) var(--space-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+  background: var(--bg-canvas); color: var(--text-primary); font-size: var(--text-small); outline: none;
+}
+.msg-modal input:focus, .msg-modal textarea:focus { border-color: var(--color-primary); }
+.msg-picker-list { max-height: 220px; overflow-y: auto; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); }
+.msg-picker-item { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); cursor: var(--cur-pointer, pointer); }
+.msg-picker-item:hover { background: var(--glass-bg); }
+.msg-picker-item.is-selected { background: var(--uip-indigo-100); }
+[data-theme="dark"] .msg-picker-item.is-selected { background: rgba(var(--color-primary-rgb),.2); }
+.msg-selected-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.msg-selected-chip { display: inline-flex; align-items: center; gap: 4px; background: var(--uip-indigo-100); color: var(--color-primary); border-radius: var(--radius-full); padding: 2px 4px 2px 10px; font-size: 12px; }
+[dir="rtl"] .msg-selected-chip { padding: 2px 10px 2px 4px; }
+[data-theme="dark"] .msg-selected-chip { background: rgba(var(--color-primary-rgb),.22); }
+.msg-selected-chip button { border: none; background: rgba(0,0,0,.1); border-radius: 50%; width: 16px; height: 16px; cursor: var(--cur-pointer, pointer); color: inherit; }
+.msg-poll-option-row { display: flex; gap: var(--space-2); align-items: center; }
+.msg-poll-option-row input { flex: 1; }
+
+/* -------------------------------------------------------------- toasts */
+.msg-toast-root { position: fixed; bottom: var(--space-5); inset-inline-end: var(--space-5); z-index: var(--z-toast); display: flex; flex-direction: column; gap: var(--space-2); }
+.msg-toast {
+  background: var(--text-primary); color: var(--bg-surface); padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm);
+  font-size: var(--text-small); box-shadow: var(--glass-shadow); animation: msgToastIn .2s var(--ease-standard);
+}
+.msg-toast--error { background: var(--color-danger); color: #fff; }
+/* Phase 32: "Undo Send" toast Ã¢â‚¬â€ plain .msg-toast plus an inline action
+   button, shown for config('messaging.undo_send_window_seconds') after
+   sending a message. */
+.msg-toast--undo { display: flex; align-items: center; gap: var(--space-3); }
+.msg-toast__undo-btn {
+  background: transparent; border: none; color: var(--color-primary, #6ea8fe);
+  font-size: var(--text-small); font-weight: 600; cursor: var(--cur-pointer, pointer); padding: 0;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.msg-toast__undo-btn:disabled { opacity: .5; cursor: var(--cur-default, default); text-decoration: none; }
+@keyframes msgToastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ------------------------------------------------------------ skeleton */
+.msg-skeleton-row { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); }
+.msg-skeleton-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--glass-bg); flex-shrink: 0; }
+.msg-skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.msg-skeleton-lines i { display: block; height: 8px; border-radius: 4px; background: var(--glass-bg); font-style: normal; }
+.msg-skeleton-lines i:first-child { width: 60%; }
+.msg-skeleton-lines i:last-child { width: 85%; }
+.msg-skeleton-avatar, .msg-skeleton-lines i { animation: msgShimmer 1.4s infinite ease-in-out; }
+@keyframes msgShimmer { 50% { opacity: .4; } }
+
+/* --------------------------------------------------------- responsive */
+@media (max-width: 1000px) {
+  .msg-app.has-info { grid-template-columns: var(--msg-rail-w) 1fr; }
+  .msg-info { position: absolute; inset-inline-end: 0; top: 0; bottom: 0; width: min(var(--msg-info-w, 340px), 90vw); z-index: var(--z-sticky); box-shadow: var(--glass-shadow); }
+}
+@media (max-width: 760px) {
+  .msg-app { grid-template-columns: 1fr; border-radius: 0; margin-inline: 0; }
+  .msg-rail { position: absolute; inset: 0; z-index: 2; }
+  .msg-thread { position: absolute; inset: 0; z-index: 1; transform: translateX(100%); transition: transform var(--duration-normal) var(--ease-standard); }
+  [dir="rtl"] .msg-thread { transform: translateX(-100%); }
+  .msg-app.thread-open .msg-rail { display: none; }
+  .msg-app.thread-open .msg-thread { transform: translateX(0); position: relative; }
+  .msg-row { max-width: 90%; }
+
+  /* Bigger, more legible message content on phones — the desktop sizing
+     (14px bubble text) read as noticeably small on a real device. */
+  .msg-bubble { font-size: 15px; padding: 10px 13px; }
+  .msg-conv__name, .msg-thread__peer-meta strong { font-size: 15px; }
+  .msg-conv__preview, .msg-conv__time, .msg-sender-name { font-size: 12.5px; }
+
+  /* iOS Safari zooms the whole page in when a focused input's font-size is
+     under 16px — with the composer at the old 14px, opening the keyboard
+     to type a message zoomed and shifted the layout, which is what made
+     sending feel broken. 16px is the standard fix; keeps the rest of the
+     UI at its normal size since this only targets the composer field. */
+  .msg-composer__input { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .msg-app *, .msg-app *::before, .msg-app *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+
+
+.msg-thread {display: flex;flex-direction: column;
+
+min-width: 0;
+min-height: 0;
+
+flex: 1 1 auto;
+
+overflow: hidden;
+
+background: var(--bg-surface);
+position: relative;
+
+}
+
+.msg-thread__scroll {flex: 1 1 auto;min-height: 0;
+
+overflow-y: auto;
+overflow-x: hidden;
+
+display: flex;
+flex-direction: column;
+
+padding: var(--space-4);
+
+scroll-behavior: smooth;
+overscroll-behavior: contain;
+
+}
+
+.msg-messages {display: flex;flex-direction: column;gap: 8px;
+
+flex: 1 1 auto;
+
+}
+
+.msg-hover-actions {
+    position: absolute;
+
+    bottom: calc(100% + 8px);
+    inset-inline-end: 0;
+
+    display: none;
+    align-items: center;
+    gap: 4px;
+
+    padding: 6px;
+
+    background: var(--bg-surface);
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 999px;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.18),
+        0 2px 8px rgba(0,0,0,.12);
+
+    z-index: 9999;
+}
+
+/* Incoming (left-side) messages: anchor the action bar to the bubble's START
+   edge so it grows toward the middle of the screen. Anchored to the end edge
+   it grew toward the edge and slid under the conversation list / got cut off
+   for short bubbles. Own (right-side) messages keep the end anchor, so the bar
+   grows leftwards into free space. */
+.msg-row:not(.is-mine) .msg-hover-actions {
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+}
+
+.msg-row.is-mine .msg-hover-actions {
+    inset-inline-end: 0;
+    inset-inline-start: auto;
+}
+
+.msg-row:hover .msg-hover-actions {
+    display: flex;
+}
+
+.msg-hover-actions button {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: transparent;
+    color: var(--text-primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: var(--cur-pointer, pointer);
+
+    transition: all .2s ease;
+}
+
+.msg-hover-actions button svg {
+    width: 18px;
+    height: 18px;
+}
+
+.msg-hover-actions button:hover {
+    background: var(--color-primary);
+    color: #fff;
+}
+.msg-hover-actions {
+    position: absolute;
+
+    bottom: calc(100% + 8px);
+    inset-inline-end: 0;
+
+    display: none;
+    align-items: center;
+    gap: 6px;
+
+    min-height: 42px;      /* Ø§Ù„Ø¬Ø¯ÙŠØ¯ */
+    padding: 6px 10px;      /* Ø§Ù„Ø¬Ø¯ÙŠØ¯ */
+
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+
+    box-shadow: var(--glass-shadow);
+
+    z-index: 9999;
+}
+
+.msg-hover-actions button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   Bugfix: three-column layout (rail + thread + info) squeezed the thread.
+   With the info panel open the grid was rail(340) + 1fr + info(320), so on
+   any viewport under ~1500px (more once the sidebar is open) the thread was
+   left with ~150px and every bubble wrapped one letter per line.
+   Now: the info panel only sits in its own column on wide screens; below
+   that it slides over the thread as a drawer, the rail gets narrower on
+   mid-size screens, and the thread can never collapse below a usable width.
+   -------------------------------------------------------------------------- */
+.msg-thread { min-width: 0; }
+.msg-bubble-col, .msg-bubble { min-width: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 1479px) {
+  html body .msg-app[data-msg-app].has-info { grid-template-columns: var(--msg-rail-w) minmax(0, 1fr); }
+  .msg-app .msg-info {
+    position: absolute; inset-inline-end: 0; top: 0; bottom: 0;
+    width: min(var(--msg-info-w, 340px), 92%); z-index: var(--z-sticky);
+    box-shadow: var(--glass-shadow); background: var(--bg-surface);
+  }
+}
+
+@media (max-width: 1180px) {
+  html body .msg-app[data-msg-app] { --msg-rail-w: 280px; }
+}
+
+@media (max-width: 900px) {
+  html body .msg-app[data-msg-app] { --msg-rail-w: 240px; }
+}
+
+/* ---------------------------------------------------------------
+   Collapsible conversation list (desktop) — the thread gets the full
+   width. Hidden on phones, where the list already is its own screen.
+   --------------------------------------------------------------- */
+@media (min-width: 761px) {
+  html body .msg-app[data-msg-app].rail-collapsed { grid-template-columns: minmax(0, 1fr) !important; }
+  html body .msg-app[data-msg-app].rail-collapsed.has-info { grid-template-columns: minmax(0, 1fr) var(--msg-info-w) !important; }
+  .msg-app.rail-collapsed .msg-rail { display: none; }
+}
+@media (min-width: 761px) and (max-width: 1479px) {
+  /* info panel is an overlay at these widths, so it never needs its own column */
+  html body .msg-app[data-msg-app].rail-collapsed.has-info { grid-template-columns: minmax(0, 1fr) !important; }
+}
+@media (max-width: 760px) {
+  .msg-rail-toggle { display: none; }
+}
+
+/* ---------------------------------------------------------------
+   Optimistic upload bubble: local preview + progress ring
+   --------------------------------------------------------------- */
+.msg-upload-wrap { position: relative; }
+.msg-upload-wrap.is-uploading .msg-attachments { opacity: .6; }
+.msg-upload-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.msg-upload-ring {
+  position: relative; width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(0, 0, 0, .55); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+}
+.msg-upload-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.msg-upload-ring circle { fill: none; stroke-width: 4; }
+.msg-upload-ring .track { stroke: rgba(255, 255, 255, .25); }
+.msg-upload-ring .bar { stroke: #fff; stroke-linecap: round; transition: stroke-dashoffset .2s linear; }
+.msg-upload-ring.is-processing svg { animation: msgUploadSpin 1s linear infinite; }
+@keyframes msgUploadSpin { to { transform: rotate(270deg); } }
+.msg-upload-failed { color: var(--color-danger, #e5484d); }
+.msg-link-btn { background: none; border: none; padding: 0; color: inherit; font: inherit; text-decoration: underline; cursor: var(--cur-pointer, pointer); }
+
+/* ---------------------------------------------------------------
+   Video: fixed-size tile in the bubble, full-viewport player on open
+   --------------------------------------------------------------- */
+.msg-attach-video--tile {
+  display: block; position: relative; padding: 0; border: none; background: #000; cursor: var(--cur-pointer, pointer);
+  width: min(260px, 100%); aspect-ratio: 4 / 3; max-height: 220px;
+}
+.msg-attach-video--tile video { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.msg-attach-video__play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 46px; height: 46px; border-radius: 50%; background: rgba(0, 0, 0, .55); color: #fff;
+  display: flex; align-items: center; justify-content: center; pointer-events: none;
+}
+.msg-videoviewer {
+  position: fixed; inset: 0; z-index: 3000; background: rgba(0, 0, 0, .94);
+  display: flex; align-items: center; justify-content: center;
+}
+.msg-videoviewer__video { max-width: 100vw; max-height: 100vh; width: 100%; height: 100%; object-fit: contain; background: #000; }
+.msg-videoviewer__close {
+  position: absolute; top: max(12px, env(safe-area-inset-top)); inset-inline-end: 12px; z-index: 1;
+  color: #fff; background: rgba(0, 0, 0, .55);
+}
+@media (max-width: 760px) {
+  .msg-attach-video--tile { width: min(240px, 70vw); }
+}
+
+/* Attachment-only bubbles: thin frame (the text-bubble padding made a fat
+   coloured border around videos/files), and a fixed tile width so the bubble
+   shrink-wraps the media instead of being wider than it. */
+html body .msg-app .msg-bubble.msg-bubble--attach { padding: 4px !important; border-radius: 16px; }
+.msg-bubble--attach .msg-attachments { margin-top: 0; gap: 4px; }
+.msg-bubble--attach .msg-attach-video--tile { width: 240px; max-width: 100%; border-radius: 12px; }
+.msg-bubble--attach .msg-attach-image-grid img { border-radius: 12px; }
+.msg-bubble--attach .msg-attach-file { margin: 0; }
+@media (max-width: 760px) {
+  .msg-bubble--attach .msg-attach-video--tile { width: min(240px, 66vw); }
+}
+
+/* Thread header with the email + role + presence lines: let it grow with the
+   content instead of clipping it (fixed height cut the name/last-seen lines on
+   some phones / large font sizes), and keep each line to one ellipsised row. */
+html body .msg-app .msg-thread__header { height: auto !important; min-height: var(--msg-header-h); padding-block: 8px; flex-shrink: 0; }
+.msg-thread__peer-meta { line-height: 1.3; }
+.msg-thread__peer-meta > * { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-thread__peer .msg-avatar { flex-shrink: 0; }
+@media (max-width: 760px) {
+  /* phones: slightly smaller status lines; long emails are ellipsised */
+  .msg-thread__peer-meta .msg-thread__status { font-size: 11.5px; }
+}
+
+
+
+/* ==========================================================================
+   Unified header (2026-10-08): every portal uses the Student design — the
+   "Messages" title + subtitle live in the topbar, so the in-page header,
+   the "UIPE / MESSAGES" eyebrow and the breadcrumb are hidden everywhere
+   (the admin shell forces .page-header visible with !important, and the
+   security shell re-shows the eyebrow, hence the !important + specificity).
+   ========================================================================== */
+body.msg-page-active .app-shell .msg-page-header,
+body.msg-page-active .app-shell .insight-eyebrow,
+body.msg-page-active .app-shell .app-shell__main > .breadcrumb { display: none !important; }
+body.msg-page-active .app-shell--insight .app-shell__main { padding-top: var(--space-4); }
+
+/* People search (2026-10-08): photo + role/org rows and the "is this the right person?" card. */
+.msg-picker-list--people { max-height: 280px; }
+.msg-person__meta { display: block; font-size: 11.5px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-person-card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-3) var(--space-4); padding: var(--space-4); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--bg-canvas); }
+.msg-person-card__avatar .msg-avatar { width: 64px; height: 64px; font-size: 22px; }
+.msg-person-card__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 13px; color: var(--text-secondary); overflow-wrap: anywhere; word-break: normal; }
+.msg-person-card__info strong { font-size: 16px; line-height: 1.3; color: var(--text-primary); }
+.msg-person-card__role { color: var(--color-primary); font-weight: 700; font-size: 12px; }
+.msg-person-card > .btn { grid-column: 1 / -1; width: 100%; justify-content: center; }
+@media (max-width: 480px) {
+  .msg-person-card { padding: var(--space-3); gap: var(--space-3); }
+  .msg-person-card__avatar .msg-avatar { width: 52px; height: 52px; font-size: 18px; }
+  .msg-person-card__info strong { font-size: 15px; }
+}
+
+/* ---- Voice message player (components/messaging/VoiceMessage.jsx) ---- */
+.vm { display: flex; align-items: center; gap: 10px; min-width: 230px; max-width: 100%; padding: 4px 2px; }
+.vm__play { width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--color-primary); color: #fff; display: flex; align-items: center; justify-content: center; cursor: var(--cur-pointer, pointer); flex-shrink: 0; }
+.vm__play:disabled { opacity: .5; cursor: var(--cur-default, default); }
+.vm__wave { flex: 1; min-width: 0; height: 32px; display: flex; align-items: center; gap: 2px; cursor: var(--cur-pointer, pointer); touch-action: none; }
+.vm__wave span { flex: 1; min-width: 2px; border-radius: 2px; background: currentColor; opacity: .28; transition: opacity .12s; }
+.vm__wave span.is-done { opacity: 1; background: var(--color-primary); }
+.vm__time { font-size: 12px; font-variant-numeric: tabular-nums; opacity: .8; min-width: 34px; text-align: end; }
+.vm__speed { border: none; border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 700; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); cursor: var(--cur-pointer, pointer); flex-shrink: 0; }
+.msg-row.is-mine .vm__play { background: #fff; color: var(--color-primary); }
+.msg-row.is-mine .vm__wave span.is-done { background: #fff; }
+.msg-row.is-mine .vm__speed { background: rgba(255,255,255,.22); color: #fff; }
+
+.msg-voice { display: block; }
+
+/* ---------------------------------------------------------------
+   Photo / video only messages: no coloured frame around the media.
+   (The bubble's 4px padding showed as a thick border and a long press only worked on that thin edge.)
+   --------------------------------------------------------------- */
+html body .msg-app .msg-row .msg-bubble.msg-bubble--visual {
+  padding: 0 !important; background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+.msg-bubble--visual .msg-attach-image-grid img,
+.msg-bubble--visual .msg-attach-video--tile { border-radius: 14px; }
+/* no system "save image" / text-selection callout on long press - the app's own action bar opens instead */
+.msg-attach-image-grid img, .msg-attach-video--tile, .msg-attach-video--tile video, .msg-gif-img, .msg-sticker-img {
+  -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; touch-action: manipulation;
+}
+
+/* voice note: download button */
+.vm__dl { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: none; border-radius: 50%; flex-shrink: 0; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); cursor: var(--cur-pointer, pointer); transition: background .15s ease, transform .1s ease; }
+.vm__dl:hover:not(:disabled) { background: rgba(var(--color-primary-rgb), .22); }
+.vm__dl:active:not(:disabled) { transform: scale(.92); }
+.vm__dl:disabled { opacity: .5; cursor: progress; }
+.msg-row.is-mine .vm__dl { background: rgba(255,255,255,.22); color: #fff; }
+.msg-row.is-mine .vm__dl:hover:not(:disabled) { background: rgba(255,255,255,.34); }
+.vm__dlmenu { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.vm__dlopt { border: none; border-radius: 999px; padding: 4px 8px; font: inherit; font-size: 10.5px; font-weight: 800; letter-spacing: .02em; background: rgba(var(--color-primary-rgb), .16); color: var(--color-primary); cursor: var(--cur-pointer, pointer); }
+.vm__dlopt:hover { background: var(--color-primary); color: #fff; }
+.vm__dlopt--x { padding: 4px 7px; background: transparent; font-size: 14px; line-height: 1; opacity: .7; }
+.msg-row.is-mine .vm__dlopt { background: rgba(255,255,255,.24); color: #fff; }
+.msg-row.is-mine .vm__dlopt:hover { background: #fff; color: var(--color-primary); }
+.vm__spin { width: 13px; height: 13px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: vm-spin .7s linear infinite; }
+@keyframes vm-spin { to { transform: rotate(360deg); } }
+
+/* ---------------------------------------------------------------
+   Photo / video WITH a caption: the media fills the bubble (thin frame) and the caption sits underneath.
+   --------------------------------------------------------------- */
+html body .msg-app .msg-bubble.msg-bubble--captioned { padding: 4px 4px 6px !important; border-radius: 16px; width: 248px; max-width: 100%; box-sizing: border-box; }
+html body .msg-app .msg-bubble.msg-bubble--captioned:has(.msg-attach-video--inline) { width: min(340px, 78vw); }
+.msg-bubble--captioned .msg-attachments { margin-top: 0; gap: 4px; }
+.msg-bubble--captioned .msg-attach-video--tile,
+.msg-bubble--captioned .msg-attach-video--inline { width: 100%; max-width: none; border-radius: 12px; }
+.msg-bubble--captioned .msg-attach-image-grid img { width: 100%; display: block; border-radius: 12px; }
+.msg-bubble--captioned .msg-reply-quote,
+.msg-bubble--captioned .msg-forward-tag { margin: 2px 4px 6px; }
+.msg-bubble--captioned .msg-caption { padding: 7px 8px 1px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+@media (max-width: 760px) {
+  html body .msg-app .msg-bubble.msg-bubble--captioned { width: min(248px, 70vw); }
+}
+
+/* "Cancel" (undo send, with a countdown) / "Delete" button next to every message I sent */
+.msg-undo-btn {
+  display: inline-flex; align-items: center; gap: 4px; height: 20px; margin-inline-start: 6px; padding: 0 8px; border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  border-radius: 10px; background: transparent; color: var(--text-secondary); font: 600 10.5px/1 inherit; cursor: var(--cur-pointer, pointer); white-space: nowrap;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.msg-undo-btn:hover { background: color-mix(in srgb, var(--danger, #e5484d) 12%, transparent); color: var(--danger, #e5484d); border-color: var(--danger, #e5484d); }
+.msg-undo-btn__n { min-width: 14px; text-align: center; font-variant-numeric: tabular-nums; opacity: .8; }
+.msg-undo-btn--del { opacity: .6; }
+.msg-row:hover .msg-undo-btn--del, .msg-undo-btn--del:focus-visible, .msg-undo-btn--del[aria-expanded="true"] { opacity: 1; }
+@media (hover: none), (max-width: 760px) { .msg-undo-btn--del { opacity: 1; } }
+.msg-bubble--deleted svg { vertical-align: -2px; opacity: .7; }
+
+/* Non-text last message (photo / voice / file) shown as a label in the inbox */
+.msg-conv__preview.is-media { opacity: .85; }
+
+/* ---- Video tile v2: follows the clip's own shape (portrait / landscape) instead of a cropped 4:3 box ---- */
+html body .msg-app .msg-attach-video--tile {
+  aspect-ratio: auto; max-height: none; height: auto; overflow: hidden;
+  background: linear-gradient(135deg, #1d2245, #0a0c18);
+}
+html body .msg-app .msg-attach-video--tile video {
+  width: 100%; height: auto; max-height: min(62vh, 440px); object-fit: contain; background: transparent; min-height: 120px;
+}
+html body .msg-app .msg-attach-video--tile video[data-ratio="portrait"] { object-fit: cover; }
+html body .msg-app .msg-bubble .msg-attach-video--tile { width: min(260px, 68vw); }
+html body .msg-app .msg-bubble .msg-attach-video--tile:has(video[data-ratio="portrait"]) { width: min(200px, 56vw); }
+html body .msg-app .msg-attach-video__play { width: 52px; height: 52px; background: rgba(0, 0, 0, .5); backdrop-filter: blur(4px); box-shadow: 0 0 0 2px rgba(255, 255, 255, .85) inset; }
+
+/* ---- Video tile: local-copy states (download ring, size chip, poster before the file is on the phone) ---- */
+.msg-attach-video__poster { width: 100%; display: block; max-height: min(62vh, 440px); object-fit: cover; min-height: 120px; }
+.msg-attach-video__blank { display: block; width: 100%; aspect-ratio: 4 / 3; max-height: 260px; }
+.msg-attach-video__play--busy { background: rgba(0, 0, 0, .5); box-shadow: none; }
+.msg-attach-video__play--busy svg { position: absolute; inset: 0; }
+.msg-attach-video__size {
+  position: absolute; inset-inline-start: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px;
+  font-size: 11px; color: #fff; background: rgba(0, 0, 0, .55); pointer-events: none;
+}
+
+/* ===== Poll bubble (WhatsApp-style) ===== */
+.poll { width: min(320px, 72vw); min-width: 230px; display: flex; flex-direction: column; gap: 6px; padding: 2px 0; }
+.poll__q { display: flex; gap: 8px; align-items: flex-start; font-weight: 700; font-size: 14.5px; line-height: 1.45; overflow-wrap: anywhere; }
+.poll__q-ico { flex: none; width: 24px; height: 24px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in srgb, currentColor 14%, transparent); }
+.poll__hint { font-size: 11.5px; opacity: .68; padding-inline-start: 32px; margin-top: -2px; }
+.poll__opts { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+.poll__opt { all: unset; box-sizing: border-box; display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 8px 6px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .15s; }
+.poll__opt:hover { background: color-mix(in srgb, currentColor 7%, transparent); }
+.poll__opt:active { background: color-mix(in srgb, currentColor 12%, transparent); }
+.poll__opt:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; }
+.poll__check { flex: none; width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; border: 2px solid color-mix(in srgb, currentColor 45%, transparent); display: inline-flex; align-items: center; justify-content: center; color: #fff; transition: background .15s, border-color .15s, transform .15s; }
+.poll__opt.is-picked .poll__check { background: var(--color-primary, #2563eb); border-color: var(--color-primary, #2563eb); transform: scale(1.05); }
+.msg-row.is-mine .poll__opt.is-picked .poll__check { background: #16a34a; border-color: #16a34a; }
+.poll__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.poll__row { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; font-size: 13.5px; }
+.poll__label { overflow-wrap: anywhere; line-height: 1.4; }
+.poll__opt.is-picked .poll__label { font-weight: 700; }
+.poll__count { flex: none; font-variant-numeric: tabular-nums; font-size: 12.5px; opacity: .8; }
+.poll__bar { display: block; height: 5px; border-radius: 99px; background: color-mix(in srgb, currentColor 14%, transparent); overflow: hidden; }
+.poll__bar-fill { display: block; height: 100%; border-radius: 99px; background: color-mix(in srgb, currentColor 55%, transparent); transition: width .35s ease; }
+.poll__opt.is-picked .poll__bar-fill, .poll__opt.is-lead .poll__bar-fill { background: var(--color-primary, #2563eb); }
+.msg-row.is-mine .poll__opt.is-picked .poll__bar-fill, .msg-row.is-mine .poll__opt.is-lead .poll__bar-fill { background: #16a34a; }
+.poll__foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 2px; padding-top: 6px; border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+.poll__total { font-size: 12px; opacity: .72; }
+.poll__toggle { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 700; cursor: pointer; padding: 4px 8px; border-radius: 8px; color: var(--color-primary, #2563eb); }
+.msg-row.is-mine .poll__toggle { color: inherit; }
+.poll__toggle:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+.poll__toggle:disabled { opacity: .4; cursor: default; }
+.poll__toggle svg { transition: transform .2s; }
+.poll__toggle.is-open svg { transform: rotate(180deg); }
+.poll__voters { display: flex; flex-direction: column; gap: 10px; padding: 8px 4px 2px; border-radius: 10px; animation: pollOpen .18s ease; }
+@keyframes pollOpen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.poll__group-head { display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; font-weight: 700; padding-bottom: 4px; margin-bottom: 2px; border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
+.poll__voter { display: flex; align-items: center; gap: 8px; padding: 3px 0; font-size: 13px; }
+.poll__voter-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.poll__empty { font-size: 12.5px; opacity: .7; text-align: center; padding: 6px 0; }

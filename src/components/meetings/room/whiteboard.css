@@ -1,0 +1,91 @@
+/* Whiteboard (Whiteboard.jsx). Fills .meeting-room__stage; always its own light "paper" (inverted by a filter for the dark board). */
+.wb { container-type: inline-size; position: absolute; inset: 0; z-index: 6; overflow: hidden; border-radius: var(--mr-radius, 18px); background: #fff; color: #111827; outline: none; user-select: none; -webkit-user-select: none;
+  border: 1px solid var(--mr-line-strong, rgba(255,255,255,.16)); font-family: Inter, 'Segoe UI', 'Noto Sans Arabic', system-ui, sans-serif; }
+.wb__cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: crosshair; }
+.wb.is-dark .wb__cv { filter: invert(1) hue-rotate(180deg); }
+.wb.is-dark { background: #0e0f13; }
+.wb__cv.tool-select { cursor: default; } .wb__cv.tool-hand, .wb__cv.is-view { cursor: grab; } .wb__cv.tool-text, .wb__cv.tool-note { cursor: text; } .wb__cv.tool-eraser { cursor: none; } .wb__cv.tool-laser { cursor: none; }
+
+/* floating glass bars */
+.wb__top, .wb__tools, .wb__style, .wb__sel, .wb__card {
+  background: rgba(255,255,255,.94); color: #1f2937; backdrop-filter: blur(10px);
+  border: 1px solid rgba(15,23,42,.1); box-shadow: 0 6px 22px rgba(15,23,42,.14);
+}
+.wb.is-dark .wb__top, .wb.is-dark .wb__tools, .wb.is-dark .wb__style, .wb.is-dark .wb__sel, .wb.is-dark .wb__card { background: rgba(26,28,36,.94); color: #e8eaf1; border-color: rgba(255,255,255,.12); }
+
+.wb__top { position: absolute; z-index: 3; top: 10px; left: 10px; right: 10px; display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 14px; flex-wrap: wrap; }
+.wb__title { flex: 1; min-width: 0; text-align: center; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wb__viewonly { margin-inline-start: 8px; font-style: normal; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: rgba(245,158,11,.18); color: #b45309; }
+.wb__grp { display: inline-flex; align-items: center; gap: 2px; }
+.wb__zoom { gap: 0; }
+.wb__btn { display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 10px; background: transparent; color: inherit; cursor: pointer; transition: background .12s; }
+.wb__btn:hover:not(:disabled) { background: rgba(100,116,139,.18); }
+.wb__btn:disabled { opacity: .35; cursor: default; }
+.wb__btn.is-on { background: rgba(59,130,246,.18); color: #2563eb; }
+.wb__btn.is-danger:hover:not(:disabled) { background: rgba(239,68,68,.16); color: #dc2626; }
+.wb__pct { min-width: 52px; height: 34px; border: 0; border-radius: 10px; background: transparent; color: inherit; font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; font-variant-numeric: tabular-nums; }
+.wb__pct:hover { background: rgba(100,116,139,.18); }
+.wb__stop { display: inline-flex; align-items: center; gap: 6px; height: 34px; margin-inline-start: 4px; padding: 0 12px 0 8px; border: 0; border-radius: 10px; background: #ef4444; color: #fff; font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; }
+.wb__stop svg { width: 16px; height: 16px; } .wb__stop:hover { filter: brightness(1.08); }
+
+/* tools: vertical on the left */
+.wb__tools { position: absolute; z-index: 3; left: 10px; top: 66px; display: flex; flex-direction: column; gap: 2px; padding: 5px; border-radius: 14px; max-height: calc(100% - 150px); overflow-y: auto; scrollbar-width: none; }
+.wb__tools::-webkit-scrollbar { display: none; }
+.wb__tool { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border: 0; border-radius: 10px; background: transparent; color: inherit; cursor: pointer; transition: background .12s, transform .08s; }
+.wb__tool:hover { background: rgba(100,116,139,.18); }
+.wb__tool.is-on { background: #2563eb; color: #fff; box-shadow: 0 2px 8px rgba(37,99,235,.4); }
+.wb__tool:active { transform: scale(.94); }
+
+/* style panel: bottom centre */
+.wb__style { position: absolute; z-index: 3; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 7px 12px; border-radius: 16px; max-width: calc(100% - 140px); flex-wrap: wrap; justify-content: center; }
+.wb__colors, .wb__widths, .wb__sizes { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.wb__sw { position: relative; width: 24px; height: 24px; padding: 0; border-radius: 50%; border: 2px solid rgba(100,116,139,.35); background: var(--c); cursor: pointer; transition: transform .1s; }
+.wb__sw:hover { transform: scale(1.12); }
+.wb__sw.is-on { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,.35); transform: scale(1.1); }
+.wb__sw--custom { overflow: hidden; background: conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }
+.wb__sw--custom.is-on { background: var(--c); }
+.wb__sw--custom input { position: absolute; inset: -6px; opacity: 0; cursor: pointer; width: 40px; height: 40px; }
+.wb__w { display: grid; place-items: center; width: 32px; height: 28px; border: 0; border-radius: 8px; background: transparent; cursor: pointer; }
+.wb__w i { display: block; width: 18px; border-radius: 99px; background: currentColor; min-height: 2px; }
+.wb__w:hover { background: rgba(100,116,139,.18); } .wb__w.is-on { background: rgba(37,99,235,.16); color: #2563eb; }
+.wb__chip { height: 28px; padding: 0 12px; border: 1px solid rgba(100,116,139,.35); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.wb__chip:hover { background: rgba(100,116,139,.14); } .wb__chip.is-on { background: #2563eb; border-color: #2563eb; color: #fff; }
+.wb__chip.is-danger { background: #ef4444; border-color: #ef4444; color: #fff; }
+.wb__hintline { font-size: 12px; opacity: .7; }
+
+.wb__sel { position: absolute; z-index: 3; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 14px; border-radius: 14px; font-size: 12.5px; font-weight: 600; }
+.wb__sel button { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border: 0; border-radius: 9px; background: rgba(239,68,68,.14); color: #dc2626; font: inherit; font-weight: 700; cursor: pointer; }
+.wb__sel button svg { width: 15px; height: 15px; }
+.wb__sel ~ .wb__style { display: none; }
+
+.wb__editor { position: absolute; z-index: 4; margin: 0; padding: 2px 4px; border: 1.5px dashed #3b82f6; border-radius: 6px; background: rgba(255,255,255,.7); resize: none; outline: none; overflow: hidden; white-space: pre; font-family: "Noto Sans Arabic", Inter, "Segoe UI", system-ui, sans-serif; user-select: text; -webkit-user-select: text; min-width: 60px; }
+.wb__editor.is-note { white-space: pre-wrap; word-break: break-word; border: 1.5px solid #3b82f6; box-shadow: 0 6px 18px rgba(0,0,0,.2); }
+.wb.is-dark .wb__editor { background: rgba(20,22,28,.85); filter: none; }
+
+.wb__modal { position: absolute; inset: 0; z-index: 9; display: grid; place-items: center; background: rgba(15,23,42,.35); }
+.wb__card { width: min(340px, calc(100% - 32px)); padding: 18px; border-radius: 16px; display: flex; flex-direction: column; gap: 6px; }
+.wb__card p { margin: 0; font-size: 13px; opacity: .7; }
+.wb__card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+
+/* narrow stage (phone, or a side panel open): tools become a bottom scrolling row, style panel sits above it — container query, not viewport */
+@container (max-width: 720px) {
+  .wb__top { gap: 4px; padding: 4px 6px; top: 6px; left: 6px; right: 6px; }
+  .wb__title { display: none; }
+  .wb__zoom { order: 3; margin-inline-start: auto; }
+  .wb__btn { width: 32px; height: 32px; }
+  .wb__stop span { display: none; } .wb__stop { padding: 0 8px; }
+  .wb__tools { top: auto; bottom: 8px; left: 8px; right: 8px; flex-direction: row; max-height: none; overflow-x: auto; overflow-y: hidden; border-radius: 16px; }
+  .wb__tool { width: 42px; height: 42px; }
+  .wb__style, .wb__sel { bottom: 66px; max-width: calc(100% - 16px); padding: 6px 10px; gap: 8px; }
+  .wb__sw { width: 26px; height: 26px; }
+}
+@media (prefers-reduced-motion: reduce) { .wb__tool, .wb__sw, .wb__btn { transition: none; } }
+
+/* Text / sticky-note box. The site-wide reset gives EVERY textarea width:100%, a 1px border, big padding, a focus ring and
+   "transition: all" — the box opened as wide as the whole page, and the transition made autoSize() measure the OLD (100%) width.
+   Pin it to its content: no width from the reset, no animation, no global ring. */
+.wb .wb__editor { width: auto; max-width: none; transition: none; box-sizing: content-box; border: 1.5px solid #3b82f6; border-radius: 8px; padding: 3px 7px; background: rgba(255,255,255,.88); box-shadow: 0 0 0 3px rgba(59,130,246,.16); caret-color: #3b82f6; }
+.wb .wb__editor:hover, .wb .wb__editor:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,.16); }
+.wb .wb__editor.is-note, .wb .wb__editor.is-note:hover, .wb .wb__editor.is-note:focus { box-sizing: border-box; box-shadow: 0 6px 18px rgba(0,0,0,.2), 0 0 0 3px rgba(59,130,246,.18); }
+.wb.is-dark .wb__editor:not(.is-note) { background: rgba(20,22,28,.9); }
+.wb .wb__editor::placeholder { color: rgba(100,110,130,.75); opacity: 1; }

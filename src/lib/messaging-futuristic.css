@@ -1,0 +1,322 @@
+/* ==========================================================================
+   Messages — "Aurora glass" look for the conversation list + stories row.
+   Loaded LAST (after messaging-mobile / laptop / redesign) so it wins over the flat rows and old chips.
+   Pure CSS: no markup was changed. RTL-safe (logical properties), light + dark, reduced-motion aware.
+   ========================================================================== */
+
+.msg-app {
+  --fx-a: var(--color-primary);
+  --fx-b: #8b5cf6;
+  --fx-c: #22d3ee;
+  --fx-grad: linear-gradient(135deg, var(--fx-a), var(--fx-b) 55%, var(--fx-c));
+  --fx-glass: color-mix(in srgb, var(--bg-surface) 72%, transparent);
+  --fx-glass-strong: color-mix(in srgb, var(--bg-surface) 90%, transparent);
+  --fx-line: color-mix(in srgb, var(--border-subtle) 80%, transparent);
+  --fx-glow: rgba(var(--color-primary-rgb), .38);
+}
+
+/* ------------------------------------------------------------ rail surface */
+html body .msg-app .msg-rail {
+  position: relative; isolation: isolate;
+  background:
+    radial-gradient(420px 260px at 105% -6%, color-mix(in srgb, var(--fx-b) 16%, transparent), transparent 62%),
+    radial-gradient(380px 280px at -8% 102%, color-mix(in srgb, var(--fx-c) 13%, transparent), transparent 60%),
+    var(--bg-canvas);
+}
+html body.msg-page-active:not(.msg-thread-open) .msg-app[data-msg-app] > .msg-rail {
+  background:
+    radial-gradient(420px 260px at 105% -6%, color-mix(in srgb, var(--fx-b) 16%, transparent), transparent 62%),
+    radial-gradient(380px 280px at -8% 102%, color-mix(in srgb, var(--fx-c) 13%, transparent), transparent 60%),
+    var(--bg-canvas);
+}
+[data-theme="dark"] .msg-app .msg-rail,
+.msg-app[data-wall="graphite"] .msg-rail, .msg-app[data-wall="midnight"] .msg-rail { --fx-glass: color-mix(in srgb, #ffffff 5%, transparent); --fx-glass-strong: color-mix(in srgb, #ffffff 8%, transparent); --fx-line: rgba(255, 255, 255, .09); }
+
+/* ------------------------------------------------------------------ header */
+html body .msg-app .mr-head { padding: 20px 16px 10px; gap: 14px; }
+html body .msg-app .mr-title {
+  white-space: nowrap; flex-shrink: 0; font-size: 26px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1;
+  background: linear-gradient(120deg, var(--text-primary) 35%, var(--fx-a) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+html body .msg-app .mr-new {
+  height: 40px; padding: 0 16px; border-radius: 999px; background: var(--fx-grad); background-size: 140% 140%;
+  box-shadow: 0 8px 22px -6px var(--fx-glow), inset 0 1px 0 rgba(255, 255, 255, .35);
+  transition: transform .18s ease, box-shadow .18s ease, background-position .4s ease;
+}
+html body .msg-app .mr-new:hover { filter: none; background-position: 100% 50%; transform: translateY(-1px); box-shadow: 0 12px 28px -6px var(--fx-glow), inset 0 1px 0 rgba(255, 255, 255, .4); }
+html body .msg-app .mr-iconbtn {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--fx-glass); border-color: var(--fx-line);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+html body .msg-app .mr-iconbtn:hover, html body .msg-app .mr-iconbtn.is-open { background: rgba(var(--color-primary-rgb), .14); color: var(--color-primary); border-color: rgba(var(--color-primary-rgb), .35); }
+html body .msg-app .mr-menu { border-radius: 18px; background: var(--fx-glass-strong); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); border-color: var(--fx-line); box-shadow: 0 24px 60px -16px rgba(10, 15, 40, .5); }
+html body .msg-app .mr-menu__item { border-radius: 12px; }
+
+html body .msg-app .mr-search {
+  height: 46px; padding: 0 16px; border-radius: 999px; background: var(--fx-glass); border: 1px solid var(--fx-line);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+html body .msg-app .mr-search:focus-within {
+  border-color: transparent; background: var(--fx-glass-strong);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), .55), 0 10px 30px -10px var(--fx-glow);
+}
+html body .msg-app .mr-search svg { color: var(--color-primary); opacity: .85; }
+
+/* narrow rail (laptop 300px): keep the title on one line, "new chat" becomes a round + button */
+html body .msg-app .msg-rail { container-type: inline-size; container-name: mrail; }
+@container mrail (max-width: 340px) {
+  .mr-title { font-size: 23px; }
+  .mr-new { width: 40px; padding: 0; justify-content: center; }
+  .mr-new span { display: none; }
+}
+
+/* ----------------------------------------------------------------- filters */
+html body .msg-app .mr-filters { gap: 8px; padding: 2px 16px 12px; border-bottom: 0; }
+html body .msg-app .mr-filter {
+  height: 34px; padding: 0 15px; border-radius: 999px; background: var(--fx-glass); border: 1px solid var(--fx-line);
+  color: var(--text-secondary); font-weight: 600; transition: transform .15s ease, box-shadow .2s ease, color .15s ease, background .15s ease;
+}
+html body .msg-app .mr-filter:hover { transform: translateY(-1px); color: var(--text-primary); background: var(--fx-glass-strong); }
+html body .msg-app .mr-filter.is-active {
+  background: var(--fx-grad); border-color: transparent; color: #fff;
+  box-shadow: 0 8px 20px -8px var(--fx-glow), inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+html body .msg-app .mr-filter b { background: rgba(var(--color-primary-rgb), .16); color: var(--color-primary); }
+html body .msg-app .mr-filter.is-active b { background: rgba(255, 255, 255, .26); color: #fff; }
+
+/* ----------------------------------------------------------------- stories */
+html body .msg-app .st-strip { gap: 14px; padding: 6px 16px 14px; border-bottom: 0; }
+html body .msg-app .st-tile { width: 68px; gap: 7px; }
+html body .msg-app .st-tile em { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); }
+html body .msg-app .st-ring { width: 62px; height: 62px; padding: 3px; background: var(--fx-line); transition: transform .2s cubic-bezier(.3, 1.4, .5, 1), box-shadow .25s ease; }
+html body .msg-app .st-ring > .st-face { border: 3px solid var(--bg-canvas); }
+html body .msg-app .st-tile:hover .st-ring { transform: translateY(-2px) scale(1.04); }
+html body .msg-app .st-ring.is-new {
+  background: conic-gradient(from var(--fx-spin, 0deg), var(--fx-c), var(--fx-a), var(--fx-b), #f472b6, var(--fx-c));
+  box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), .0), 0 8px 22px -6px var(--fx-glow);
+  animation: fx-spin 6s linear infinite;
+}
+html body .msg-app .st-ring.is-mine { background: conic-gradient(from var(--fx-spin, 0deg), var(--fx-c), var(--fx-a), var(--fx-c)); box-shadow: 0 8px 20px -8px var(--fx-glow); }
+html body .msg-app .st-ring.is-seen { background: var(--fx-line); }
+html body .msg-app .st-ring--add { border: 2px dashed rgba(var(--color-primary-rgb), .45); color: var(--color-primary); background: var(--fx-glass); }
+html body .msg-app .st-plus { width: 22px; height: 22px; background: var(--fx-grad); border: 2.5px solid var(--bg-canvas); box-shadow: 0 4px 10px -2px var(--fx-glow); }
+@property --fx-spin { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes fx-spin { to { --fx-spin: 360deg; } }
+
+/* -------------------------------------------------------------------- list */
+html body .msg-app .msg-rail__list { padding: 4px 6px 16px; }
+html body .msg-app .msg-conv-row { margin: 0; border: 0; }
+html body.msg-page-active .msg-app .msg-conv-row,
+html body.msg-page-active .msg-app .msg-conv-row:last-child { border: 0; }
+
+html body .msg-app .msg-conv,
+html body.msg-page-active .msg-app .msg-conv {
+  margin: 3px 6px; width: calc(100% - 12px); padding: 11px 14px 11px 12px; gap: 14px; border-radius: 22px;
+  background: transparent; border: 1px solid transparent; border-inline-start: 1px solid transparent;
+  transition: transform .18s ease, background .2s ease, border-color .2s ease, box-shadow .25s ease;
+}
+html body .msg-app .msg-conv:hover {
+  background: var(--fx-glass); border-color: var(--fx-line); transform: translateY(-1px);
+  box-shadow: 0 10px 26px -14px rgba(10, 15, 40, .35);
+}
+html body .msg-app .msg-conv:active { transform: scale(.985); }
+html body .msg-app .msg-conv:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* active chat: gradient hairline border + soft glow */
+html body .msg-app .msg-conv.is-active,
+html body.msg-page-active .msg-app .msg-conv.is-active {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box,
+    var(--fx-grad) border-box;
+  box-shadow: 0 14px 34px -16px var(--fx-glow);
+}
+html body .msg-app .msg-conv-row.is-selected .msg-conv { background: rgba(var(--color-primary-rgb), .14); border-color: rgba(var(--color-primary-rgb), .35); }
+
+/* avatar: bigger, soft glow; unread = gradient ring */
+html body .msg-app .msg-conv .msg-avatar,
+html body.msg-page-active .msg-app .msg-conv .msg-avatar {
+  width: 54px; height: 54px; font-size: 17px; font-weight: 700;
+  box-shadow: 0 8px 20px -10px rgba(10, 15, 40, .55);
+  transition: box-shadow .25s ease, transform .2s ease;
+}
+html body .msg-app .msg-conv:hover .msg-avatar { transform: scale(1.04); }
+html body .msg-app .msg-conv.is-unread .msg-avatar {
+  box-shadow: 0 0 0 2.5px var(--bg-canvas), 0 0 0 4.5px rgba(var(--color-primary-rgb), .85), 0 10px 24px -8px var(--fx-glow);
+}
+html body .msg-app .msg-avatar--group { border-radius: 36%; background: linear-gradient(135deg, var(--uip-teal-500, #14b8a6), var(--fx-a)); }
+html body .msg-app .msg-conv .msg-avatar--group { border-radius: 36%; }
+
+/* text */
+html body .msg-app .msg-conv__row1 { align-items: center; }
+html body .msg-app .msg-conv__name,
+html body.msg-page-active .msg-app .msg-conv__name { font-size: 15.5px; font-weight: 650; letter-spacing: -.005em; }
+html body .msg-app .msg-conv.is-unread .msg-conv__name { font-weight: 800; }
+html body .msg-app .msg-conv__time,
+html body.msg-page-active .msg-app .msg-conv__time { font-size: 11.5px; font-weight: 600; letter-spacing: .01em; color: var(--text-secondary); opacity: .9; }
+html body .msg-app .msg-conv.is-unread .msg-conv__time { color: var(--color-primary); opacity: 1; }
+html body .msg-app .msg-conv__row2 { margin-top: 4px; }
+html body .msg-app .msg-conv__preview,
+html body.msg-page-active .msg-app .msg-conv__preview { font-size: 13.5px; line-height: 1.35; opacity: .92; }
+html body .msg-app .msg-conv.is-unread .msg-conv__preview { opacity: 1; color: var(--text-primary); }
+
+/* unread count: glowing gradient pill; dot: pulsing */
+html body .msg-app .msg-unread-count {
+  min-width: 22px; height: 22px; padding: 0 7px; border-radius: 999px; display: inline-grid; place-items: center;
+  font-size: 11.5px; font-weight: 800; color: #fff; background: var(--fx-grad);
+  box-shadow: 0 6px 14px -4px var(--fx-glow), inset 0 1px 0 rgba(255, 255, 255, .4);
+}
+html body .msg-app .msg-unread-dot { width: 11px; height: 11px; background: var(--fx-grad); box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), .18); animation: fx-pulse 2.2s ease-in-out infinite; }
+@keyframes fx-pulse { 50% { box-shadow: 0 0 0 7px rgba(var(--color-primary-rgb), .0); } }
+html body .msg-app .msg-conv__pin { color: var(--fx-b); }
+
+/* delete button on hover (desktop) matches the rounded card */
+html body .msg-app .msg-conv__del { border-radius: 12px; background: var(--fx-glass-strong); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+
+/* ---------------------------------------------------------- empty + skeleton */
+html body .msg-app .msg-empty-state { margin: 18px 12px; padding: 28px 18px; border-radius: 22px; background: var(--fx-glass); border: 1px dashed var(--fx-line); }
+html body .msg-app .msg-skeleton-row { border-radius: 22px; background: var(--fx-glass); margin: 6px; }
+html body .msg-app .msg-skeleton-avatar { border-radius: 50%; }
+
+/* ----------------------------------------------------------- selection bar */
+html body .msg-app .msg-select-bar { margin: 4px 12px 8px; border-radius: 18px; background: var(--fx-glass-strong); border: 1px solid var(--fx-line); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+
+/* ------------------------------------------------------------------ phones */
+@media (max-width: 760px) {
+  html body .msg-app .mr-head { padding: 16px 14px 8px; }
+  html body .msg-app .mr-title { font-size: 28px; }
+  html body .msg-app .mr-filters, html body .msg-app .st-strip { padding-inline: 14px; }
+  html body.msg-page-active .msg-app .msg-rail__list { padding: 2px 4px 18px; }
+  html body.msg-page-active .msg-app .msg-conv { margin: 2px 4px; width: calc(100% - 8px); padding: 10px 12px; }
+  html body.msg-page-active .msg-app .msg-conv.is-active { background: linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box, var(--fx-grad) border-box; }
+  html body .msg-app .msg-conv:hover { transform: none; }
+}
+@media (max-width: 360px) {
+  html body .msg-app .msg-conv .msg-avatar, html body.msg-page-active .msg-app .msg-conv .msg-avatar { width: 48px; height: 48px; }
+  html body .msg-app .st-tile { width: 62px; }
+  html body .msg-app .st-ring { width: 56px; height: 56px; }
+}
+
+/* ------------------------------------------------------------ reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html body .msg-app .st-ring.is-new, html body .msg-app .msg-unread-dot { animation: none; }
+  html body .msg-app .msg-conv, html body .msg-app .mr-new, html body .msg-app .mr-filter, html body .msg-app .st-ring { transition: none; }
+}
+
+
+/* ==========================================================================
+   Chat themes — same family as the AI assistant themes (aurora · lagoon · forest · rose · amber · graphite · midnight).
+   A theme re-declares the design tokens on .msg-app, so the list, header, composer, details panel and bubbles all follow it.
+   The palette block is shared with the little preview swatch in the details panel.
+   ========================================================================== */
+.msg-app[data-wall="aurora"],   .msg-wall-swatch--aurora   { --color-primary: #6d5efc; --color-primary-rgb: 109, 94, 252; --color-primary-hover: #5b4be6; --fx-b: #b25cf2; --fx-c: #f0abfc; --t1: 168, 120, 255; --t2: 109, 94, 252; --tb1: #f6f3ff; --tb2: #eef0ff; --tbd1: #17123a; --tbd2: #0f0c26; }
+.msg-app[data-wall="lagoon"],   .msg-wall-swatch--lagoon   { --color-primary: #0b8fa6; --color-primary-rgb: 11, 143, 166; --color-primary-hover: #087a8e; --fx-b: #3b82f6; --fx-c: #22d3ee; --t1: 59, 130, 246; --t2: 14, 165, 183; --tb1: #eefaff; --tb2: #e2f1fa; --tbd1: #0b2231; --tbd2: #07151f; }
+.msg-app[data-wall="forest"],   .msg-wall-swatch--forest   { --color-primary: #11865f; --color-primary-rgb: 17, 134, 95; --color-primary-hover: #0c7351; --fx-b: #5cb85c; --fx-c: #2dd4bf; --t1: 92, 184, 92; --t2: 18, 161, 116; --tb1: #f1fbf5; --tb2: #e4f4eb; --tbd1: #0d2319; --tbd2: #08150f; }
+.msg-app[data-wall="rose"],     .msg-wall-swatch--rose     { --color-primary: #d93f78; --color-primary-rgb: 217, 63, 120; --color-primary-hover: #c22f66; --fx-b: #ff8a65; --fx-c: #f9a8d4; --t1: 255, 138, 101; --t2: 229, 72, 127; --tb1: #fff5f8; --tb2: #fbe9f0; --tbd1: #2a1220; --tbd2: #1a0b13; }
+.msg-app[data-wall="amber"],    .msg-wall-swatch--amber    { --color-primary: #c9690a; --color-primary-rgb: 201, 105, 10; --color-primary-hover: #b05b07; --fx-b: #ef6a3c; --fx-c: #fbbf24; --t1: 245, 158, 11; --t2: 239, 106, 60; --tb1: #fffaf0; --tb2: #fbefd9; --tbd1: #2a1d0a; --tbd2: #1a1106; }
+.msg-app[data-wall="graphite"], .msg-wall-swatch--graphite { --color-primary: #8ab4ff; --color-primary-rgb: 138, 180, 255; --color-primary-hover: #a9c7ff; --fx-b: #8b7bff; --fx-c: #5eead4; --t1: 120, 140, 255; --t2: 94, 234, 212; --tb1: #14151a; --tb2: #0d0e11; --tbd1: #14151a; --tbd2: #0d0e11; }
+.msg-app[data-wall="midnight"], .msg-wall-swatch--midnight { --color-primary: #8794ff; --color-primary-rgb: 135, 148, 255; --color-primary-hover: #a3adff; --fx-b: #6366f1; --fx-c: #22d3ee; --t1: 99, 102, 241; --t2: 34, 211, 238; --tb1: #121739; --tb2: #0a0e24; --tbd1: #121739; --tbd2: #0a0e24; }
+
+/* app tokens: light themes keep the site's text/surface and only tint the canvas + borders */
+html body .msg-app[data-wall="aurora"]   { --bg-canvas: #f3f1ff; --border-subtle: #e2defa; }
+html body .msg-app[data-wall="lagoon"]   { --bg-canvas: #ebf6fb; --border-subtle: #d3e8f1; }
+html body .msg-app[data-wall="forest"]   { --bg-canvas: #edf8f1; --border-subtle: #d4eadc; }
+html body .msg-app[data-wall="rose"]     { --bg-canvas: #fdf0f4; --border-subtle: #f5d9e3; }
+html body .msg-app[data-wall="amber"]    { --bg-canvas: #fdf5e8; --border-subtle: #f1e2c7; }
+/* ... and when the whole site is dark they become deep, tinted versions of themselves */
+[data-theme="dark"] body .msg-app[data-msg-app][data-wall="aurora"]   { --bg-canvas: #100d26; --border-subtle: rgba(190, 170, 255, .14); }
+[data-theme="dark"] body .msg-app[data-msg-app][data-wall="lagoon"]   { --bg-canvas: #07151f; --border-subtle: rgba(120, 210, 235, .14); }
+[data-theme="dark"] body .msg-app[data-msg-app][data-wall="forest"]   { --bg-canvas: #08150f; --border-subtle: rgba(130, 230, 180, .13); }
+[data-theme="dark"] body .msg-app[data-msg-app][data-wall="rose"]     { --bg-canvas: #1a0b13; --border-subtle: rgba(255, 170, 200, .14); }
+[data-theme="dark"] body .msg-app[data-msg-app][data-wall="amber"]    { --bg-canvas: #1a1106; --border-subtle: rgba(255, 200, 120, .14); }
+
+/* dark themes: full token set (they stay dark in the light site theme too) */
+html body .msg-app[data-wall="graphite"] {
+  --bg-surface: #17181c; --bg-canvas: #0f1013; --text-primary: #ececf1; --text-secondary: #9b9ca8; --border-subtle: rgba(255, 255, 255, .09);
+  --glass-bg: rgba(255, 255, 255, .07); --msg-bubble-theirs: #1f2127; color-scheme: dark;
+}
+html body .msg-app[data-wall="midnight"] {
+  --bg-surface: #141937; --bg-canvas: #0c1026; --text-primary: #e9edff; --text-secondary: #9ba6d6; --border-subtle: rgba(160, 175, 255, .14);
+  --glass-bg: rgba(160, 175, 255, .10); --msg-bubble-theirs: #1b2147; color-scheme: dark;
+}
+
+/* FIX (dark/light wallpaper text): the wallpaper redefines --text-primary / --bg-* on .msg-app,
+   but any text with no colour of its own (names, toggle labels, member rows...) inherits from <body>,
+   i.e. from the SITE theme -> dark text on graphite/midnight (and light text on light walls in dark mode).
+   Giving the app root its own colour makes every inheriting element follow the wallpaper's tokens. */
+html body .msg-app[data-wall] { color: var(--text-primary); }
+/* form controls don't inherit colour by default; zero-specificity so any component rule still wins */
+:where(.msg-app[data-wall]) :where(button, input, textarea, select) { color: inherit; }
+:where(.msg-app[data-wall]) :where(input, textarea)::placeholder { color: var(--text-secondary); opacity: .85; }
+/* secondary text on the two dark walls: keep it readable on the glass surfaces */
+html body .msg-app[data-wall="graphite"], html body .msg-app[data-wall="midnight"] { --text-secondary: color-mix(in srgb, var(--text-primary) 68%, transparent); }
+
+/* animated-background colours follow the theme */
+html body .msg-app[data-wall]:not([data-wall="dots"]) { --wall-a: rgba(var(--t1), .30); --wall-b: rgba(var(--t2), .24); --wall-d: rgba(var(--color-primary-rgb), .20); }
+
+/* the wallpaper itself: soft colour blooms + a fine pattern, over a tinted base */
+html body .msg-app[data-msg-app][data-wall]:not([data-wall="dots"]):not([data-wall="custom"]) .msg-thread {
+  background:
+    var(--msg-pattern, radial-gradient(rgba(var(--color-primary-rgb), .14) 1.2px, transparent 1.3px) 0 0 / 24px 24px),
+    radial-gradient(560px 360px at 12% 4%, rgba(var(--t1), .30), transparent 62%),
+    radial-gradient(580px 400px at 95% 96%, rgba(var(--t2), .22), transparent 60%),
+    linear-gradient(180deg, var(--tb1), var(--tb2));
+}
+[data-theme="dark"] body .msg-app[data-msg-app][data-wall]:not([data-wall="dots"]):not([data-wall="graphite"]):not([data-wall="midnight"]):not([data-wall="custom"]) .msg-thread {
+  background:
+    radial-gradient(rgba(255, 255, 255, .06) 1.2px, transparent 1.3px) 0 0 / 24px 24px,
+    radial-gradient(560px 360px at 12% 4%, rgba(var(--t1), .20), transparent 62%),
+    radial-gradient(580px 400px at 95% 96%, rgba(var(--t2), .15), transparent 60%),
+    linear-gradient(180deg, var(--tbd1), var(--tbd2));
+}
+html body .msg-app[data-wall="graphite"] { --msg-pattern: linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px) 0 0 / 30px 30px, linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px) 0 0 / 30px 30px; }
+html body .msg-app[data-wall="midnight"] {
+  --msg-pattern:
+    radial-gradient(1.4px 1.4px at 18% 28%, rgba(255, 255, 255, .7), transparent 60%), radial-gradient(1px 1px at 72% 18%, rgba(255, 255, 255, .55), transparent 60%),
+    radial-gradient(1.3px 1.3px at 42% 74%, rgba(255, 255, 255, .5), transparent 60%), radial-gradient(1px 1px at 88% 60%, rgba(255, 255, 255, .55), transparent 60%),
+    radial-gradient(1px 1px at 8% 86%, rgba(255, 255, 255, .45), transparent 60%), radial-gradient(1.2px 1.2px at 60% 44%, rgba(255, 255, 255, .4), transparent 60%);
+}
+
+/* bubbles: mine = theme gradient, theirs = frosted glass */
+html body .msg-app[data-msg-app][data-wall]:not([data-wall="dots"]) .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  background: linear-gradient(135deg, var(--color-primary), var(--fx-b)); color: #fff;
+  box-shadow: 0 10px 22px -10px rgba(var(--color-primary-rgb), .7), inset 0 1px 0 rgba(255, 255, 255, .22);
+}
+html body .msg-app[data-msg-app][data-wall="graphite"] .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted),
+html body .msg-app[data-msg-app][data-wall="midnight"] .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) { background: linear-gradient(135deg, #5b8cff, var(--fx-b)); }
+html body .msg-app[data-msg-app][data-wall]:not([data-wall="dots"]) .msg-row:not(.is-mine) .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  background: color-mix(in srgb, var(--bg-surface) 84%, transparent); border: 1px solid var(--border-subtle);
+  -webkit-backdrop-filter: blur(10px) saturate(1.3); backdrop-filter: blur(10px) saturate(1.3);
+  box-shadow: 0 8px 20px -14px rgba(10, 15, 40, .4);
+}
+html body .msg-app[data-msg-app][data-wall="graphite"] .msg-row:not(.is-mine) .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted),
+html body .msg-app[data-msg-app][data-wall="midnight"] .msg-row:not(.is-mine) .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) { background: var(--msg-bubble-theirs); }
+html body .msg-app[data-wall="graphite"] .msg-day-sep span, html body .msg-app[data-wall="midnight"] .msg-day-sep span { color: var(--text-secondary); }
+
+/* ---------------------------------------------------------------- picker (details panel) */
+html body .msg-wall-picker { grid-template-columns: repeat(4, 1fr); gap: 12px 10px; margin-top: 10px; }
+.msg-wall-opt { all: unset; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: var(--cur-pointer, pointer); -webkit-tap-highlight-color: transparent; }
+.msg-wall-opt:focus-visible .msg-wall-swatch { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.msg-wall-opt em { font-style: normal; font-size: 11.5px; font-weight: 600; color: var(--text-secondary); text-align: center; line-height: 1.2; }
+.msg-wall-opt[aria-pressed="true"] em { color: var(--text-primary); }
+html body .msg-wall-swatch {
+  position: relative; display: block; width: 100%; height: 62px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(127, 127, 150, .25);
+  background:
+    radial-gradient(circle at 18% 12%, rgba(var(--t1), .55), transparent 60%),
+    radial-gradient(circle at 88% 92%, rgba(var(--t2), .42), transparent 60%),
+    linear-gradient(160deg, var(--tb1), var(--tb2));
+  box-shadow: 0 6px 14px -8px rgba(10, 15, 40, .45); transition: transform .18s ease, box-shadow .2s ease;
+}
+html body .msg-wall-swatch--graphite { background: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px) 0 0 / 10px 10px, linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px) 0 0 / 10px 10px, radial-gradient(circle at 85% 10%, rgba(var(--t1), .35), transparent 60%), #14151a; }
+html body .msg-wall-swatch--midnight { background: radial-gradient(1px 1px at 28% 38%, #fff, transparent 60%), radial-gradient(1px 1px at 72% 24%, #fff, transparent 60%), radial-gradient(1px 1px at 55% 78%, #fff, transparent 60%), radial-gradient(circle at 15% 10%, rgba(var(--t1), .6), transparent 60%), #121739; }
+.msg-wall-swatch--dots { --color-primary: #5b6cff; --fx-b: #8b5cf6; --t1: 91, 108, 255; --t2: 20, 184, 166; --tb1: #ffffff; --tb2: #eef0fb; }
+html body .msg-wall-swatch--dots { background: radial-gradient(rgba(60, 60, 130, .22) 1.2px, transparent 1.3px) 0 0 / 10px 10px, radial-gradient(circle at 18% 12%, rgba(var(--t1), .22), transparent 60%), linear-gradient(160deg, #fff, #eef0fb); }
+/* two tiny chat bubbles show how messages will look */
+.msg-wall-swatch::before, .msg-wall-swatch::after { content: ""; position: absolute; height: 10px; border-radius: 6px; }
+.msg-wall-swatch::before { top: 12px; inset-inline-start: 9px; width: 46%; background: rgba(255, 255, 255, .92); box-shadow: 0 2px 6px -2px rgba(10, 15, 40, .3); }
+.msg-wall-swatch::after { bottom: 12px; inset-inline-end: 9px; width: 40%; background: linear-gradient(135deg, var(--color-primary), var(--fx-b)); box-shadow: 0 3px 8px -3px rgba(var(--color-primary-rgb), .8); }
+.msg-wall-swatch--graphite::before, .msg-wall-swatch--midnight::before { background: rgba(255, 255, 255, .16); }
+.msg-wall-opt:hover .msg-wall-swatch { transform: translateY(-2px); }
+.msg-wall-opt[aria-pressed="true"] .msg-wall-swatch { outline: 2.5px solid var(--color-primary); outline-offset: 2px; box-shadow: 0 10px 22px -8px rgba(var(--color-primary-rgb), .6); }

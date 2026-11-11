@@ -1,0 +1,62 @@
+/* ============================================================================
+   tables-modern.css — one calmer table language for the whole platform.
+   Restyles the shared table classes (adm-/sec-/data-/st-/ex-table) and the shared pager.
+   Visual only: no display/width changes, so existing layouts and horizontal scrolling keep working.
+   Imported LAST in index.css so it wins over the per-portal definitions.
+   ========================================================================== */
+.adm-table-wrap, .sec-table-wrap {
+  border-radius: 18px; border: 1px solid var(--border-subtle); background: var(--bg-surface);
+  box-shadow: 0 1px 2px rgba(20, 28, 70, .04), 0 8px 24px -16px rgba(20, 28, 70, .10);
+}
+:is(.adm-table, .sec-table, .data-table, .st-table, .ex-table) { font-size: 13.5px; }
+:is(.adm-table, .sec-table, .data-table, .st-table, .ex-table) thead th {
+  padding: 13px 18px; font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: none; white-space: nowrap;
+  color: var(--text-secondary); text-align: start;
+  background: color-mix(in srgb, var(--color-primary) 4%, var(--bg-surface));
+  border-block: 0; border-bottom: 1px solid var(--border-subtle);
+}
+:is(.adm-table, .sec-table, .data-table, .st-table, .ex-table) tbody td {
+  padding: 15px 18px; vertical-align: middle; border-bottom: 1px solid color-mix(in srgb, var(--border-subtle) 70%, transparent);
+}
+:is(.adm-table, .sec-table, .data-table, .st-table, .ex-table) tbody tr:last-child td { border-bottom: 0; }
+:is(.adm-table, .sec-table, .data-table, .st-table, .ex-table) tbody tr { transition: background .15s; }
+:is(.adm-table, .sec-table, .data-table, .st-table, .ex-table) tbody tr:hover { background: rgba(var(--color-primary-rgb), .045); }
+:is(.adm-table, .sec-table, .data-table, .st-table, .ex-table) td strong { font-weight: 700; }
+:is(.adm-table, .sec-table, .data-table, .st-table, .ex-table) .num { font-variant-numeric: tabular-nums; }
+.adm-table tbody tr td.adm-empty, .adm-table td.adm-empty { padding: 44px 18px !important; color: var(--text-secondary); }
+
+/* status badges inside admin tables get a leading dot */
+.adm-table .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+.adm-table .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* row actions: bordered icon buttons instead of bare icons */
+.adm-table td.adm-actions { display: table-cell; white-space: nowrap; text-align: end; }
+.adm-table td.adm-actions .btn { min-height: 34px; padding: 0 12px; margin-inline-start: 6px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; vertical-align: middle;
+  border-radius: 10px; border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-secondary); font-weight: 700; }
+/* only a lone icon becomes a square button (.btn--icon is set by lib/labelTables.js when the button has no text) — buttons with a label keep their natural width */
+.adm-table td.adm-actions .btn.btn--icon { width: 34px; padding: 0; }
+.adm-table td.adm-actions .btn.btn-primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.adm-table td.adm-actions .btn:hover { color: var(--color-primary); border-color: rgba(var(--color-primary-rgb), .45); background: rgba(var(--color-primary-rgb), .07); }
+.adm-table td.adm-actions .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .18); }
+
+/* reusable cells (tbl-*) */
+.tbl-main { display: inline-flex; align-items: center; gap: 12px; min-width: 0; }
+.tbl-main__icon { flex: none; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 11px; color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), .1); border: 1px solid rgba(var(--color-primary-rgb), .16); }
+.tbl-fmt { display: inline-block; min-width: 46px; text-align: center; padding: 4px 9px; border-radius: 8px; font-size: 11.5px; font-weight: 800; letter-spacing: .04em;
+  color: var(--text-secondary); background: var(--bg-canvas); border: 1px solid var(--border-subtle); }
+.tbl-fmt[data-fmt="pdf"] { color: #D64545; background: rgba(214, 69, 69, .1); border-color: rgba(214, 69, 69, .22); }
+.tbl-fmt[data-fmt="csv"], .tbl-fmt[data-fmt="xlsx"] { color: #14906B; background: rgba(29, 185, 138, .12); border-color: rgba(29, 185, 138, .26); }
+.tbl-who { display: inline-flex; align-items: center; gap: 9px; min-width: 0; }
+.tbl-who i { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; font-style: normal; font-size: 11px; font-weight: 700;
+  color: var(--color-primary); background: rgba(var(--color-primary-rgb), .12); }
+.tbl-date { color: var(--text-secondary); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* shared pager (components/admin/adminUi.jsx) */
+.adm-pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 4px 4px; font-size: 13px; color: var(--text-secondary); }
+.adm-pager > div { display: inline-flex; align-items: center; gap: 10px; padding: 4px; border-radius: 14px; border: 1px solid var(--border-subtle); background: var(--bg-surface); }
+.adm-pager .btn { width: 34px; height: 34px; padding: 0; display: inline-grid; place-items: center; border-radius: 10px; border: 0; background: transparent; color: var(--text-primary); }
+.adm-pager .btn:hover:not(:disabled) { background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+.adm-pager .btn:disabled { opacity: .35; cursor: not-allowed; }
+.adm-pager > div > span { min-width: 92px; text-align: center; font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+[dir="rtl"] .adm-pager .btn svg { transform: scaleX(-1); }   /* "previous" must point toward the start (right) in RTL */

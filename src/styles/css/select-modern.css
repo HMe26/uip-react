@@ -1,0 +1,431 @@
+/* ==========================================================================
+   select-modern.css — one dropdown design for every <select> on the platform.
+   Loaded LAST so it wins over per-page select rules. No JSX changes needed.
+
+   Browser support
+   · Chrome / Edge / Android WebView 135+ : fully custom panel (appearance: base-select)
+     → rounded floating panel, animated open/close, an icon beside every option.
+   · Firefox / Safari / older Chromium    : the closed control gets the same look
+     (icon + chevron), the open list stays the OS-native one (browser limitation).
+   Icons are chosen from the option's value (role, status, priority, sort…).
+   Selects whose values aren't listed below simply show no icon.
+   ========================================================================== */
+
+:root {
+  --ic-cap: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 10 12 5 2 10l10 5z'/%3E%3Cpath d='M6 12v5c3 3 9 3 12 0v-5'/%3E%3Cpath d='M22 10v6'/%3E%3C/svg%3E");
+  --ic-landmark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 22h18'/%3E%3Cpath d='M6 18v-7M10 18v-7M14 18v-7M18 18v-7'/%3E%3Cpath d='m12 2 8 5H4z'/%3E%3C/svg%3E");
+  --ic-shieldcheck: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");
+  --ic-present: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h20'/%3E%3Cpath d='M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3'/%3E%3Cpath d='m7 21 5-5 5 5'/%3E%3C/svg%3E");
+  --ic-book: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z'/%3E%3Cpath d='M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z'/%3E%3C/svg%3E");
+  --ic-clip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='2' width='8' height='4' rx='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E");
+  --ic-lock: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+  --ic-shield: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E");
+  --ic-chart: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 3v18h18'/%3E%3Cpath d='M18 17V9M13 17V5M8 17v-3'/%3E%3C/svg%3E");
+  --ic-ok: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");
+  --ic-clock: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E");
+  --ic-pencil: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z'/%3E%3C/svg%3E");
+  --ic-pause: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M10 15V9M14 15V9'/%3E%3C/svg%3E");
+  --ic-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m15 9-6 6M9 9l6 6'/%3E%3C/svg%3E");
+  --ic-trash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cpath d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/%3E%3C/svg%3E");
+  --ic-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3z'/%3E%3Cpath d='M12 9v4M12 17h.01'/%3E%3C/svg%3E");
+  --ic-info: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
+  --ic-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14'/%3E%3Cpath d='m19 12-7 7-7-7'/%3E%3C/svg%3E");
+  --ic-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5'/%3E%3Cpath d='m5 12 7-7 7 7'/%3E%3C/svg%3E");
+  --ic-minus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M8 12h8'/%3E%3C/svg%3E");
+  --ic-bar1: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 20v-4'/%3E%3Cpath d='M12 20v-8' opacity='.3'/%3E%3Cpath d='M18 20V6' opacity='.3'/%3E%3C/svg%3E");
+  --ic-bar2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 20v-4'/%3E%3Cpath d='M12 20v-8'/%3E%3Cpath d='M18 20V6' opacity='.3'/%3E%3C/svg%3E");
+  --ic-bar3: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 20v-4'/%3E%3Cpath d='M12 20v-8'/%3E%3Cpath d='M18 20V6'/%3E%3C/svg%3E");
+  --ic-cal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+  --ic-zap: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2 3 14h9l-1 8 10-12h-9z'/%3E%3C/svg%3E");
+  --ic-sortasc: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 8 4-4 4 4'/%3E%3Cpath d='M7 4v16'/%3E%3Cpath d='M11 12h4M11 16h7M11 20h10'/%3E%3C/svg%3E");
+  --ic-sortdesc: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 16 4 4 4-4'/%3E%3Cpath d='M7 20V4'/%3E%3Cpath d='M11 4h10M11 8h7M11 12h4'/%3E%3C/svg%3E");
+  --ic-list: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h.01M3 12h.01M3 18h.01'/%3E%3Cpath d='M8 6h13M8 12h13M8 18h13'/%3E%3C/svg%3E");
+  --ic-radio: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+  --ic-toggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='10' rx='5'/%3E%3Ccircle cx='16' cy='12' r='2'/%3E%3C/svg%3E");
+  --ic-text: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7V4h16v3'/%3E%3Cpath d='M9 20h6M12 4v16'/%3E%3C/svg%3E");
+  --ic-file: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M8 13h8M8 17h5'/%3E%3C/svg%3E");
+  --ic-layers: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18'/%3E%3Cpath d='M6 12h12'/%3E%3Cpath d='M10 18h4'/%3E%3C/svg%3E");
+  --ic-ban: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m4.9 4.9 14.2 14.2'/%3E%3C/svg%3E");
+  --ic-award: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='6'/%3E%3Cpath d='M15.5 13.5 17 22l-5-3-5 3 1.5-8.5'/%3E%3C/svg%3E");
+  --ic-mail: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3Cpath d='m22 7-10 6L2 7'/%3E%3C/svg%3E");
+  --ic-send: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m22 2-7 20-4-9-9-4z'/%3E%3Cpath d='M22 2 11 13'/%3E%3C/svg%3E");
+  --ic-sliders: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3'/%3E%3Cpath d='M1 14h6M9 8h6M17 16h6'/%3E%3C/svg%3E");
+  --ic-hand: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 11V6a2 2 0 0 0-4 0M14 10V4a2 2 0 0 0-4 0v2M10 10.5V6a2 2 0 0 0-4 0v8'/%3E%3Cpath d='M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.4L3.4 16a2 2 0 0 1 3.2-2.4L8 15'/%3E%3C/svg%3E");
+  --ic-more: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M8 12h.01M12 12h.01M16 12h.01'/%3E%3C/svg%3E");
+  --ic-users: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8'/%3E%3C/svg%3E");
+  --ic-folder: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z'/%3E%3C/svg%3E");
+  --ic-brief: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2'/%3E%3Cpath d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/%3E%3C/svg%3E");
+  --ic-hash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9h16M4 15h16M10 3 8 21M16 3l-2 18'/%3E%3C/svg%3E");
+  --ic-sigma: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 7V5H6l6.5 7L6 19h12v-2'/%3E%3C/svg%3E");
+  --ic-target: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E");
+  --ic-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5L20 7'/%3E%3C/svg%3E");
+  --ic-eye: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+  --ic-power: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23515fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2v10'/%3E%3Cpath d='M18.4 6.6a9 9 0 1 1-12.8 0'/%3E%3C/svg%3E");
+  --sel-chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a0b8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* ---- value → icon (closed control) ---- */
+select:not([multiple]):not([size]):has(> option[value="student"]:checked),
+select:not([multiple]):not([size]):has(> option[value="bachelor"]:checked),
+select:not([multiple]):not([size]):has(> option[value="master"]:checked),
+select:not([multiple]):not([size]):has(> option[value="phd"]:checked),
+select:not([multiple]):not([size]):has(> option[value="diploma"]:checked),
+select:not([multiple]):not([size]):has(> option[value="higher"]:checked) { --sel-icon: var(--ic-cap); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="university"]:checked) { --sel-icon: var(--ic-landmark); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="admin"]:checked),
+select:not([multiple]):not([size]):has(> option[value="allowlist"]:checked) { --sel-icon: var(--ic-shieldcheck); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="faculty"]:checked) { --sel-icon: var(--ic-present); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="academic_staff"]:checked),
+select:not([multiple]):not([size]):has(> option[value="academic"]:checked) { --sel-icon: var(--ic-book); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="supervisor"]:checked),
+select:not([multiple]):not([size]):has(> option[value="decision"]:checked) { --sel-icon: var(--ic-clip); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="security_admin"]:checked),
+select:not([multiple]):not([size]):has(> option[value="ssl"]:checked),
+select:not([multiple]):not([size]):has(> option[value="tls"]:checked),
+select:not([multiple]):not([size]):has(> option[value="required"]:checked) { --sel-icon: var(--ic-lock); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="security_officer"]:checked) { --sel-icon: var(--ic-shield); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="data_analyst"]:checked),
+select:not([multiple]):not([size]):has(> option[value="avg"]:checked),
+select:not([multiple]):not([size]):has(> option[value="avg_asc"]:checked),
+select:not([multiple]):not([size]):has(> option[value="avg_desc"]:checked),
+select:not([multiple]):not([size]):has(> option[value="average"]:checked) { --sel-icon: var(--ic-chart); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="active"]:checked),
+select:not([multiple]):not([size]):has(> option[value="approved"]:checked),
+select:not([multiple]):not([size]):has(> option[value="published"]:checked),
+select:not([multiple]):not([size]):has(> option[value="verified"]:checked),
+select:not([multiple]):not([size]):has(> option[value="healthy"]:checked),
+select:not([multiple]):not([size]):has(> option[value="excellent"]:checked),
+select:not([multiple]):not([size]):has(> option[value="taken"]:checked) { --sel-icon: var(--ic-ok); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="pending"]:checked),
+select:not([multiple]):not([size]):has(> option[value="time"]:checked),
+select:not([multiple]):not([size]):has(> option[value="minutes"]:checked),
+select:not([multiple]):not([size]):has(> option[value="hours"]:checked),
+select:not([multiple]):not([size]):has(> option[value="days"]:checked),
+select:not([multiple]):not([size]):has(> option[value="after_close"]:checked),
+select:not([multiple]):not([size]):has(> option[value="at_risk"]:checked) { --sel-icon: var(--ic-clock); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="draft"]:checked),
+select:not([multiple]):not([size]):has(> option[value="manual"]:checked) { --sel-icon: var(--ic-pencil); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="suspended"]:checked),
+select:not([multiple]):not([size]):has(> option[value="inactive"]:checked) { --sel-icon: var(--ic-pause); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="rejected"]:checked) { --sel-icon: var(--ic-x); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="deleted"]:checked) { --sel-icon: var(--ic-trash); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="critical"]:checked),
+select:not([multiple]):not([size]):has(> option[value="urgent"]:checked),
+select:not([multiple]):not([size]):has(> option[value="warning"]:checked),
+select:not([multiple]):not([size]):has(> option[value="attention"]:checked),
+select:not([multiple]):not([size]):has(> option[value="action_item"]:checked) { --sel-icon: var(--ic-alert); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="info"]:checked) { --sel-icon: var(--ic-info); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="low"]:checked) { --sel-icon: var(--ic-down); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="high"]:checked),
+select:not([multiple]):not([size]):has(> option[value="priority"]:checked) { --sel-icon: var(--ic-up); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="medium"]:checked),
+select:not([multiple]):not([size]):has(> option[value="normal"]:checked) { --sel-icon: var(--ic-minus); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="easy"]:checked) { --sel-icon: var(--ic-bar1); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="hard"]:checked) { --sel-icon: var(--ic-bar3); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="daily"]:checked),
+select:not([multiple]):not([size]):has(> option[value="weekly"]:checked),
+select:not([multiple]):not([size]):has(> option[value="monthly"]:checked) { --sel-icon: var(--ic-cal); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="immediate"]:checked),
+select:not([multiple]):not([size]):has(> option[value="direct"]:checked) { --sel-icon: var(--ic-zap); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="asc"]:checked),
+select:not([multiple]):not([size]):has(> option[value="score_asc"]:checked),
+select:not([multiple]):not([size]):has(> option[value="oldest"]:checked),
+select:not([multiple]):not([size]):has(> option[value="lower_better"]:checked) { --sel-icon: var(--ic-sortasc); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="desc"]:checked),
+select:not([multiple]):not([size]):has(> option[value="score_desc"]:checked),
+select:not([multiple]):not([size]):has(> option[value="newest"]:checked),
+select:not([multiple]):not([size]):has(> option[value="exams_desc"]:checked),
+select:not([multiple]):not([size]):has(> option[value="higher_better"]:checked) { --sel-icon: var(--ic-sortdesc); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="multiple_choice"]:checked) { --sel-icon: var(--ic-list); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="single_choice"]:checked),
+select:not([multiple]):not([size]):has(> option[value="mcq"]:checked) { --sel-icon: var(--ic-radio); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="true_false"]:checked) { --sel-icon: var(--ic-toggle); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="short_answer"]:checked),
+select:not([multiple]):not([size]):has(> option[value="name"]:checked) { --sel-icon: var(--ic-text); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="essay"]:checked) { --sel-icon: var(--ic-file); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="all"]:checked) { --sel-icon: var(--ic-layers); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="none"]:checked),
+select:not([multiple]):not([size]):has(> option[value="denylist"]:checked) { --sel-icon: var(--ic-ban); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="smtp"]:checked) { --sel-icon: var(--ic-mail); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="brevo"]:checked) { --sel-icon: var(--ic-send); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="custom"]:checked),
+select:not([multiple]):not([size]):has(> option[value="optional"]:checked) { --sel-icon: var(--ic-sliders); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="other"]:checked) { --sel-icon: var(--ic-more); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="users"]:checked),
+select:not([multiple]):not([size]):has(> option[value="by_role"]:checked),
+select:not([multiple]):not([size]):has(> option[value="group"]:checked) { --sel-icon: var(--ic-users); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="projects"]:checked) { --sel-icon: var(--ic-folder); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="administrative"]:checked) { --sel-icon: var(--ic-brief); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="count"]:checked) { --sel-icon: var(--ic-hash); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="sum"]:checked) { --sel-icon: var(--ic-sigma); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="task"]:checked) { --sel-icon: var(--ic-target); --sel-pad: 42px; }
+select:not([multiple]):not([size]):has(> option[value="off"]:checked),
+select:not([multiple]):not([size]):has(> option[value="disabled"]:checked) { --sel-icon: var(--ic-power); --sel-pad: 42px; }
+
+/* ---- value → icon (options inside the open panel) ---- */
+select:not([multiple]):not([size]) option[value="student"],
+select:not([multiple]):not([size]) option[value="bachelor"],
+select:not([multiple]):not([size]) option[value="master"],
+select:not([multiple]):not([size]) option[value="phd"],
+select:not([multiple]):not([size]) option[value="diploma"],
+select:not([multiple]):not([size]) option[value="higher"] { --opt-icon: var(--ic-cap); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="university"] { --opt-icon: var(--ic-landmark); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="admin"],
+select:not([multiple]):not([size]) option[value="allowlist"] { --opt-icon: var(--ic-shieldcheck); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="faculty"] { --opt-icon: var(--ic-present); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="academic_staff"],
+select:not([multiple]):not([size]) option[value="academic"] { --opt-icon: var(--ic-book); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="supervisor"],
+select:not([multiple]):not([size]) option[value="decision"] { --opt-icon: var(--ic-clip); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="security_admin"],
+select:not([multiple]):not([size]) option[value="ssl"],
+select:not([multiple]):not([size]) option[value="tls"],
+select:not([multiple]):not([size]) option[value="required"] { --opt-icon: var(--ic-lock); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="security_officer"] { --opt-icon: var(--ic-shield); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="data_analyst"],
+select:not([multiple]):not([size]) option[value="avg"],
+select:not([multiple]):not([size]) option[value="avg_asc"],
+select:not([multiple]):not([size]) option[value="avg_desc"],
+select:not([multiple]):not([size]) option[value="average"] { --opt-icon: var(--ic-chart); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="active"],
+select:not([multiple]):not([size]) option[value="approved"],
+select:not([multiple]):not([size]) option[value="published"],
+select:not([multiple]):not([size]) option[value="verified"],
+select:not([multiple]):not([size]) option[value="healthy"],
+select:not([multiple]):not([size]) option[value="excellent"],
+select:not([multiple]):not([size]) option[value="taken"] { --opt-icon: var(--ic-ok); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="pending"],
+select:not([multiple]):not([size]) option[value="time"],
+select:not([multiple]):not([size]) option[value="minutes"],
+select:not([multiple]):not([size]) option[value="hours"],
+select:not([multiple]):not([size]) option[value="days"],
+select:not([multiple]):not([size]) option[value="after_close"],
+select:not([multiple]):not([size]) option[value="at_risk"] { --opt-icon: var(--ic-clock); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="draft"],
+select:not([multiple]):not([size]) option[value="manual"] { --opt-icon: var(--ic-pencil); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="suspended"],
+select:not([multiple]):not([size]) option[value="inactive"] { --opt-icon: var(--ic-pause); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="rejected"] { --opt-icon: var(--ic-x); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="deleted"] { --opt-icon: var(--ic-trash); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="critical"],
+select:not([multiple]):not([size]) option[value="urgent"],
+select:not([multiple]):not([size]) option[value="warning"],
+select:not([multiple]):not([size]) option[value="attention"],
+select:not([multiple]):not([size]) option[value="action_item"] { --opt-icon: var(--ic-alert); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="info"] { --opt-icon: var(--ic-info); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="low"] { --opt-icon: var(--ic-down); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="high"],
+select:not([multiple]):not([size]) option[value="priority"] { --opt-icon: var(--ic-up); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="medium"],
+select:not([multiple]):not([size]) option[value="normal"] { --opt-icon: var(--ic-minus); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="easy"] { --opt-icon: var(--ic-bar1); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="hard"] { --opt-icon: var(--ic-bar3); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="daily"],
+select:not([multiple]):not([size]) option[value="weekly"],
+select:not([multiple]):not([size]) option[value="monthly"] { --opt-icon: var(--ic-cal); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="immediate"],
+select:not([multiple]):not([size]) option[value="direct"] { --opt-icon: var(--ic-zap); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="asc"],
+select:not([multiple]):not([size]) option[value="score_asc"],
+select:not([multiple]):not([size]) option[value="oldest"],
+select:not([multiple]):not([size]) option[value="lower_better"] { --opt-icon: var(--ic-sortasc); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="desc"],
+select:not([multiple]):not([size]) option[value="score_desc"],
+select:not([multiple]):not([size]) option[value="newest"],
+select:not([multiple]):not([size]) option[value="exams_desc"],
+select:not([multiple]):not([size]) option[value="higher_better"] { --opt-icon: var(--ic-sortdesc); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="multiple_choice"] { --opt-icon: var(--ic-list); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="single_choice"],
+select:not([multiple]):not([size]) option[value="mcq"] { --opt-icon: var(--ic-radio); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="true_false"] { --opt-icon: var(--ic-toggle); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="short_answer"],
+select:not([multiple]):not([size]) option[value="name"] { --opt-icon: var(--ic-text); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="essay"] { --opt-icon: var(--ic-file); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="all"] { --opt-icon: var(--ic-layers); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="none"],
+select:not([multiple]):not([size]) option[value="denylist"] { --opt-icon: var(--ic-ban); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="smtp"] { --opt-icon: var(--ic-mail); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="brevo"] { --opt-icon: var(--ic-send); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="custom"],
+select:not([multiple]):not([size]) option[value="optional"] { --opt-icon: var(--ic-sliders); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="other"] { --opt-icon: var(--ic-more); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="users"],
+select:not([multiple]):not([size]) option[value="by_role"],
+select:not([multiple]):not([size]) option[value="group"] { --opt-icon: var(--ic-users); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="projects"] { --opt-icon: var(--ic-folder); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="administrative"] { --opt-icon: var(--ic-brief); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="count"] { --opt-icon: var(--ic-hash); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="sum"] { --opt-icon: var(--ic-sigma); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="task"] { --opt-icon: var(--ic-target); --opt-w: 18px; --opt-gap: 10px; }
+select:not([multiple]):not([size]) option[value="off"],
+select:not([multiple]):not([size]) option[value="disabled"] { --opt-icon: var(--ic-power); --opt-w: 18px; --opt-gap: 10px; }
+
+/* ---- closed control (all browsers) ---- */
+select:not([multiple]):not([size]) {
+  --sel-pad: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  max-width: 100%;
+  padding-block: 0;
+  padding-inline: var(--sel-pad) 38px;
+  border: 1px solid var(--border-strong, var(--border-subtle, #d7dbe8));
+  border-radius: 12px;
+  background-color: var(--bg-surface, #fff);
+  background-image: var(--sel-icon, none), var(--sel-chev);
+  background-repeat: no-repeat;
+  background-size: 18px 18px, 16px 16px;
+  background-position: left 13px center, right 12px center;
+  color: var(--text-primary, #111);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  word-break: normal;
+  cursor: var(--cur-pointer, pointer);
+  transition: border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
+}
+select:not([multiple]):not([size]):dir(rtl) {
+  background-position: right 13px center, left 12px center;
+}
+select:not([multiple]):not([size]):has(option:checked[value=""]) { color: var(--text-secondary, #64708a); font-weight: 500; }
+select:not([multiple]):not([size]):hover:not(:disabled) {
+  border-color: rgba(var(--color-primary-rgb, 81, 95, 255), .55);
+  background-color: rgba(var(--color-primary-rgb, 81, 95, 255), .035);
+}
+select:not([multiple]):not([size]):focus-visible,
+select:not([multiple]):not([size]):open {
+  outline: none;
+  border-color: var(--color-primary, #515fff);
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 81, 95, 255), .16);
+}
+select:not([multiple]):not([size]):disabled { opacity: .55; cursor: not-allowed; }
+select:not([multiple]):not([size]) option { font-weight: 500; }
+
+/* ---- Chromium 135+: fully styleable picker ---- */
+@supports (appearance: base-select) {
+  select:not([multiple]):not([size]),
+  select:not([multiple]):not([size])::picker(select) { appearance: base-select; }
+
+  select:not([multiple]):not([size]) {
+    background-image: var(--sel-icon, none);          /* chevron comes from ::picker-icon */
+    background-size: 18px 18px;
+    background-position: left 13px center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-inline-end: 12px;
+  }
+  select:not([multiple]):not([size]):dir(rtl) { background-position: right 13px center; }
+
+  select:not([multiple]):not([size])::picker-icon {
+    content: "";
+    flex: none;
+    width: 16px; height: 16px;
+    background: var(--sel-chev) center / contain no-repeat;
+    transition: rotate .2s ease;
+  }
+  select:not([multiple]):not([size]):open::picker-icon { rotate: 180deg; }
+
+  /* the floating panel */
+  select:not([multiple]):not([size])::picker(select) {
+    box-sizing: border-box;
+    min-inline-size: anchor-size(self-inline);
+    inline-size: max-content;
+    max-inline-size: min(360px, 94vw);
+    max-block-size: min(340px, 60vh);
+    margin-block: 6px;
+    padding: 6px;
+    border: 1px solid var(--border-subtle, #e4e7f2);
+    border-radius: 14px;
+    background: var(--bg-surface, #fff);
+    color: var(--text-primary, #111);
+    box-shadow: 0 18px 40px -12px rgba(20, 28, 70, .28), 0 4px 12px rgba(20, 28, 70, .08);
+    overflow-y: auto;
+
+    opacity: 0;
+    translate: 0 -6px;
+    scale: .98;
+    transition: opacity .16s ease, translate .16s ease, scale .16s ease,
+                overlay .16s allow-discrete, display .16s allow-discrete;
+  }
+  select:not([multiple]):not([size]):open::picker(select) { opacity: 1; translate: 0 0; scale: 1; }
+  @starting-style {
+    select:not([multiple]):not([size]):open::picker(select) { opacity: 0; translate: 0 -6px; scale: .98; }
+  }
+
+  /* options */
+  select:not([multiple]):not([size]) option {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 38px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: var(--cur-pointer, pointer);
+    transition: background-color .12s ease, color .12s ease;
+  }
+  select:not([multiple]):not([size]) option::before {
+    content: "";
+    flex: none;
+    inline-size: var(--opt-w, 0px);
+    block-size: 18px;
+    margin-inline-end: var(--opt-gap, 0px);
+    background: currentColor;
+    -webkit-mask: var(--opt-icon, none) center / contain no-repeat;
+            mask: var(--opt-icon, none) center / contain no-repeat;
+    opacity: .75;
+  }
+  select:not([multiple]):not([size]) option:hover,
+  select:not([multiple]):not([size]) option:focus-visible {
+    background: rgba(var(--color-primary-rgb, 81, 95, 255), .09);
+    outline: none;
+  }
+  select:not([multiple]):not([size]) option:checked {
+    background: rgba(var(--color-primary-rgb, 81, 95, 255), .14);
+    color: var(--color-primary, #515fff);
+    font-weight: 700;
+  }
+  select:not([multiple]):not([size]) option:checked::before { opacity: 1; }
+  select:not([multiple]):not([size]) option:disabled { opacity: .45; cursor: not-allowed; }
+  /* checkmark → end of the row */
+  select:not([multiple]):not([size]) option::checkmark {
+    order: 2;
+    margin-inline-start: auto;
+    padding-inline-start: 14px;
+    font-size: 13px;
+    color: var(--color-primary, #515fff);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  select:not([multiple]):not([size]),
+  select:not([multiple]):not([size])::picker(select),
+  select:not([multiple]):not([size])::picker-icon { transition: none !important; }
+}
+
+/* ---- checkboxes & radios: use the platform colour instead of the default blue/grey ---- */
+input[type="checkbox"], input[type="radio"] { accent-color: var(--color-primary, #515fff); cursor: var(--cur-pointer, pointer); }
+input[type="checkbox"]:disabled, input[type="radio"]:disabled { cursor: not-allowed; }
+
+/* ---- Auth selects ---------------------------------------------------------
+   AuthSelect renders its own leading icon + chevron as DOM nodes, so the
+   global select styling above must not (a) override the icon/chevron padding
+   that keeps the text clear of them, nor (b) paint a second icon/chevron. */
+select.auth-field__select:not([multiple]):not([size]) {
+  padding-inline: 14px 44px;
+  background-image: none;
+}
+select.auth-field__select.has-start:not([multiple]):not([size]) {
+  padding-inline: 46px 44px;
+}
+select.auth-field__select:not([multiple]):not([size])::picker-icon { display: none; }

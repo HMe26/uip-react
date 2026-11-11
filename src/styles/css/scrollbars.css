@@ -1,0 +1,93 @@
+/* ==========================================================================
+   scrollbars.css — one themed scrollbar for the whole site (page + every inner scroller).
+   Slim rounded pill, no arrow buttons, transparent track; colours follow the look:
+     Light (white palette)   neutral grey, indigo when dragged
+     Classic (insight)       soft indigo-tinted
+     Dark / Dark-from-Light  light-on-charcoal
+   Chromium/Safari use ::-webkit-scrollbar, Firefox uses scrollbar-color.
+   Low specificity on purpose: component rules (sidebar, chat panes…) still win.
+   Loaded last.
+   ========================================================================== */
+
+:root {
+  --scroll-thumb: rgba(15, 20, 36, .20);
+  --scroll-thumb-hover: rgba(15, 20, 36, .36);
+  --scroll-thumb-active: var(--color-primary, #515FFF);
+  --scroll-track: transparent;
+}
+/* Classic (default): indigo-tinted */
+html[data-palette="insight"]:not([data-theme="dark"]) {
+  --scroll-thumb: rgba(81, 95, 255, .26);
+  --scroll-thumb-hover: rgba(81, 95, 255, .46);
+}
+/* Light: neutral grey */
+html[data-palette="white"]:not([data-theme="dark"]) {
+  --scroll-thumb: rgba(15, 20, 36, .18);
+  --scroll-thumb-hover: rgba(15, 20, 36, .34);
+}
+/* Classic dark */
+html[data-palette="insight"][data-theme="dark"] {
+  --scroll-thumb: rgba(143, 154, 181, .30);
+  --scroll-thumb-hover: rgba(143, 154, 181, .50);
+  --scroll-thumb-active: #7480FF;
+}
+/* Dark entered from Light */
+html[data-palette="white"][data-theme="dark"] {
+  --scroll-thumb: rgba(255, 255, 255, .16);
+  --scroll-thumb-hover: rgba(255, 255, 255, .30);
+  --scroll-thumb-active: #7A73FF;
+}
+
+/* ---- Chromium / Safari / Edge ---- */
+*::-webkit-scrollbar { width: 12px; height: 12px; background: var(--scroll-track); }
+*::-webkit-scrollbar-track { background: var(--scroll-track); }
+*::-webkit-scrollbar-corner { background: transparent; }
+*::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+*::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  background-clip: content-box;
+  border: 3px solid transparent;       /* leaves a 6px pill inside the 12px lane */
+  border-radius: 999px;
+  min-height: 40px; min-width: 40px;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); background-clip: content-box; border-width: 2px; }
+*::-webkit-scrollbar-thumb:active { background: var(--scroll-thumb-active); background-clip: content-box; border-width: 2px; }
+
+/* ---- Firefox (no ::-webkit-scrollbar) ---- */
+@supports not selector(::-webkit-scrollbar) {
+  * { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) transparent; }
+}
+
+/* ==========================================================================
+   Sidebar scrollers — same slim pill as the page scrollbar.
+   The sidebar rules set the standard `scrollbar-width` / `scrollbar-color`
+   properties; in modern Chromium those switch OFF every ::-webkit-scrollbar
+   rule, which is why the sidebar showed the native bar with arrow buttons.
+   Reset them here (this file loads last) so the global pill styling applies.
+   The sidebar is dark in every look, so the thumb is light-on-dark.
+   ========================================================================== */
+html .app-shell .sidebar,
+html .app-shell .sidebar *,
+html .app-shell .sidebar__nav {
+  scrollbar-width: auto !important;
+  scrollbar-color: auto !important;
+  --scroll-thumb: rgba(255, 255, 255, .22);
+  --scroll-thumb-hover: rgba(255, 255, 255, .42);
+  --scroll-thumb-active: #8F9AFF;
+}
+html .app-shell .sidebar ::-webkit-scrollbar,
+html .app-shell .sidebar::-webkit-scrollbar,
+html .app-shell .sidebar__nav::-webkit-scrollbar { width: 12px; height: 12px; background: transparent; }
+html .app-shell .sidebar ::-webkit-scrollbar-button,
+html .app-shell .sidebar__nav::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+html .app-shell .sidebar ::-webkit-scrollbar-track,
+html .app-shell .sidebar__nav::-webkit-scrollbar-track { background: transparent; }
+html .app-shell .sidebar ::-webkit-scrollbar-thumb,
+html .app-shell .sidebar__nav::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb); background-clip: content-box;
+  border: 3px solid transparent; border-radius: 999px; min-height: 40px;
+}
+html .app-shell .sidebar ::-webkit-scrollbar-thumb:hover,
+html .app-shell .sidebar__nav::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); background-clip: content-box; border-width: 2px; }
+html .app-shell .sidebar ::-webkit-scrollbar-thumb:active,
+html .app-shell .sidebar__nav::-webkit-scrollbar-thumb:active { background: var(--scroll-thumb-active); background-clip: content-box; border-width: 2px; }

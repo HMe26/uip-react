@@ -1,0 +1,48 @@
+/* Full-screen "this device type is blocked" page (see DeviceGate.jsx). Standalone: no nav, no links into the app. */
+.devblock {
+  min-height: 100vh; min-height: 100dvh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px 16px;
+  background:
+    radial-gradient(700px 340px at 50% 0%, rgba(var(--color-danger-rgb, 255, 107, 107), .12), transparent 70%),
+    var(--bg-canvas, #F6F7FC);
+  color: var(--text-primary, #0B1020);
+}
+.devblock__card {
+  width: 100%; max-width: 480px; text-align: center;
+  padding: 36px 28px 28px;
+  background: var(--bg-surface, #fff);
+  border: 1px solid var(--border-subtle, #E8EAF3);
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(var(--color-danger-rgb, 255, 107, 107), .12);
+}
+.devblock__icon {
+  position: relative; width: 88px; height: 88px; margin: 0 auto 20px;
+  display: grid; place-items: center; border-radius: 50%;
+  color: var(--color-danger, #FF6B6B);
+  background: rgba(var(--color-danger-rgb, 255, 107, 107), .1);
+  border: 1px solid rgba(var(--color-danger-rgb, 255, 107, 107), .28);
+}
+.devblock__slash {
+  position: absolute; width: 64px; height: 3px; border-radius: 3px;
+  background: var(--color-danger, #FF6B6B); transform: rotate(-45deg);
+  box-shadow: 0 0 0 3px var(--bg-surface, #fff);
+}
+.devblock__code {
+  display: inline-block; margin: 0 0 14px; padding: 5px 12px; border-radius: 99px;
+  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px; font-weight: 700; letter-spacing: .05em;
+  color: var(--color-danger, #FF6B6B);
+  background: rgba(var(--color-danger-rgb, 255, 107, 107), .1);
+  border: 1px solid rgba(var(--color-danger-rgb, 255, 107, 107), .25);
+}
+.devblock__title { margin: 0 0 10px; font-size: clamp(20px, 5.2vw, 26px); line-height: 1.35; font-weight: 800; }
+.devblock__desc { margin: 0 0 8px; font-size: 15px; line-height: 1.75; color: var(--text-secondary, #6B7391); }
+.devblock__tips {
+  margin: 18px 0 22px; padding: 14px 16px; text-align: start; font-size: 14px; line-height: 1.8;
+  color: var(--text-secondary, #6B7391);
+  background: var(--bg-canvas, #F6F7FC); border: 1px solid var(--border-subtle, #E8EAF3); border-radius: 14px;
+}
+.devblock__tips ul { margin: 0; padding-inline-start: 20px; }
+.devblock__actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.devblock__actions .btn { min-width: 140px; }
+.devblock__status { margin: 14px 0 0; font-size: 13px; color: var(--text-secondary, #6B7391); min-height: 18px; }

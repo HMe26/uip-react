@@ -1,0 +1,153 @@
+/* ---------- Chat settings page (/messages/settings) ---------- */
+.cs { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: var(--space-4); align-items: start; }
+.cs-nav { display: flex; flex-direction: column; gap: 4px; padding: 8px; border-radius: 16px; background: var(--glass-bg); border: 1px solid var(--border-subtle); position: sticky; top: 12px; }
+.cs-nav__item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border: 0; border-radius: 11px; background: transparent; color: var(--text-secondary); font-size: 14px; font-weight: 600; cursor: pointer; text-align: start; }
+.cs-nav__item:hover { color: var(--text-primary); background: rgba(127,127,127,.08); }
+.cs-nav__item.is-active { background: var(--color-primary); color: #fff; box-shadow: 0 2px 10px rgba(var(--color-primary-rgb), .35); }
+.cs-main { padding: 20px 22px 26px; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.cs-main__title { margin: 0; font-size: 20px; }
+.cs-group__title { margin: 0 0 4px; font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.cs-group__hint { margin: 0 0 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.cs-rows { display: flex; flex-direction: column; border: 1px solid var(--border-subtle); border-radius: 14px; overflow: hidden; background: var(--bg-surface, var(--bg-canvas)); }
+.cs-row { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border: 0; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; text-align: start; width: 100%; font: inherit; }
+.cs-row:last-child { border-bottom: 0; }
+.cs-row.is-click { cursor: pointer; }
+.cs-row.is-click:hover { background: var(--glass-bg); }
+.cs-row__icon { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.cs-row__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cs-row__text strong { font-size: 14px; }
+.cs-row__text small { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+.cs-row__value { flex: none; font-size: 13px; font-weight: 600; color: var(--color-primary); max-width: 40%; text-align: end; }
+.cs-row__chev { flex: none; color: var(--text-secondary); }
+[dir="rtl"] .cs-row__chev { transform: scaleX(-1); }
+.cs-pad { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+.cs-profile { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, rgba(var(--color-primary-rgb), .12), transparent); border: 1px solid var(--border-subtle); }
+.cs-profile .msg-avatar { width: 64px; height: 64px; font-size: 22px; }
+.cs-profile__text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.cs-profile__text strong { font-size: 17px; }
+.cs-profile__text span { font-size: 13px; color: var(--text-secondary); }
+.cs-profile__bio { font-size: 13.5px; font-style: normal; color: var(--text-primary); }
+.cs-bio { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.cs-bio textarea { width: 100%; resize: vertical; }
+.cs-bio__foot { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.cs-count { margin-inline-end: auto; font-size: 12px; color: var(--text-secondary); }
+.cs-seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; background: var(--glass-bg); border: 1px solid var(--border-subtle); }
+.cs-seg button { border: 0; background: transparent; padding: 6px 13px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; }
+.cs-seg button.is-on { background: var(--color-primary); color: #fff; }
+.cs-mini { margin: 0; font-size: 12.5px; color: var(--text-secondary); }
+.cs-empty { margin: 0; padding: 14px; text-align: center; font-size: 13px; color: var(--text-secondary); }
+.cs-chatlist { display: flex; flex-direction: column; max-height: 340px; overflow: auto; border: 1px solid var(--border-subtle); border-radius: 12px; }
+.cs-chatrow { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 0; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; cursor: pointer; text-align: start; font: inherit; }
+.cs-chatrow:last-child { border-bottom: 0; }
+.cs-chatrow:hover { background: var(--glass-bg); }
+.cs-chatrow__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 600; }
+.cs-chatrow__wall { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.cs-chatrow__wall.is-own { color: var(--color-primary); font-weight: 600; }
+.cs-chatrow__wall .msg-wall-swatch { width: 38px; height: 26px; border-radius: 8px; display: inline-block; position: relative; }
+.cs-chatrow__wall .msg-wall-swatch::before, .cs-chatrow__wall .msg-wall-swatch::after { display: none; }
+.wp-default { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer; }
+.wp-default.is-on { border-color: var(--color-primary); color: var(--color-primary); }
+/* audience dialog */
+.cs-radios { display: flex; flex-direction: column; gap: 8px; }
+.cs-radio { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border-subtle); background: transparent; color: inherit; cursor: pointer; text-align: start; font: inherit; }
+.cs-radio.is-on { border-color: var(--color-primary); background: rgba(var(--color-primary-rgb), .08); }
+.cs-radio span { display: flex; flex-direction: column; gap: 2px; }
+.cs-radio small { font-size: 12px; color: var(--text-secondary); }
+.cs-radio__dot { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border-subtle); position: relative; }
+.cs-radio.is-on .cs-radio__dot { border-color: var(--color-primary); }
+.cs-radio.is-on .cs-radio__dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--color-primary); }
+.cs-people { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.cs-people__title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+.cs-people__title b { padding: 1px 8px; border-radius: 999px; background: rgba(var(--color-primary-rgb), .14); color: var(--color-primary); font-size: 12px; }
+.cs-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.cs-pchip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; border-radius: 999px; border: 1px solid var(--border-subtle); background: var(--glass-bg); color: inherit; font-size: 12.5px; cursor: pointer; }
+.cs-plist { max-height: 220px; overflow: auto; display: flex; flex-direction: column; }
+.cs-person { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 0; border-radius: 10px; background: transparent; color: inherit; cursor: pointer; text-align: start; font: inherit; }
+.cs-person span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.cs-person:hover, .cs-person.is-on { background: var(--glass-bg); }
+.cs-check { flex: none; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--border-subtle); display: grid; place-items: center; }
+.cs-person.is-on .cs-check { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+/* rail header gear + bio in details */
+.mr-settings { position: relative; }
+.msg-info__bio { font-size: 13px; color: var(--text-secondary); text-align: center; line-height: 1.5; max-width: 90%; }
+.msg-info__hint { margin: 6px 2px 0; font-size: 12px; color: var(--text-secondary); }
+/* message text size */
+.msg-app[data-font="sm"] .msg-bubble { font-size: 13px; }
+.msg-app[data-font="lg"] .msg-bubble { font-size: 16.5px; line-height: 1.6; }
+@media (max-width: 860px) {
+  .cs { grid-template-columns: 1fr; }
+  .cs-nav { flex-direction: row; overflow-x: auto; position: static; scrollbar-width: none; }
+  .cs-nav__item { white-space: nowrap; }
+  .cs-main { padding: 14px 12px 22px; border-radius: 0; }
+  .cs-main__title { display: none; }
+}
+
+/* ---------- Mobile: the settings page is a pinned full-screen app (see messaging-mobile.css), so the
+   section list + content must scroll INSIDE it. Before, the grid was neither a flex child nor a scroller:
+   body scroll is locked on this page, so everything below the first screen was unreachable. ---------- */
+@media (max-width: 760px) {
+  html body.msg-center-active .cs-page .cs {
+    display: flex; flex-direction: column; gap: 0; align-items: stretch;
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
+    overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(24px + var(--safe-bottom, 0px));
+  }
+  /* section chips stay pinned at the top of the scroller, one swipeable row */
+  html body.msg-center-active .cs-page .cs-nav {
+    position: sticky; top: 0; z-index: 3; flex: none; flex-direction: row; gap: 8px;
+    padding: 8px 12px; margin: 0; border: 0; border-bottom: 1px solid var(--border-subtle); border-radius: 0;
+    background: var(--bg-surface); overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: 12px; scrollbar-width: none;
+  }
+  html body.msg-center-active .cs-page .cs-nav::-webkit-scrollbar { display: none; }
+  html body.msg-center-active .cs-page .cs-nav__item {
+    flex: none; scroll-snap-align: center; padding: 8px 14px; border-radius: 999px; font-size: 13.5px;
+    background: var(--glass-bg); white-space: nowrap;
+  }
+  html body.msg-center-active .cs-page .cs-nav__item.is-active { background: var(--color-primary); color: #fff; }
+  /* content: edge-to-edge, no card chrome, natural height */
+  html body.msg-center-active .cs-page .cs-main {
+    flex: none; padding: 16px 12px 8px; gap: 20px; border: 0; border-radius: 0; box-shadow: none; background: transparent;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  html body.msg-center-active .cs-page .cs-row { padding: 12px 12px; gap: 10px; }
+  html body.msg-center-active .cs-page .cs-row__text strong { font-size: 14px; line-height: 1.35; }
+  html body.msg-center-active .cs-page .cs-row__value { max-width: 45%; font-size: 12.5px; line-height: 1.3; }
+  html body.msg-center-active .cs-page .cs-pad,
+  html body.msg-center-active .cs-page .cs-bio { padding: 12px; }
+  html body.msg-center-active .cs-page .cs-profile { padding: 12px; gap: 12px; }
+  html body.msg-center-active .cs-page .cs-chatlist { max-height: none; }
+  html body.msg-center-active .cs-page .cs-seg { flex-wrap: wrap; }
+}
+
+/* ---------- availability timer ---------- */
+.cs-sched { display: flex; flex-direction: column; gap: 0; }
+.cs-sched__top { display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+.cs-sched__top .cs-row__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.cs-sched__state { padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800; color: #c0353a; background: rgba(229, 72, 77, .12); }
+.cs-sched__state.is-open { color: #0d7a4f; background: rgba(16, 185, 129, .16); }
+.cs-sched__body { display: flex; flex-direction: column; gap: 10px; padding: 4px 16px 16px; border-top: 1px solid var(--border-subtle); }
+.cs-sched__label { margin-top: 8px; font-size: 12px; font-weight: 800; color: var(--text-secondary); }
+.cs-sched__days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cs-sched__days button { height: 38px; border-radius: 12px; border: 1px solid var(--border-subtle); background: var(--bg-canvas); color: var(--text-secondary); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.cs-sched__days button.is-on { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--color-primary), #7c5cff); box-shadow: 0 6px 14px -8px rgba(var(--color-primary-rgb), .8); }
+.cs-sched__presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.cs-sched__presets button, .cs-sched__tz button { padding: 5px 12px; border-radius: 999px; border: 1px dashed var(--border-subtle); background: none; color: var(--color-primary); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.cs-sched__times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cs-sched__times label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-secondary); }
+.cs-sched__times input, .cs-sched__tz select { height: 40px; padding: 0 10px; border-radius: 12px; border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-primary); font: inherit; font-size: 14px; font-weight: 700; }
+.cs-sched__bar { position: relative; height: 12px; margin: 6px 0 16px; border-radius: 999px; background: var(--bg-canvas); border: 1px solid var(--border-subtle); }
+.cs-sched__bar i { position: absolute; top: 0; bottom: 0; border-radius: 999px; background: linear-gradient(90deg, var(--color-primary), #7c5cff); }
+.cs-sched__bar em { position: absolute; top: 15px; font-style: normal; font-size: 10px; color: var(--text-secondary); transform: translateX(-50%); }
+.cs-sched__bar em:nth-of-type(1) { left: 0; transform: none; } .cs-sched__bar em:nth-of-type(2) { left: 25%; } .cs-sched__bar em:nth-of-type(3) { left: 50%; } .cs-sched__bar em:nth-of-type(4) { left: 75%; } .cs-sched__bar em:nth-of-type(5) { left: auto; right: 0; transform: none; }
+.cs-sched__sum { margin: 0; font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.cs-sched__tz { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cs-sched__tz select { flex: 1; min-width: 180px; }
+.cs-sched__scopes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.cs-sched__scopes button { display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 14px; border: 1px solid var(--border-subtle); background: var(--bg-canvas); color: var(--text-primary); font: inherit; text-align: start; cursor: pointer; }
+.cs-sched__scopes button small { font-size: 11px; color: var(--text-secondary); }
+.cs-sched__scopes button.is-on { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .14); }
+.cs-sched__affects { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; font-weight: 600; }
+.cs-sched__affects label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.cs-sched__foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border-subtle); background: color-mix(in srgb, var(--color-primary) 5%, var(--bg-surface)); }
+.cs-sched .mc-alert { margin: 0 16px 12px; }
+@media (max-width: 520px) { .cs-sched__scopes { grid-template-columns: 1fr; } }

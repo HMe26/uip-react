@@ -1,0 +1,147 @@
+/* ==========================================================================
+   ambient.css — the platform-wide "alive" layer (backdrop + pills + small touches).
+
+   Sits on top of motion.css / motion-plus.css (which animate content once on mount) and
+   brings the Landing page feel to every page, deliberately lighter:
+
+   - Backdrop: 2 soft glows (radial-gradient, NO blur filter) + 8 small shapes. Only
+     transform + opacity animate, durations 26–38 s, one composited layer each.
+   - Pills / chips / badges: quick pop-in once, small hover lift, a calm "live" ping.
+   - Buttons / avatars / notification dots: tiny hover + a slow pulse on unread dots.
+   - Off (not just paused) for: prefers-reduced-motion, slow screens, data-saver,
+     the Android app, and low-end devices (the component renders nothing for those).
+   - :where() keeps specificity at 0 so any page rule can still override.
+
+   Tune the whole layer from the tokens below.
+   ========================================================================== */
+
+:root {
+  --amb-1: #4C63FF; --amb-1-rgb: 76, 99, 255;    /* indigo */
+  --amb-2: #0EA5E9; --amb-2-rgb: 14, 165, 233;   /* sky    */
+  --amb-3: #0FB5AE; --amb-3-rgb: 15, 181, 174;   /* teal   */
+  --amb-4: #F0603A; --amb-4-rgb: 240, 96, 58;    /* coral  */
+  --amb-5: #F0A30A; --amb-5-rgb: 240, 163, 10;   /* amber  */
+  --amb-opacity: .5;           /* peak opacity of a shape */
+  --amb-glow: .10;             /* alpha of the soft glows */
+}
+[data-theme="dark"] {
+  --amb-1: #7C8BFF; --amb-1-rgb: 124, 139, 255;
+  --amb-2: #4CC2FF; --amb-2-rgb: 76, 194, 255;
+  --amb-3: #2DD4BF; --amb-3-rgb: 45, 212, 191;
+  --amb-4: #FF8A65; --amb-4-rgb: 255, 138, 101;
+  --amb-5: #FFC54D; --amb-5-rgb: 255, 197, 77;
+  --amb-opacity: .38;
+  --amb-glow: .14;
+}
+
+/* ---- Stacking: the backdrop sits above the page canvas, below all content ----
+   `isolation` gives the root a stacking context so z-index:-1 lands above the root's own
+   background (the .app-shell paints --bg-canvas) but under everything inside it. */
+:where(.app-shell:not(.app-shell--exam-lock), .lp2-page, .prf-page, .join-grp) { isolation: isolate; }
+:where(.lp2-page, .prf-page, .join-grp) { position: relative; }
+
+.ambient-bg {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+  contain: strict;                      /* nothing in here can cause layout/paint outside */
+}
+.ambient-bg__orb {
+  position: absolute; border-radius: 50%; will-change: transform;
+  background: radial-gradient(closest-side, rgba(var(--amb-1-rgb), var(--amb-glow)), transparent);
+}
+.ambient-bg__orb--1 { width: 620px; height: 620px; inset-block-start: -200px; inset-inline-start: 8%; }
+.ambient-bg__orb--2 {
+  width: 560px; height: 560px; inset-block-end: -220px; inset-inline-end: -80px;
+  background: radial-gradient(closest-side, rgba(var(--amb-3-rgb), var(--amb-glow)), transparent);
+}
+.ambient-bg__grid {
+  position: absolute; inset: 0; opacity: .5;                 /* static: panning a background repaints */
+  background-image: radial-gradient(rgba(var(--amb-1-rgb), .16) 1px, transparent 1px); background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(ellipse at 70% 0%, #000 0%, transparent 62%); mask-image: radial-gradient(ellipse at 70% 0%, #000 0%, transparent 62%);
+}
+.ambient-bg__shape {
+  position: absolute; inset-block-end: -40px; width: var(--s); height: var(--s);
+  opacity: 0; color: var(--c, var(--amb-1)); will-change: transform, opacity;
+}
+.ambient-bg__shape--ring { border: 2px solid currentColor; border-radius: 50%; }
+.ambient-bg__shape--dot { background: currentColor; border-radius: 50%; }
+.ambient-bg__shape--square { border: 2px solid currentColor; border-radius: 5px; }
+.ambient-bg__shape--plus::before, .ambient-bg__shape--plus::after { content: ''; position: absolute; background: currentColor; border-radius: 2px; }
+.ambient-bg__shape--plus::before { inset-inline: 0; top: 50%; height: 2.5px; transform: translateY(-50%); }
+.ambient-bg__shape--plus::after { inset-block: 0; left: 50%; width: 2.5px; transform: translateX(-50%); }
+
+/* Pages that must stay perfectly calm: no backdrop at all. */
+html.is-native .ambient-bg,
+:where(.app-shell--exam-lock) .ambient-bg,
+body.msg-page-active .ambient-bg { display: none; }
+
+/* ---- Motion ------------------------------------------------------------------ */
+@keyframes amb-rise {
+  0%   { transform: translate3d(0, 0, 0) rotate(0); opacity: 0; }
+  12%  { opacity: var(--amb-opacity); }
+  88%  { opacity: var(--amb-opacity); }
+  100% { transform: translate3d(0, calc(-100vh - 80px), 0) rotate(200deg); opacity: 0; }
+}
+@keyframes amb-drift-1 { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(60px, 40px, 0); } }
+@keyframes amb-drift-2 { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(-50px, -40px, 0); } }
+@keyframes amb-pill { from { opacity: 0; transform: scale(.82); } }
+@keyframes amb-ping { 0% { transform: scale(1); opacity: .55; } 70%, 100% { transform: scale(2.4); opacity: 0; } }
+@keyframes amb-dot { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .ambient-bg__orb--1 { animation: amb-drift-1 34s ease-in-out infinite; }
+  .ambient-bg__orb--2 { animation: amb-drift-2 40s ease-in-out -12s infinite; }
+  .ambient-bg__shape { animation: amb-rise var(--d, 32s) linear var(--delay, 0s) infinite; }
+
+  /* ---- Pills / chips / badges: one quick pop-in (first 6 siblings staggered) ---- */
+  :where(
+    .badge, .st-pill, .pill, .adm-chip, .um-chip, .sa-chip, .fd-chip, .sec-chip, .pol-chip, .sf-chip, .sl-badge,
+    .qb-chip, .dr-chip, .pm-chip, .quick-link-pill, .active-chip, .ru-chip, .uf-pill, .uf-chip, .msg-chip
+  ) { animation: amb-pill 320ms var(--m-ease, cubic-bezier(.2,.7,.2,1)) backwards; }
+  :where(.badge, .st-pill, .pill, .adm-chip, .um-chip, .sa-chip, .fd-chip, .qb-chip, .dr-chip, .pm-chip, .quick-link-pill):nth-child(2) { animation-delay: 40ms; }
+  :where(.badge, .st-pill, .pill, .adm-chip, .um-chip, .sa-chip, .fd-chip, .qb-chip, .dr-chip, .pm-chip, .quick-link-pill):nth-child(3) { animation-delay: 80ms; }
+  :where(.badge, .st-pill, .pill, .adm-chip, .um-chip, .sa-chip, .fd-chip, .qb-chip, .dr-chip, .pm-chip, .quick-link-pill):nth-child(4) { animation-delay: 120ms; }
+  :where(.badge, .st-pill, .pill, .adm-chip, .um-chip, .sa-chip, .fd-chip, .qb-chip, .dr-chip, .pm-chip, .quick-link-pill):nth-child(n+5) { animation-delay: 160ms; }
+
+  /* "live" / unread signals: a calm ping (small elements only, transform + opacity) */
+  :where(.ai-status__dot, .lp2-err__dot) { animation: amb-dot 2.4s ease-in-out infinite; }
+  :where(.sidebar__dot, .topbar__count) { animation: amb-dot 2.2s ease-in-out infinite; }
+
+  :where(.badge, .st-pill, .pill, .adm-chip, .um-chip, .sa-chip, .fd-chip, .sec-chip, .pol-chip, .qb-chip, .dr-chip, .pm-chip, .quick-link-pill, .sl-badge) {
+    transition: transform var(--m-dur-fast, 180ms) var(--m-ease, ease), box-shadow var(--m-dur-fast, 180ms) linear, background-color var(--m-dur-fast, 180ms) linear;
+  }
+}
+
+/* ---- Hover feedback: real pointers only ----------------------------------------- */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  :where(.badge, .st-pill, .pill, .adm-chip, .um-chip, .sa-chip, .fd-chip, .sec-chip, .pol-chip, .qb-chip, .dr-chip, .pm-chip, .quick-link-pill, .sl-badge):hover {
+    transform: translateY(-1px) scale(1.04);
+    box-shadow: 0 6px 14px -8px rgba(var(--color-primary-rgb, 76, 99, 255), .55);
+  }
+  :where(.btn-primary):not(:disabled):hover { box-shadow: 0 10px 22px -10px rgba(var(--color-primary-rgb, 76, 99, 255), .65); }
+  :where(.avatar, .topbar__avatar, .user-avatar, .msg-avatar) { transition: transform var(--m-dur-fast, 180ms) var(--m-ease, ease); }
+  :where(.avatar, .topbar__avatar, .user-avatar, .msg-avatar):hover { transform: scale(1.06); }
+}
+
+/* ---- Admin kill switch: Platform Policy -> "Platform animations" = off ------------------
+   <html data-motion="off"> (set by lib/motionPolicy.js). Same safe approach as the reduced-motion
+   net in animations.css (jump to the final state, never leave an element half-animated), but
+   loading spinners keep turning so people can still see that something is in progress. */
+html[data-motion="off"] .ambient-bg { display: none; }
+html[data-motion="off"] *:not([class*="spin"]):not([class*="load"]):not([aria-busy="true"]),
+html[data-motion="off"] *:not([class*="spin"]):not([class*="load"]):not([aria-busy="true"])::before,
+html[data-motion="off"] *:not([class*="spin"]):not([class*="load"]):not([aria-busy="true"])::after {
+  animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important; transition-delay: 0s !important; scroll-behavior: auto !important;
+}
+
+/* ---- Switch the heavy part off ---------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-bg__shape, .ambient-bg__grid { display: none; }   /* keep two static glows only */
+}
+@media (update: slow), (prefers-reduced-data: reduce) {
+  .ambient-bg { display: none; }
+}
+@media (max-width: 768px) {
+  .ambient-bg__shape:not(.is-keep) { display: none; }        /* phones: 4 shapes instead of 8 */
+  .ambient-bg__orb { width: 360px; height: 360px; }
+}

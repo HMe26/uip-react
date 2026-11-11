@@ -1,0 +1,123 @@
+/* Desktop Browser app: tab strip, toolbar, new-tab page and Google-style results. Colours come from the desktop tokens (light / dark / accent). */
+.wb { --wb-link: #1a0dab; --wb-visited: #681da8; --wb-url: #1e6e3a; --wb-tabbar: color-mix(in srgb, var(--panel-2) 78%, #000 6%); }
+.os--dark .wb { --wb-link: #8ab4f8; --wb-visited: #c58af9; --wb-url: #81c995; --wb-tabbar: color-mix(in srgb, var(--panel) 70%, #000 30%); }
+.wb { min-width: 0; }
+.wb button { font: inherit; }
+
+/* ---- tab strip ---- */
+.wb-tabs { display: flex; align-items: flex-end; gap: 2px; padding: 6px 8px 0; background: var(--wb-tabbar); flex: none; overflow-x: auto; scrollbar-width: none; }
+.wb-tabs::-webkit-scrollbar { display: none; }
+.wb-tab { position: relative; flex: 1 1 0; min-width: 44px; max-width: 220px; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 11px; border-radius: 10px 10px 0 0; color: var(--g-mute); cursor: default; font-size: 12.5px; user-select: none; outline: 0; }
+.wb-tab:hover { background: var(--g-hover); }
+.wb-tab.is-on { background: var(--panel-2); color: var(--g-fg); font-weight: 600; box-shadow: 0 -1px 0 var(--g-line) inset, 1px 0 0 var(--g-line) inset, -1px 0 0 var(--g-line) inset; }
+.wb-tab:focus-visible { box-shadow: 0 0 0 2px var(--os-accent) inset; }
+.wb-tab:not(.is-on)::after { content: ''; position: absolute; inset-inline-end: 0; top: 9px; bottom: 9px; width: 1px; background: var(--g-line); }
+.wb-tab:hover::after, .wb-tab.is-on::after, .wb-tab:has(+ .wb-tab.is-on)::after { opacity: 0; }
+.wb-tab > svg { flex: none; }
+.wb-tab__t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: start; }
+.wb-tab__x { flex: none; width: 20px; height: 20px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; opacity: .65; }
+.wb-tab__x:hover { background: var(--g-hover); opacity: 1; }
+.wb-tab:not(.is-on):not(:hover) .wb-tab__x { opacity: 0; }
+.wb-tab:focus-within .wb-tab__x { opacity: .65; }
+.wb-newtab { flex: none; width: 30px; height: 30px; margin: 0 4px 2px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--g-mute); cursor: pointer; }
+.wb-newtab:hover { background: var(--g-hover); color: var(--g-fg); }
+
+/* ---- toolbar ---- */
+.wb-bar { display: flex; align-items: center; gap: 2px; padding: 6px 8px; background: var(--panel-2); border-bottom: 1px solid var(--g-line); flex: none; }
+.wb-bar button, .wb-bar .wb-btn { height: 32px; min-width: 32px; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 50%; background: transparent; color: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap; }
+.wb-bar button:has(.wb-lbl), .wb-bar .wb-btn:has(.wb-lbl) { border-radius: 16px; }
+.wb-bar button:hover:not(:disabled), .wb-bar .wb-btn:hover { background: var(--g-hover); }
+.wb-bar button:disabled { opacity: .35; cursor: default; }
+.wb-lbl { display: none; }
+@media (min-width: 820px) { .wb-lbl { display: inline; } }
+.wb-omni { flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px; height: 34px; margin: 0 6px; padding: 0 14px; border-radius: 17px; background: var(--panel); border: 1px solid transparent; box-shadow: 0 0 0 1px var(--g-line) inset; color: var(--g-mute); }
+.wb-omni:focus-within { box-shadow: 0 0 0 2px var(--os-accent) inset; }
+.wb-omni input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--g-fg); font: inherit; font-size: 13.5px; }
+.wb-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; background: var(--g-hover); color: var(--g-mute); }
+.wb-badge--cloud { background: color-mix(in srgb, var(--os-accent) 18%, transparent); color: var(--os-accent); }
+.wb-note { padding: 7px 14px; font-size: 12.5px; background: color-mix(in srgb, #f59e0b 16%, var(--panel)); color: var(--g-fg); border-bottom: 1px solid var(--g-line); flex: none; }
+.wb-note.is-ok { background: color-mix(in srgb, #22c55e 16%, var(--panel)); }
+
+/* ---- stage ---- */
+.wb-stage { flex: 1; min-height: 0; position: relative; display: flex; flex-direction: column; overflow: hidden; background: var(--panel); }
+.wb-frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
+.wb-cloud { position: absolute; inset: 0; background: var(--panel); }
+.wb-wait { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--g-mute); font-size: 13px; padding: 24px; text-align: center; }
+.wb-spin { width: 26px; height: 26px; border-radius: 50%; border: 3px solid var(--g-line); border-top-color: var(--os-accent); animation: wb-rot .8s linear infinite; }
+.wb-spin--sm { width: 13px; height: 13px; border-width: 2px; flex: none; }
+@keyframes wb-rot { to { transform: rotate(360deg); } }
+.wb-loadbar { position: absolute; inset-inline: 0; top: 0; height: 3px; overflow: hidden; background: transparent; z-index: 4; pointer-events: none; }
+.wb-loadbar i { display: block; height: 100%; width: 35%; background: var(--os-accent); border-radius: 2px; animation: wb-slide 1.1s ease-in-out infinite; }
+@keyframes wb-slide { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+[dir="rtl"] .wb-loadbar i { animation-direction: reverse; }
+.wb-ribbon { position: absolute; inset-inline: 0; inset-block-end: 0; padding: 7px 12px; text-align: center; font-size: 12px; font-weight: 600; background: var(--os-accent); color: #fff; z-index: 5; }
+.wb-cta { margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 16px; border: 0; border-radius: 17px; background: var(--os-accent); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; }
+.wb-fav { border-radius: 4px; object-fit: contain; flex: none; background: transparent; }
+.wb-fav--fb { display: inline-grid; place-items: center; background: color-mix(in srgb, var(--os-accent) 20%, transparent); color: var(--os-accent); font-size: 10px; font-weight: 800; border-radius: 50%; }
+
+/* ---- new tab page ---- */
+.wb-home { flex: 1; overflow: auto; display: flex; flex-direction: column; align-items: center; gap: 26px; padding: clamp(18px, 8vh, 80px) 20px 30px; }
+.wb-logo { display: flex; align-items: center; gap: 12px; color: var(--os-accent); }
+.wb-logo h1 { margin: 0; font-size: clamp(26px, 4vw, 38px); font-weight: 800; letter-spacing: -.5px; color: var(--g-fg); }
+.wb-big { width: min(640px, 100%); display: flex; align-items: center; gap: 12px; height: 50px; padding: 0 8px 0 18px; border-radius: 25px; background: var(--panel); border: 1px solid var(--g-line); color: var(--g-mute); box-shadow: 0 2px 10px rgba(0, 0, 0, .06); transition: box-shadow .15s, border-color .15s; }
+.wb-big:hover { box-shadow: 0 3px 14px rgba(0, 0, 0, .12); }
+.wb-big:focus-within { border-color: var(--os-accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--os-accent) 20%, transparent); }
+.wb-big input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--g-fg); font: inherit; font-size: 15.5px; }
+.wb-big button { height: 36px; padding: 0 20px; border: 0; border-radius: 18px; background: var(--os-accent); color: #fff; font-weight: 700; cursor: pointer; }
+.wb-tiles { width: min(640px, 100%); display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px 4px; }
+.wb-tile { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 4px 10px; border: 0; border-radius: 14px; background: transparent; color: var(--g-fg); cursor: pointer; }
+.wb-tile:hover { background: var(--g-hover); }
+.wb-tile b { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; color: #fff; font-size: 19px; font-weight: 800; box-shadow: 0 2px 6px rgba(0, 0, 0, .2); }
+.wb-tile span { max-width: 100%; font-size: 12.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-tile i { position: absolute; top: 8px; inset-inline-end: 18px; font-style: normal; font-size: 11px; color: var(--g-mute); }
+.wb-recent { width: min(640px, 100%); }
+.wb-recent h3 { margin: 0 0 8px; font-size: 12px; font-weight: 700; color: var(--g-mute); }
+.wb-recent > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.wb-recent button { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border: 1px solid var(--g-line); border-radius: 15px; background: var(--panel-2); color: var(--g-fg); font-size: 12.5px; cursor: pointer; }
+.wb-recent button:hover { border-color: var(--os-accent); }
+.wb-foot { width: min(640px, 100%); margin: 0; font-size: 11.5px; line-height: 1.7; color: var(--g-mute); text-align: center; }
+
+/* ---- results (Google-style) ---- */
+.wb-results { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; }
+.wb-rhead { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; gap: 18px; padding: 14px 24px 8px; background: var(--panel); }
+.wb-rlogo { display: inline-flex; align-items: center; gap: 7px; border: 0; background: transparent; color: var(--os-accent); font-size: 21px; font-weight: 800; letter-spacing: -.3px; cursor: pointer; padding: 0; }
+.wb-rbox { flex: 1; max-width: 640px; display: flex; align-items: center; height: 44px; padding: 0 6px 0 18px; border-radius: 22px; background: var(--panel); border: 1px solid var(--g-line); box-shadow: 0 1px 5px rgba(0, 0, 0, .08); }
+.wb-rbox:hover, .wb-rbox:focus-within { box-shadow: 0 2px 10px rgba(0, 0, 0, .16); }
+.wb-rbox input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--g-fg); font: inherit; font-size: 15px; }
+.wb-rbox button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--g-mute); cursor: pointer; }
+.wb-rbox button:hover { background: var(--g-hover); }
+.wb-rbox__go { color: var(--os-accent) !important; }
+.wb-rtabs { display: flex; align-items: center; gap: 22px; padding: 0 24px; border-bottom: 1px solid var(--g-line); background: var(--panel); position: sticky; top: 66px; z-index: 2; }
+.wb-rtabs > span, .wb-rtabs > button { display: inline-flex; align-items: center; gap: 6px; height: 40px; border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--g-mute); font-size: 13px; cursor: pointer; padding: 0 2px; }
+.wb-rtabs > span.is-on { color: var(--os-accent); border-bottom-color: var(--os-accent); font-weight: 700; cursor: default; }
+.wb-rtabs > button:hover { color: var(--g-fg); }
+.wb-rbody { width: 100%; max-width: 720px; padding: 8px 24px 40px; margin-inline-end: auto; display: flex; flex-direction: column; gap: 4px; }
+[dir="rtl"] .wb-rbody { margin-inline-start: 0; }
+.wb-r { padding: 14px 0 12px; display: flex; flex-direction: column; gap: 2px; }
+.wb-r__site { display: flex; align-items: center; gap: 12px; color: var(--g-fg); text-decoration: none; min-width: 0; }
+.wb-r__ico { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--panel-2); border: 1px solid var(--g-line); }
+.wb-r__who { display: flex; flex-direction: column; min-width: 0; line-height: 1.35; }
+.wb-r__who b { font-size: 13.5px; font-weight: 500; color: var(--g-fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wb-r__who cite { font-style: normal; font-size: 12px; color: var(--g-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: start; }
+.wb-r__t { margin-top: 4px; font-size: 20px; line-height: 1.3; font-weight: 400; color: var(--wb-link); text-decoration: none; cursor: pointer; overflow-wrap: anywhere; }
+.wb-r__t:hover { text-decoration: underline; }
+.wb-r__t:visited { color: var(--wb-visited); }
+.wb-r p { margin: 3px 0 0; font-size: 14px; line-height: 1.58; color: var(--g-mute); overflow-wrap: anywhere; }
+.wb-r p b { color: var(--g-fg); font-weight: 700; }
+.wb-skel { display: grid; grid-template-columns: 28px 1fr; gap: 8px 12px; padding: 16px 0; }
+.wb-skel i { width: 28px; height: 28px; border-radius: 50%; }
+.wb-skel b { height: 14px; width: 40%; align-self: center; border-radius: 7px; }
+.wb-skel u { grid-column: 1 / -1; height: 12px; border-radius: 6px; }
+.wb-skel u:nth-of-type(1) { width: 78%; height: 18px; } .wb-skel u:nth-of-type(2) { width: 94%; }
+.wb-skel i, .wb-skel b, .wb-skel u { background: linear-gradient(90deg, var(--g-hover), var(--g-line), var(--g-hover)); background-size: 200% 100%; animation: wb-shim 1.3s linear infinite; text-decoration: none; }
+@keyframes wb-shim { to { background-position: -200% 0; } }
+.wb-warn { display: flex; gap: 12px; padding: 16px; margin-top: 10px; border-radius: 12px; border: 1px solid var(--g-line); background: var(--panel-2); color: var(--g-fg); }
+.wb-warn p { margin: 4px 0 0; font-size: 13px; color: var(--g-mute); }
+.wb-empty { padding: 28px 4px; color: var(--g-mute); font-size: 14px; }
+.wb-empty b { display: block; color: var(--g-fg); font-size: 16px; margin-bottom: 4px; }
+.wb-pager { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 22px 0 6px; }
+.wb-pager button { min-width: 38px; height: 38px; padding: 0 12px; border: 0; border-radius: 19px; background: transparent; color: var(--wb-link); font-size: 14px; cursor: pointer; }
+.wb-pager button:hover:not(:disabled) { background: var(--g-hover); }
+.wb-pager button.is-on { color: var(--g-fg); font-weight: 700; background: var(--g-hover); cursor: default; }
+.wb-pager button:disabled { color: var(--g-mute); opacity: .5; cursor: default; }
+@media (max-width: 640px) { .wb-rhead { padding-inline: 12px; gap: 10px; } .wb-rlogo span { display: none; } .wb-rtabs { padding-inline: 12px; top: 66px; } .wb-rbody { padding-inline: 14px; } }

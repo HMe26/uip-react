@@ -1,0 +1,26 @@
+/* Voice message card — two rows, never overlaps: [play] [ wave ] / [time ........ speed · boost · download].
+   The wave measures its own width (VoiceMessage.jsx) so the number of bars always fits; the card shrinks to any bubble. */
+.vm.vm--pro { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 10px; min-width: min(240px, 100%); width: 100%; max-width: 360px; padding: 2px 0; box-sizing: border-box; }
+.vm.vm--pro .vm__play { width: 42px; height: 42px; flex: none; box-shadow: 0 2px 6px rgba(0, 0, 0, .16); transition: transform .12s; }
+.vm.vm--pro .vm__play:active:not(:disabled) { transform: scale(.94); }
+.vm.vm--pro .vm__main { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.vm.vm--pro .vm__wave { flex: none; width: 100%; height: 30px; gap: 2px; overflow: hidden; touch-action: none; user-select: none; outline: none; border-radius: 6px; }
+.vm.vm--pro .vm__wave:focus-visible { box-shadow: 0 0 0 2px currentColor; }
+.vm.vm--pro .vm__wave span { flex: 1 1 0; min-width: 0; max-width: 4px; border-radius: 3px; opacity: .32; transition: opacity .1s, height .12s; }
+.vm.vm--pro .vm__wave span.is-done { opacity: 1; }
+.vm.vm--pro.is-playing .vm__wave span.is-done:last-of-type { opacity: 1; }
+.vm.vm--pro.is-scrub .vm__wave { cursor: grabbing; }
+.vm.vm--pro .vm__meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+.vm.vm--pro .vm__time { min-width: 0; font-size: 12px; font-weight: 600; opacity: .85; text-align: start; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vm.vm--pro .vm__time i { font-style: normal; font-weight: 500; opacity: .65; }
+.vm.vm--pro .vm__actions { display: inline-flex; align-items: center; gap: 5px; flex-wrap: nowrap; flex: none; }
+.vm.vm--pro .vm__speed, .vm.vm--pro .vb-chip { height: 26px; min-width: 38px; padding: 0 9px; display: inline-flex; align-items: center; justify-content: center; gap: 3px; border-radius: 999px; font-size: 11px; font-weight: 700; line-height: 1; white-space: nowrap; }
+.vm.vm--pro .vm__dl { width: 28px; height: 28px; }
+.vm.vm--pro .vm__dlmenu { gap: 4px; }
+/* very narrow bubbles: drop the speed / boost text chips to icons-only width and let the row wrap instead of overflowing */
+@media (max-width: 380px) {
+  .vm.vm--pro { column-gap: 8px; }
+  .vm.vm--pro .vm__play { width: 38px; height: 38px; }
+  .vm.vm--pro .vm__meta { flex-wrap: wrap; row-gap: 4px; }
+  .vm.vm--pro .vm__speed, .vm.vm--pro .vb-chip { min-width: 34px; padding: 0 7px; }
+}

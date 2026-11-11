@@ -1,0 +1,69 @@
+/* ==========================================================================
+   motion-plus.css — extends motion.css (same rules: CSS-only, opacity/transform
+   only, one-shot, zero specificity via :where(), first 8 items staggered,
+   reduced-motion respected). Authenticated app only: every rule is scoped to
+   .app-shell, so landing / login / register keep their own animations.
+
+   What it adds on top of motion.css:
+   1. Page wrappers (.st-page, .ex-page, .um-page …): the wrapper stays still and
+      its sections rise in one after another (instead of one big block).
+   2. More collection containers (stacks, lists, KPI rows, card grids).
+   3. Hover lift for KPI tiles, press feedback on buttons/tabs, progress/score
+      draw-on, tab panels + <details> fade.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* ---- 1. Page wrappers: stagger sections, not the wrapper ------------------ */
+  :where(.app-shell) :where(.app-shell__main) > :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) { animation: none; }
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) > :where(*:not(.insight-eyebrow, .modal-overlay)) {
+    animation: m-rise var(--m-dur) var(--m-ease) backwards;
+  }
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) > :where(*:nth-child(2)) { animation-delay: calc(var(--m-step) * 1); }
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) > :where(*:nth-child(3)) { animation-delay: calc(var(--m-step) * 2); }
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) > :where(*:nth-child(4)) { animation-delay: calc(var(--m-step) * 3); }
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) > :where(*:nth-child(5)) { animation-delay: calc(var(--m-step) * 4); }
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) > :where(*:nth-child(6)) { animation-delay: calc(var(--m-step) * 5); }
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) > :where(*:nth-child(7)) { animation-delay: calc(var(--m-step) * 6); }
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page) > :where(*:nth-child(n+8)) { animation-delay: calc(var(--m-step) * 7); }
+
+  /* ---- 2. Extra collections: container still, children stagger ------------- */
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) { animation: none; }
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*) {
+    animation: m-rise var(--m-dur) var(--m-ease) backwards;
+  }
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*:nth-child(2)) { animation-delay: calc(var(--m-step) * 1); }
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*:nth-child(3)) { animation-delay: calc(var(--m-step) * 2); }
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*:nth-child(4)) { animation-delay: calc(var(--m-step) * 3); }
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*:nth-child(5)) { animation-delay: calc(var(--m-step) * 4); }
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*:nth-child(6)) { animation-delay: calc(var(--m-step) * 5); }
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*:nth-child(7)) { animation-delay: calc(var(--m-step) * 6); }
+  :where(.app-shell) :where(.st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*:nth-child(n+8)) { animation-delay: calc(var(--m-step) * 7); }
+
+  /* ---- 3. Draw-on + pop-in ------------------------------------------------- */
+  :where(.app-shell) :where(.st-progress > span) { transform-origin: left center; animation: m-grow 800ms var(--m-ease) 200ms backwards; }
+  [dir="rtl"] :where(.app-shell) :where(.st-progress > span) { transform-origin: right center; }
+  :where(.app-shell) :where(.st-score, .gh-review__count, .gh-stat__icon) { animation: m-icon 520ms var(--m-ease) 150ms backwards; }
+
+  /* ---- 4. Small states ----------------------------------------------------- */
+  :where(.app-shell) :where([role="tabpanel"], details[open] > *:not(summary), .st-alert) { animation: m-fade 260ms var(--m-ease) backwards; }
+  :where(.app-shell) :where(.btn, .st-tab, .tab-link, .gh-tab, .gh-iconbtn) { transition: transform 120ms var(--m-ease), background-color var(--m-dur-fast) linear, color var(--m-dur-fast) linear, border-color var(--m-dur-fast) linear; }
+  :where(.app-shell) :where(.btn):not(:disabled):active { transform: scale(.97); }
+  :where(.app-shell) :where(.gh-tab, .st-tab):active { transform: scale(.96); }
+  :where(.app-shell) :where(a, button, [tabindex]):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+}
+
+/* ---- 5. Hover lift: real pointers only ------------------------------------- */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  :where(.app-shell) :where(.st-kpi, .fc-kpi, .ex-kpi, .pol-card) { transition: transform var(--m-dur) var(--m-ease), box-shadow var(--m-dur) var(--m-ease), border-color var(--m-dur-fast) linear; }
+  :where(.app-shell) :where(.st-kpi, .fc-kpi, .ex-kpi, .pol-card):hover:where(:not(:has(.modal-overlay, .st-modal-overlay, .sec-modal-overlay, .ex-modal-scrim, .gr-modal, .drawer-overlay, .ua-sheet-overlay, .file-preview-overlay, .nf-scrim, .sc-scrim, .att-sheet, .export-menu, .ai-pop, [role="dialog"], [aria-modal="true"]))) {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px -16px rgba(var(--color-primary-rgb, 76, 99, 255), .45);
+    border-color: rgba(var(--color-primary-rgb, 76, 99, 255), .4);
+  }
+}
+
+/* Slow / battery-saver devices: single quick fade, no stagger. */
+@media (prefers-reduced-motion: no-preference) and (update: slow) {
+  :where(.app-shell) :where(.st-page, .ex-page, .um-page, .sec-page, .prf-page, .fd-page, .sa-page, .stf-page, .sl-page, .qb-page, .nc-page, .eg-page, .cv-page, .ac-page, .gh-page, .st-stack, .st-list, .st-cards, .st-ecards, .st-grid, .fc-stack, .fc-kpis, .fc-rows, .fc-detail-grid, .adm-list, .adm-role-grid, .pol-list, .pol-stack, .um-cards, .um-grid, .um-stack, .ex-info-grid, .ex-integrity-grid, .gh-grid, .gh-stats) > :where(*) { animation: m-fade var(--m-dur-fast) linear backwards !important; animation-delay: 0s !important; }
+}

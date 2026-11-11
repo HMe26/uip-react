@@ -1,0 +1,222 @@
+/* app-shell.css — layout shell + page-level utility components used by
+   every wired dashboard page (student/university/
+   admin). Sits on top of variables.css + component css files.
+   Status: Active - Phase 3/4 (UI Wiring)
+   @package UIPE */
+
+/* ---- App shell (sidebar + topbar + content) --------------------------- */
+.app-shell { display: flex; min-height: 100vh; }
+.app-shell__content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-shell__main { flex: 1; min-width: 0; padding: var(--space-6); max-width: var(--content-max-width); width: 100%; margin-inline: auto; }
+
+/* Desktop sidebar: pinned to the viewport and fully visible while the page
+   scrolls. It is exactly one screen tall; if the nav is longer than the screen
+   only the nav list scrolls, so the brand/user card and the footer
+   (theme switch, AI button) are always on screen. Needs html/body NOT to be
+   scroll containers (see overflow-x: clip in base.css) or sticky silently fails.
+   The mobile drawer (<= 768px, responsive.css) is unaffected. */
+@media (min-width: 769px) {
+  .app-shell .sidebar {
+    position: sticky; top: 0; align-self: flex-start;
+    height: 100vh; height: 100dvh; max-height: 100dvh; overflow: hidden;
+  }
+  .app-shell .sidebar__nav { min-height: 0; overflow-y: auto; }
+}
+
+.sidebar.is-collapsed { width: var(--sidebar-width-collapsed); }
+.sidebar.is-collapsed .sidebar__link span,
+.sidebar.is-collapsed .sidebar__section-title,
+.sidebar.is-collapsed .sidebar__brand-text { display: none; }
+
+/* ---- Page header (title + primary actions) ---------------------------- */
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-5);
+  margin-bottom: var(--space-6); flex-wrap: wrap;
+}
+.page-header__title h1 { margin: var(--space-1) 0; }
+.page-header__title p { margin: 0; color: var(--text-secondary); }
+.page-header__actions { display: flex; gap: var(--space-3); flex-shrink: 0; }
+
+/* ---- Breadcrumb --------------------------------------------------------- */
+.breadcrumb { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-small); color: var(--text-secondary); margin-bottom: var(--space-4); flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); }
+.breadcrumb a:hover { color: var(--color-primary); }
+.breadcrumb__sep { opacity: 0.5; display: inline-flex; }
+.breadcrumb__current { color: var(--text-primary); font-weight: 600; }
+
+/* ---- Grids -------------------------------------------------------------- */
+.grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-6); align-items: start; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
+.grid-2 > *, .grid-3 > *, .grid-4 > * { min-width: 0; }
+@media (max-width: 1080px) { .grid-2 { grid-template-columns: 1fr; } .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ---- Tabs ---------------------------------------------------------------- */
+.tabs { display: flex; gap: var(--space-2); border-bottom: 1px solid var(--border-subtle); margin-bottom: var(--space-5); overflow-x: auto; overflow-y: hidden; }
+.tab-link {
+  padding: var(--space-3) var(--space-4); font-size: var(--text-small); font-weight: 600;
+  color: var(--text-secondary); border-bottom: 2px solid transparent; white-space: nowrap; background: none; border-inline: none; border-top: none; cursor: var(--cur-pointer, pointer);
+  transition: color var(--duration-fast), border-color var(--duration-fast);
+}
+.tab-link:hover { color: var(--text-primary); }
+.tab-link.is-active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+.tab-link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; border-radius: var(--radius-sm); }
+.tab-panel { display: none; animation: uip-rise-in var(--duration-normal) var(--ease-standard) both; }
+.tab-panel.is-active { display: block; }
+
+/* ---- Pagination ------------------------------------------------------- */
+.uip-pagination { display: flex; align-items: center; justify-content: center; gap: var(--space-2); margin-top: var(--space-6); flex-wrap: wrap; }
+.uip-pagination__ellipsis { color: var(--text-secondary); font-size: var(--text-caption); padding: 0 4px; }
+.uip-pagination__count { color: var(--text-secondary); font-size: var(--text-caption); text-align: center; margin-top: var(--space-2); }
+
+/* ---- Form step indicator (multi-step forms) ------------------------------ */
+.form-steps { display: flex; gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap; }
+.form-step { font-size: var(--text-small); font-weight: 600; color: var(--text-secondary); padding-bottom: var(--space-2); border-bottom: 2px solid var(--border-subtle); }
+.form-step.is-active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+
+/* ---- Timeline (approval workflow, activity feeds) ------------------------ */
+.timeline { display: flex; flex-direction: column; gap: var(--space-5); position: relative; }
+.timeline-item { display: flex; gap: var(--space-4); align-items: flex-start; }
+.timeline-item__dot {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--glass-bg); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+}
+.timeline-item.is-done .timeline-item__dot { background: rgba(25, 200, 182,0.15); color: var(--color-success); border-color: transparent; }
+.timeline-item:not(:last-child) { position: relative; }
+.timeline-item:not(:last-child)::after {
+  content: ""; position: absolute; inset-inline-start: 15px; top: 34px; width: 2px; height: calc(100% + var(--space-5) - 34px);
+  background: var(--border-subtle);
+}
+
+/* ---- Misc small utilities ------------------------------------------------ */
+.divider { height: 1px; background: var(--border-subtle); margin: var(--space-5) 0; }
+.classification-tag {
+  display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-caption); font-weight: 700;
+  color: var(--color-success); background: rgba(25, 200, 182,0.12); padding: 4px 10px; border-radius: var(--radius-full);
+}
+.kv-list { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2) var(--space-4); margin: 0; }
+.kv-list dt { color: var(--text-secondary); font-size: var(--text-small); }
+.kv-list dd { margin: 0; font-size: var(--text-small); font-weight: 600; text-align: end; }
+.empty-state { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-3); padding: var(--space-7) var(--space-4); color: var(--text-secondary); }
+.empty-state__icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--glass-bg); }
+
+/* ---- Dropdown menus (used by notification bell, avatar menu, lang switch) */
+.dropdown { position: relative; }
+.dropdown__menu {
+  position: absolute; inset-inline-end: 0; top: calc(100% + var(--space-2));
+  min-width: 200px; padding: var(--space-2); z-index: var(--z-dropdown);
+  display: flex; flex-direction: column; gap: 2px;
+  /* Solid surface, not glass — this floats over arbitrary page content
+     and must stay legible regardless of what's behind it. */
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  /* Closed by default via opacity/transform (not display:none) so the
+     open/close transition can actually animate; pointer-events keeps it
+     inert and out of tab order while hidden. */
+  opacity: 0; transform: translateY(-4px) scale(0.98); pointer-events: none; visibility: hidden;
+  transition: opacity var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-standard),
+              visibility 0s linear var(--duration-fast);
+}
+.dropdown.is-open .dropdown__menu {
+  opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; visibility: visible;
+  transition: opacity var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-standard);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dropdown__menu { transition: opacity var(--duration-fast) linear; transform: none; }
+}
+/* Sign-out stays pinned to the bottom of a menu that scrolls (long role-switch list on phones). */
+.dropdown__item--logout {
+  position: sticky; bottom: calc(-1 * var(--space-2)); z-index: 1;
+  background: var(--bg-surface);
+  box-shadow: 0 -10px 10px -8px rgba(10, 15, 30, 0.12);
+}
+/* Profile menu: the list scrolls, "Log out" is a footer that never scrolls away or hides under the bottom bar. */
+.dropdown > .dropdown__menu.profile-menu { overflow: hidden; }
+.profile-menu__scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 2px; }
+.profile-menu__footer { flex: none; padding-top: var(--space-1); margin-top: var(--space-1); border-top: 1px solid var(--border-subtle); background: var(--bg-surface); }
+.profile-menu .dropdown__item--logout { position: static; box-shadow: none; }
+.dropdown__item {
+  display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm); font-size: var(--text-small); color: var(--text-primary); text-align: start;
+  background: none; border: none; cursor: var(--cur-pointer, pointer); width: 100%;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+.dropdown__item:hover { background: var(--glass-bg); }
+.dropdown__item:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; background: var(--glass-bg); }
+
+/* ---- Command Palette (Data Analysis Portal, spec section 13) ----------- */
+.uip-cmdk-overlay {
+  position: fixed; inset: 0; z-index: var(--z-modal);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 12vh; background: rgba(10, 12, 20, 0.45);
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+}
+.uip-cmdk-overlay[hidden] { display: none; }
+.uip-cmdk {
+  width: min(560px, 92vw); max-height: 70vh; display: flex; flex-direction: column;
+  background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); overflow: hidden;
+}
+.uip-cmdk__input-row {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-4); border-bottom: 1px solid var(--border-subtle); flex-shrink: 0;
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.uip-cmdk__input-row:focus-within { border-bottom-color: var(--color-primary); }
+.uip-cmdk__input-row input {
+  flex: 1; border: none; background: none; outline: none;
+  color: var(--text-primary); font-size: var(--text-body);
+}
+.uip-cmdk__input-row kbd, .uip-cmdk__shortcuts-grid kbd {
+  font-size: var(--text-caption); padding: 2px 7px; border-radius: var(--radius-sm);
+  background: var(--glass-bg); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+}
+.uip-cmdk__results { overflow-y: auto; padding: var(--space-2); }
+.uip-cmdk__hint { padding: var(--space-3); margin: 0; }
+.uip-cmdk__group-label {
+  font-size: var(--text-caption); color: var(--text-secondary); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .04em; padding: var(--space-2) var(--space-3) 4px;
+}
+.uip-cmdk__result {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  padding: var(--space-3); border-radius: var(--radius-sm); cursor: var(--cur-pointer, pointer); text-decoration: none; color: inherit;
+}
+.uip-cmdk__result:hover, .uip-cmdk__result.is-active { background: var(--glass-bg); }
+.uip-cmdk__result-name { font-size: var(--text-small); }
+.uip-cmdk__result-meta { font-size: var(--text-caption); color: var(--text-secondary); }
+.uip-cmdk--shortcuts .uip-cmdk__shortcuts-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-5); padding: var(--space-4);
+}
+.uip-cmdk__shortcuts-grid > div { display: flex; align-items: center; gap: var(--space-2); }
+.uip-cmdk__shortcuts-grid span { font-size: var(--text-small); color: var(--text-secondary); margin-inline-start: var(--space-2); }
+@media (max-width: 640px) { .uip-cmdk--shortcuts .uip-cmdk__shortcuts-grid { grid-template-columns: 1fr; } }
+
+/* ---- Icon sizing convenience -------------------------------------------- */
+.uip-icon { display: inline-block; vertical-align: -3px; }
+/* Role switcher (Super Admin) inside the user dropdown */
+.role-switch { display: flex; flex-direction: column; gap: 2px; padding: 2px 0; }
+.role-switch__title { padding: var(--space-1) var(--space-3); font-size: 11px; font-weight: 700; letter-spacing: .02em; color: var(--text-secondary, var(--text-primary)); opacity: .7; }
+.role-switch__toggle { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); width: 100%; padding: 7px var(--space-3); border: none; border-radius: var(--radius-sm); background: none; color: var(--text-primary); text-align: start; cursor: var(--cur-pointer, pointer); transition: background var(--duration-fast) var(--ease-standard); }
+.role-switch__toggle:hover { background: var(--glass-bg); }
+.role-switch__toggle:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
+.role-switch__toggle-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.role-switch__toggle .role-switch__title { padding: 0; }
+.role-switch__current { font-size: var(--text-small); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.role-switch__chevron { flex: none; transition: transform var(--duration-fast) var(--ease-standard); }
+.role-switch__chevron.is-open { transform: rotate(180deg); }
+.role-switch__item { display: flex; align-items: center; gap: var(--space-3); width: 100%; padding: 7px var(--space-3); border: 1px solid transparent; border-radius: var(--radius-sm); background: none; color: var(--text-primary); font-size: var(--text-small); text-align: start; cursor: var(--cur-pointer, pointer); transition: background var(--duration-fast) var(--ease-standard); }
+.role-switch__item:hover:not(:disabled) { background: var(--glass-bg); }
+.role-switch__item:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
+.role-switch__icon { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--glass-bg); color: var(--text-secondary, currentColor); flex: none; }
+.role-switch__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.role-switch__check { display: inline-grid; place-items: center; color: var(--color-primary); }
+.role-switch__item.is-active { background: color-mix(in srgb, var(--color-primary) 10%, transparent); border-color: color-mix(in srgb, var(--color-primary) 28%, transparent); font-weight: 700; cursor: default; opacity: 1; }
+.role-switch__item.is-active .role-switch__icon { background: var(--color-primary); color: #fff; }

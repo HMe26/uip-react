@@ -1,0 +1,151 @@
+/* "Saved messages" — profile hub in the info panel, filter chips, empty state. Tokens only: works in light + dark. */
+
+/* avatar with my own photo + bookmark badge */
+.msg-avatar.msg-avatar--saved-photo { position: relative; overflow: visible; }
+.msg-avatar--saved-photo > img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+.msg-avatar__badge {
+  position: absolute; inset-inline-end: -2px; bottom: -2px; width: 40%; height: 40%; min-width: 14px; min-height: 14px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #4f6bff, #7c5cff);
+  border: 2px solid var(--bg-surface); box-sizing: border-box;
+}
+.msg-avatar__badge svg { fill: currentColor; stroke: none; }
+
+.savp { display: flex; flex-direction: column; gap: 12px; }
+
+/* hero */
+.savp-hero { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 0 8px 4px; }
+.savp-hero__cover {
+  position: absolute; inset: -16px -16px auto -16px; height: 84px; border-radius: 0 0 22px 22px;
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), .28), rgba(124, 92, 255, .22) 60%, rgba(var(--color-primary-rgb), .08));
+}
+.savp-hero__avatar { position: relative; margin-top: 24px; }
+.savp-avatar-btn { position: relative; display: block; border: 0; padding: 0; background: none; cursor: pointer; border-radius: 50%; transition: transform .15s; }
+.savp-avatar-btn:hover { transform: scale(1.03); }
+.savp-avatar-btn:focus-visible { outline: 3px solid rgba(var(--color-primary-rgb), .45); outline-offset: 3px; }
+html body .msg-app .savp-hero .msg-avatar { width: 92px; height: 92px; border: 4px solid var(--bg-surface); box-shadow: 0 12px 28px -12px rgba(var(--color-primary-rgb), .6); }
+.savp-hero .msg-avatar__badge { width: 30px; height: 30px; }
+.savp-avatar-btn__cam {
+  position: absolute; inset-inline-start: 0; bottom: 2px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  color: #fff; background: var(--color-primary); border: 2px solid var(--bg-surface); box-shadow: 0 4px 10px -4px rgba(0,0,0,.4);
+}
+.savp-hero__title { font-size: 17px; font-weight: 800; overflow-wrap: anywhere; }
+.savp-hero__id { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+.savp-lock {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 2px; padding: 4px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+  color: var(--text-secondary); background: var(--bg-canvas); border: 1px solid var(--border-subtle);
+}
+.savp-spin { width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; animation: savp-rot .7s linear infinite; }
+@keyframes savp-rot { to { transform: rotate(360deg); } }
+
+/* tabs + segmented */
+.savp-tabs, .savp-seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 4px; border-radius: 14px; background: var(--bg-canvas); border: 1px solid var(--border-subtle); }
+.savp-tabs button, .savp-seg button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 8px; border: 0; border-radius: 10px;
+  background: none; color: var(--text-secondary); font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: background .15s, color .15s;
+}
+.savp-tabs button.is-on, .savp-seg button.is-on { background: var(--bg-surface); color: var(--color-primary); box-shadow: 0 2px 8px -3px rgba(20, 28, 70, .25); }
+
+.savp-note { padding: 9px 12px; border-radius: 12px; font-size: 12.5px; font-weight: 600; }
+.savp-note.is-ok { color: #0d7a4f; background: rgba(16, 185, 129, .12); border: 1px solid rgba(16, 185, 129, .3); }
+.savp-note.is-err { color: #c0353a; background: rgba(229, 72, 77, .1); border: 1px solid rgba(229, 72, 77, .3); }
+
+.savp-body { display: flex; flex-direction: column; gap: 12px; }
+.savp-card { background: var(--bg-canvas); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.savp-card--list { padding: 4px 14px; gap: 0; }
+.savp-card__h { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 800; }
+.savp-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.savp-hint { margin: 0; font-size: 12px; line-height: 1.5; color: var(--text-secondary); }
+.savp-danger { color: #c0353a; }
+.savp-link { border: 0; background: none; padding: 0; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--color-primary); cursor: pointer; }
+.savp-input { width: 100%; }
+.savp-more {
+  display: flex; align-items: center; gap: 8px; width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border-subtle);
+  background: var(--bg-canvas); color: var(--text-primary); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.savp-more:hover { border-color: rgba(var(--color-primary-rgb), .45); color: var(--color-primary); }
+.savp-more__arrow { margin-inline-start: auto; }
+[dir="rtl"] .savp-more__arrow { transform: scaleX(-1); }
+
+/* "as others see me" */
+.savp-pv { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 18px; background: var(--bg-surface); border: 1px solid var(--border-subtle); box-shadow: 0 10px 26px -18px rgba(var(--color-primary-rgb), .55); }
+.savp-pv__bar { display: flex; align-items: center; gap: 12px; }
+html body .msg-app .savp-pv__bar .msg-avatar { width: 48px; height: 48px; flex: none; }
+.savp-pv__meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.savp-pv__meta strong { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 14.5px; font-weight: 800; }
+.savp-pv__status { font-size: 12px; color: var(--text-secondary); }
+.savp-pv__status.is-on { color: #0d7a4f; }
+.savp-pv__bio { align-self: flex-start; }
+.savp-pv__ghost { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; color: var(--text-secondary); }
+
+/* permissions: icon + label on one line, audience select beside it; when the panel is narrow the select drops under the label */
+.savp { container-type: inline-size; container-name: savp; min-width: 0; }
+.savp-group-h { padding: 12px 0 4px; font-size: 12px; font-weight: 800; color: var(--text-secondary); }
+.savp-perm { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; column-gap: 10px; row-gap: 8px; padding: 10px 0; }
+.savp-perm + .savp-perm { border-top: 1px solid var(--border-subtle); }
+.savp-perm__ic { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #c0353a; background: rgba(229, 72, 77, .12); }
+.savp-perm__ic.is-ok { color: #0d7a4f; background: rgba(16, 185, 129, .16); }
+.savp-perm__txt { min-width: 0; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.savp-perm__txt svg { flex: none; color: var(--text-secondary); }
+.savp-perm__lbl { min-width: 0; white-space: normal; overflow-wrap: normal; word-break: normal; line-height: 1.35; }
+html body .savp .savp-select {
+  width: 128px; min-width: 0; max-width: 100%; height: 34px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface); color: var(--text-primary); font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; text-overflow: ellipsis;
+}
+html body .savp .savp-select:focus { outline: 0; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .14); }
+@container savp (max-width: 300px) {
+  .savp-perm { grid-template-columns: 22px minmax(0, 1fr); }
+  html body .savp .savp-select { grid-column: 1 / -1; width: 100%; }
+}
+@container savp (min-width: 420px) { html body .savp .savp-select { width: 168px; } }
+
+/* filter chips above the saved list */
+.savp-filters { flex: none; flex-shrink: 0; min-height: max-content; display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; scrollbar-width: none; background: color-mix(in srgb, var(--bg-surface) 82%, transparent); border-bottom: 1px solid var(--border-subtle); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.savp-filters::-webkit-scrollbar { display: none; }
+.savp-filter { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-secondary); font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: all .15s; }
+.savp-filter b { min-width: 18px; padding: 0 5px; border-radius: 999px; font-size: 11px; line-height: 18px; text-align: center; color: var(--color-primary); background: rgba(var(--color-primary-rgb), .12); }
+.savp-filter:hover { border-color: rgba(var(--color-primary-rgb), .45); color: var(--color-primary); }
+.savp-filter.is-on { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--color-primary), #7c5cff); }
+.savp-filter.is-on b { color: var(--color-primary); background: #fff; }
+
+/* empty state */
+.savp-empty { margin: auto; max-width: 380px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 28px 24px; text-align: center; border-radius: 22px; background: color-mix(in srgb, var(--bg-surface) 88%, transparent); border: 1px solid var(--border-subtle); box-shadow: 0 18px 40px -26px rgba(var(--color-primary-rgb), .5); }
+.savp-empty__ic { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #4f6bff, #7c5cff); box-shadow: 0 12px 24px -12px rgba(79, 107, 255, .7); }
+.savp-empty__ic svg { fill: currentColor; stroke: none; }
+.savp-empty strong { font-size: 16px; font-weight: 800; }
+.savp-empty p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+.savp-empty ul { list-style: none; margin: 4px 0 0; padding: 0; width: 100%; display: grid; gap: 6px; }
+.savp-empty li { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 12px; font-size: 12.5px; font-weight: 600; text-align: start; background: var(--bg-canvas); border: 1px solid var(--border-subtle); }
+.savp-empty li svg { color: var(--color-primary); flex: none; }
+
+/* the other person turned calls off: greyed, struck-through call buttons + a slim notice */
+.msg-call-btn--off { position: relative; opacity: .5; cursor: not-allowed; }
+.msg-call-btn__slash { position: absolute; top: 50%; inset-inline: 22% ; height: 2px; border-radius: 2px; background: #e5484d; transform: rotate(-45deg); pointer-events: none; }
+.msg-calls-off { flex: none; display: flex; align-items: center; gap: 8px; padding: 6px 14px; font-size: 12.5px; color: var(--text-secondary, #64748b); background: color-mix(in srgb, #e5484d 8%, var(--bg-surface, #fff)); border-bottom: 1px solid var(--border-subtle, rgba(127, 127, 150, .25)); }
+.msg-calls-off svg { color: #e5484d; flex: none; }
+.grp-locked--privacy strong { font-weight: 700; }
+
+/* ================= "Saved messages" chat — a calmer, solid, professional frame =================
+   The header / pinned bar / filters used to be translucent, so over a dark photo background they turned muddy grey.
+   In the saved chat they are solid surfaces, with a small summary line and icon filter chips. */
+html body .msg-app .msg-thread.msg-thread--saved .msg-thread__header {
+  background: var(--bg-surface); -webkit-backdrop-filter: none; backdrop-filter: none;
+  border-bottom: 1px solid var(--border-subtle); box-shadow: 0 6px 18px -14px rgba(var(--color-primary-rgb), .55);
+}
+html body .msg-app .msg-thread.msg-thread--saved .pinbar {
+  background: color-mix(in srgb, var(--bg-surface) 90%, #f5a524 10%); -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.savp-bar { flex: none; flex-shrink: 0; display: flex; flex-direction: column; background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); box-shadow: 0 8px 18px -16px rgba(15, 23, 42, .5); }
+.savp-bar__top { display: flex; align-items: center; gap: 8px; padding: 9px 14px 2px; font-size: 12.5px; color: var(--text-secondary); }
+.savp-bar__ic { width: 24px; height: 24px; border-radius: 8px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #4f6bff, #7c5cff); }
+.savp-bar__ic svg { fill: currentColor; stroke: none; }
+.savp-bar__title { font-weight: 800; font-size: 13.5px; color: var(--text-primary); }
+.savp-bar__count { min-width: 22px; padding: 0 7px; border-radius: 999px; font-size: 11.5px; font-weight: 800; line-height: 20px; text-align: center; color: var(--color-primary); background: rgba(var(--color-primary-rgb), .12); }
+.savp-bar__priv { margin-inline-start: auto; display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--bg-canvas); border: 1px solid var(--border-subtle); }
+.savp-bar .savp-filters { background: transparent; border-bottom: 0; padding: 8px 14px 10px; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.savp-filter svg { flex: none; opacity: .85; }
+.savp-filter { height: 32px; padding: 0 12px 0 10px; }
+.savp-filter.is-on { box-shadow: 0 6px 14px -8px rgba(var(--color-primary-rgb), .8); }
+html body .msg-app .msg-thread--saved .msg-day-sep span { background: var(--bg-surface); border: 1px solid var(--border-subtle); color: var(--text-secondary); font-weight: 700; padding: 3px 12px; border-radius: 999px; box-shadow: 0 2px 8px -4px rgba(0, 0, 0, .35); }
+/* the empty state is the first thing a new user sees: give it a solid card on any background */
+html body .msg-app .msg-thread--saved .savp-empty { background: var(--bg-surface); }
+@media (max-width: 900px) and (max-height: 520px) { html body.msg-page-active .msg-app .savp-bar { display: none; } }

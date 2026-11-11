@@ -1,0 +1,18 @@
+/* University-link gate (AccessGate.jsx): full-screen "waiting for approval" page + slim banner + "needs approval" notice. */
+.accgate { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px 16px;
+  background: radial-gradient(700px 340px at 50% 0%, rgba(var(--color-primary-rgb), .12), transparent 70%), var(--bg-canvas, #F6F7FC); color: var(--text-primary, #0B1020); }
+.accgate__card { width: 100%; max-width: 500px; text-align: center; padding: 34px 28px 24px; background: var(--bg-surface, #fff);
+  border: 1px solid var(--border-subtle, #E8EAF3); border-radius: 24px; box-shadow: 0 18px 50px rgba(var(--color-primary-rgb), .12); }
+.accgate__icon { width: 76px; height: 76px; margin: 0 auto 18px; display: grid; place-items: center; border-radius: 50%; color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), .1); border: 1px solid rgba(var(--color-primary-rgb), .25); }
+.accgate__title { margin: 0 0 10px; font-size: clamp(19px, 5vw, 24px); line-height: 1.4; font-weight: 800; }
+.accgate__desc { margin: 0 0 6px; font-size: 14.5px; line-height: 1.75; color: var(--text-secondary, #6B7391); }
+.accgate__state { display: inline-flex; align-items: center; gap: 6px; margin: 12px 0 4px; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 700;
+  background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+.accgate__state--rejected { background: rgba(229, 72, 77, .1); color: var(--color-danger, #E5484D); }
+.accgate__actions { display: flex; justify-content: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.accgate__actions .btn { min-width: 170px; }
+.accgate__foot { display: flex; justify-content: center; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--border-subtle, #E8EAF3); }
+.accgate__banner { position: fixed; inset-inline: 0; bottom: 0; z-index: 900; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+  padding: 10px 16px; font-size: 13.5px; background: var(--color-primary); color: #fff; }
+.accgate__banner a, .accgate__banner button { color: #fff; font-weight: 700; text-decoration: underline; background: none; border: 0; cursor: pointer; padding: 0; font: inherit; font-weight: 700; }

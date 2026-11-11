@@ -1,0 +1,64 @@
+/* Word editor + preview (DocxView / DocxRibbon / DocxPreview). Page look matches the exporter in lib/officeFmt/docx.js. */
+.dx__stage { flex: 1; min-height: 0; overflow: auto; background: #0b0f19; padding: 22px 16px 40px; display: flex; flex-direction: column; align-items: center; }
+.dx__preview { overflow: auto; padding: 12px; display: flex; flex-direction: column; align-items: center; }
+
+.dxp {
+  --dx-ink: #000; position: relative; box-sizing: border-box; flex: none; background: #fff; color: var(--dx-ink); box-shadow: 0 10px 40px rgba(0, 0, 0, .55);
+  font: var(--dx-size, 11pt) var(--dx-font, Calibri, Arial, sans-serif); display: flex; flex-direction: column; overflow-wrap: anywhere;
+  background-image: linear-gradient(to bottom, transparent calc(100% - 1px), #cbd5e1 0); background-size: 100% var(--dx-ph, 1123px); background-repeat: repeat-y;
+}
+.dxp--ro { box-shadow: 0 2px 14px rgba(15, 23, 42, .18); margin: 0 auto; background-image: none; }
+.dxp__body { flex: 1; min-height: 40px; outline: none; white-space: pre-wrap; }
+.dxp__hdr, .dxp__ftr { position: relative; z-index: 1; box-sizing: border-box; outline: none; display: flow-root; }
+.dxp__hdr { min-height: var(--dx-hmin, 0px); } .dxp__ftr { min-height: var(--dx-fmin, 0px); }
+.dxp__hdr:empty, .dxp__ftr:empty { min-height: max(var(--dx-hmin, 0px), 16px); }
+.dxp__body { position: relative; z-index: 1; }
+.dxp__pb { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.dxp__pb i { box-sizing: border-box; display: block; }
+.dxp img[data-fl="left"] { float: left; margin: 0 8px 4px 0; } .dxp img[data-fl="right"] { float: right; margin: 0 0 4px 8px; }
+.dxp:not(.dxp--ro) .dxp__hdr:hover, .dxp:not(.dxp--ro) .dxp__ftr:hover, .dxp__hdr:focus, .dxp__ftr:focus { outline: 1px dashed #94a3b8; outline-offset: 2px; background: rgba(59, 130, 246, .05); opacity: 1; }
+.dxp__hdr:empty::before, .dxp__ftr:empty::before { content: attr(data-ph); color: #94a3b8; }
+.dxp [data-fld] { background: #e5e7eb; border-radius: 3px; padding: 0 2px; }
+
+/* typography: same numbers as the .docx writer */
+.dxp p { margin: var(--dx-before, 0) 0 var(--dx-after, 10pt); line-height: var(--dx-line, 1.15); min-height: 1em; }
+.dxp h1, .dxp h2, .dxp h3, .dxp h4, .dxp h5, .dxp h6 { font-weight: 700; line-height: var(--dx-line, 1.15); }
+.dxp h1 { font-size: 16pt; color: #2f5496; margin: 12pt 0 4pt; } .dxp h2 { font-size: 13pt; color: #2f5496; margin: 10pt 0 4pt; } .dxp h3 { font-size: 12pt; color: #1f3763; margin: 8pt 0 3pt; }
+.dxp h4, .dxp h5, .dxp h6 { font-size: 11pt; color: #2f5496; margin: 6pt 0 2pt; }
+.dxp [data-st="title"] { font-size: 26pt; color: #17365d; line-height: 1; margin-bottom: 15pt; } .dxp [data-st="subtitle"] { font-size: 14pt; font-style: italic; color: #595959; }
+.dxp [data-st="quote"] { font-style: italic; color: #404040; margin-inline: 36pt; }
+.dxp ul, .dxp ol { margin: 0 0 var(--dx-after, 10pt); padding-inline-start: 36pt; } .dxp li { margin: 0; line-height: var(--dx-line, 1.15); } .dxp li > ul, .dxp li > ol { margin: 0; }
+.dxp li p { margin: 0; }
+.dxp table { border-collapse: collapse; width: 100%; table-layout: fixed; margin: 0 0 var(--dx-after, 10pt); }
+.dxp td, .dxp th { border: 1px solid #808080; padding: 3pt 5pt; vertical-align: top; min-width: 24px; } .dxp td p, .dxp th p { margin: 0; }
+.dxp table[data-b="none"] td, .dxp table[data-b="none"] th { border-color: transparent; }
+.dxp:not(.dxp--ro) table[data-b="none"] td { border: 1px dashed #d1d5db; }
+.dxp img { max-width: 100%; height: auto; vertical-align: bottom; } .dxp img.is-sel { outline: 2px solid #3b82f6; outline-offset: 1px; }
+.dxp a { color: #0563c1; text-decoration: underline; }
+.dxp hr[data-pb] { border: 0; border-top: 2px dashed #94a3b8; margin: 14px 0; height: 0; position: relative; overflow: visible; }
+.dxp hr[data-pb]::after { content: 'Page break'; position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: #fff; color: #64748b; font: 10px sans-serif; padding: 0 6px; }
+.dxp ::selection { background: #b3d4ff; }
+::highlight(dx-find) { background: #fde68a; color: #000; } ::highlight(dx-find-cur) { background: #fb923c; color: #000; }
+
+/* find bar, status bar, notices */
+.dx__find { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px 12px; background: var(--ed-panel, #161c2b); border-bottom: 1px solid var(--ed-line); }
+.dx__find input[type="text"], .dx__find input:not([type]) { background: rgba(255, 255, 255, .07); color: var(--ed-text); border: 1px solid var(--ed-line); border-radius: 8px; padding: 6px 9px; font: inherit; min-width: 130px; }
+.dx__cnt { font-size: 12px; opacity: .7; min-width: 36px; text-align: center; } .dx__mc { display: inline-flex; gap: 4px; align-items: center; font-size: 12px; }
+.dx__status { display: flex; align-items: center; gap: 14px; padding: 5px 12px; font-size: 12px; border-top: 1px solid var(--ed-line); background: var(--ed-panel, #161c2b); color: var(--ed-text); flex-wrap: wrap; }
+.dx__sp { flex: 1; } .dx__status input[type="range"] { width: 120px; } .dx__zoomlbl { background: none; border: 0; color: inherit; font: inherit; min-width: 40px; cursor: pointer; }
+.dx__warn { color: #fbbf24; } .dx__err { margin: 0; padding: 6px 12px; cursor: pointer; }
+
+/* ribbon extras */
+.dxr .pxr__sel { background: rgba(255, 255, 255, .07); color: var(--ed-text); border: 1px solid var(--ed-line); border-radius: 8px; padding: 6px 8px; font: inherit; } .dxr .pxr__sel option { color: #111; }
+.dxr .pxr__ctx { color: #fbbf24; }
+.dxr__gcells { display: grid; grid-template-columns: repeat(8, 18px); gap: 3px; padding: 4px; } .dxr__gcells button { width: 18px; height: 18px; border: 1px solid var(--ed-line); background: rgba(255, 255, 255, .05); border-radius: 3px; padding: 0; cursor: pointer; } .dxr__gcells button.is-on { background: var(--ed-accent); border-color: transparent; }
+.dxr__grid small { display: block; text-align: center; padding: 2px 0 4px; opacity: .8; }
+.dxr__sym { display: grid; grid-template-columns: repeat(8, 30px); gap: 2px; padding: 4px; } .dxr__sym button { height: 30px; border: 0; background: none; color: inherit; border-radius: 6px; font-size: 16px; cursor: pointer; } .dxr__sym button:hover { background: rgba(255, 255, 255, .13); }
+.dxr__flipv svg { transform: scaleY(-1); } .dxr__fliph svg { transform: scaleX(-1); }
+
+@media (max-width: 760px) { .dx__stage { padding: 12px 6px 30px; } }
+@media print { .dx__stage { padding: 0; background: none; } }
+
+/* An LTR run inside a right-to-left paragraph must join its LTR neighbours (Word does), not become its own isolated
+   island — otherwise "An identification card … for year 2026-2027" is laid out run by run in reverse order. */
+.dxp span[dir="ltr"], .dxp span[dir="rtl"] { unicode-bidi: embed; }

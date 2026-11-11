@@ -1,0 +1,26 @@
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx: { English: 'Arabic' }.
+// Shared words (Active, Pending, Status, Joined, Suspend…) come from i18n/common.js.
+export default {
+  'Companies': 'الشركات',
+  'Company accounts on the platform and their access status.': 'حسابات الشركات على المنصة وحالة وصولها.',
+  'Company accounts': 'حسابات الشركات',
+  'matching current filters': 'مطابقة للفلاتر الحالية',
+  'all companies': 'كل الشركات',
+  'Awaiting review': 'بانتظار المراجعة',
+  'None': 'لا يوجد',
+  'Search company name or email…': 'ابحث باسم الشركة أو البريد الإلكتروني…',
+  'All statuses': 'كل الحالات',
+  'Clear filters': 'مسح الفلاتر',
+  'Company': 'الشركة',
+  'View': 'عرض',
+  'Reactivate': 'إعادة التفعيل',
+  'Suspend account': 'إيقاف الحساب',
+  'Reactivate account': 'إعادة تفعيل الحساب',
+  'No company accounts match these filters.': 'لا توجد حسابات شركات تطابق هذه الفلاتر.',
+  'Showing {from}–{to} of {total}': 'عرض {from}–{to} من {total}',
+  'Page {page} of {total}': 'الصفحة {page} من {total}',
+  'Previous page': 'الصفحة السابقة',
+  'Next page': 'الصفحة التالية',
+  '{name} will lose access until reactivated.': '{name} سيفقد الوصول حتى تتم إعادة تفعيله.',
+  '{name} will be able to sign in again.': '{name} سيتمكن من تسجيل الدخول مرة أخرى.',
+};

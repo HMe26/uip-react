@@ -1,0 +1,86 @@
+/* question-bank.css — readable typography + clean question cards for the doctor's
+   question bank and the exam question cards. Scoped: only `.qb-*`, `.ex-q*` and
+   pages wrapped in `.qb-page`, so nothing else in the app changes. */
+
+/* ---- Fonts: one clear family per language, no decorative serif for headings ---- */
+.qb-page,
+.qb-page h1, .qb-page h2, .qb-page h3,
+.qb-card, .qb-toolbar, .ex-q {
+  --font-display: 'Cairo', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Cairo', 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+html[lang='en'] .qb-page, html[lang='en'] .qb-card, html[lang='en'] .qb-toolbar, html[lang='en'] .ex-q,
+html[dir='ltr'] .qb-page, html[dir='ltr'] .qb-card, html[dir='ltr'] .qb-toolbar, html[dir='ltr'] .ex-q {
+  font-family: 'Inter', 'Cairo', 'Segoe UI', system-ui, sans-serif;
+}
+.qb-page h1 { font-size: clamp(1.5rem, 1.2rem + 1vw, 1.9rem); font-weight: 800; line-height: 1.3; }
+.qb-page h2 { font-size: 1.25rem; font-weight: 800; line-height: 1.4; }
+.qb-page .text-small { font-size: 15px; line-height: 1.7; }
+.qb-page .text-caption { font-size: 13.5px; line-height: 1.6; }
+
+/* ---- Toolbar (search + filters + count) ---- */
+.qb-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.qb-search { position: relative; flex: 1 1 240px; min-width: 0; }
+.qb-search svg { position: absolute; inset-inline-start: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; }
+.qb-search input { width: 100%; height: 44px; padding-inline: 38px 14px; font-size: 15.5px; border-radius: 12px; }
+.qb-select { height: 44px; padding-inline: 12px; font-size: 15px; border-radius: 12px; min-width: 130px; }
+.qb-summary { margin: 0; font-size: 14.5px; color: var(--text-secondary); }
+.qb-summary b { color: var(--text-primary); font-weight: 800; }
+
+/* ---- Question card ---- */
+.qb-list { display: flex; flex-direction: column; gap: 14px; }
+.qb-card {
+  border: 1px solid var(--border-subtle); border-radius: 16px; padding: 18px 20px 20px;
+  background: var(--bg-surface); display: flex; flex-direction: column; gap: 12px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.qb-card:hover { border-color: var(--border-strong, var(--border-subtle)); box-shadow: 0 4px 18px rgba(15, 23, 42, .06); }
+.qb-card__head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.qb-card__no {
+  display: grid; place-items: center; min-width: 32px; height: 32px; padding-inline: 8px; border-radius: 10px;
+  background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); font-weight: 800; font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.qb-chip { display: inline-flex; align-items: center; height: 28px; padding-inline: 11px; border-radius: 999px; font-size: 13.5px; font-weight: 700; letter-spacing: 0; text-transform: none; }
+.qb-chip--type { background: var(--bg-muted, rgba(100, 116, 139, .12)); color: var(--text-primary); }
+.qb-chip--easy { background: rgba(var(--color-success-rgb), .14); color: var(--color-success); }
+.qb-chip--medium { background: rgba(245, 158, 11, .16); color: #b45309; }
+.qb-chip--hard { background: rgba(239, 68, 68, .14); color: #b91c1c; }
+.qb-card__marks { font-size: 14.5px; font-weight: 700; color: var(--text-secondary); margin-inline-start: 4px; }
+.qb-card__actions { margin-inline-start: auto; display: inline-flex; gap: 4px; }
+.qb-icon-btn { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; transition: background .15s, color .15s; }
+.qb-icon-btn:hover { background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+.qb-icon-btn--danger:hover { background: rgba(239, 68, 68, .12); color: #dc2626; }
+
+.qb-card__prompt { margin: 2px 0 0; font-size: 17.5px; font-weight: 600; line-height: 1.9; color: var(--text-primary); white-space: pre-wrap; unicode-bidi: plaintext; text-align: start; }
+
+/* ---- Options ---- */
+.qb-opts { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 8px; }
+.qb-opts--tf { grid-template-columns: 1fr 1fr; }
+.qb-opt { display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border-subtle); font-size: 16px; line-height: 1.75; color: var(--text-primary); }
+.qb-opt__key { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--bg-muted, rgba(100, 116, 139, .12)); color: var(--text-secondary); font-size: 14px; font-weight: 800; }
+.qb-opt__text { flex: 1; min-width: 0; unicode-bidi: plaintext; text-align: start; }
+.qb-opt.is-correct { background: rgba(var(--color-success-rgb), .1); border-color: rgba(var(--color-success-rgb), .45); font-weight: 700; }
+.qb-opt.is-correct .qb-opt__key { background: var(--color-success); color: #fff; }
+
+.qb-note { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 12px; background: var(--bg-muted, rgba(100, 116, 139, .08)); font-size: 15.5px; line-height: 1.8; color: var(--text-secondary); }
+.qb-note strong { color: var(--text-primary); font-size: 14px; }
+
+/* ---- Same readability fixes for the exam builder / exam detail question cards ---- */
+.ex-q { padding: 18px 20px; border-radius: 16px; }
+.ex-q__top { font-size: 14px; letter-spacing: 0; text-transform: none; gap: 10px; }
+.ex-q__prompt { font-size: 17px; font-weight: 600; line-height: 1.9; margin: 12px 0; }
+.ex-opts { gap: 8px; }
+.ex-opt { font-size: 16px; line-height: 1.75; padding: 10px 14px; border-radius: 12px; color: var(--text-primary); }
+.ex-opt__dot { width: 20px; height: 20px; }
+.ex-opt em { font-size: 13px; letter-spacing: 0; text-transform: none; }
+.ex-tf span { font-size: 16px; padding: 11px; border-radius: 12px; }
+.ex-ghost { font-size: 15px; line-height: 1.7; }
+
+@media (max-width: 640px) {
+  .qb-card { padding: 14px 14px 16px; border-radius: 14px; }
+  .qb-card__prompt { font-size: 16.5px; }
+  .qb-opt { font-size: 15.5px; }
+  .qb-opts--tf { grid-template-columns: 1fr; }
+  .qb-select { flex: 1 1 140px; }
+}

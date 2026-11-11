@@ -1,0 +1,158 @@
+/* My Library (مكتبتي) — theme-agnostic: surfaces are mixed from currentColor so light/dark both work. */
+.lib { --lib-line: color-mix(in srgb, currentColor 14%, transparent); --lib-soft: color-mix(in srgb, currentColor 6%, transparent); --lib-pri: var(--color-primary, #0a84ff); position: relative; display: flex; flex-direction: column; gap: 14px; padding-bottom: 84px; min-width: 0; }
+.lib-top { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.lib-search { flex: 1 1 260px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border: 1px solid var(--lib-line); border-radius: 12px; background: var(--lib-soft); }
+.lib-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; padding: 11px 0; }
+.lib-search:focus-within { border-color: var(--lib-pri); box-shadow: 0 0 0 3px color-mix(in srgb, var(--lib-pri) 22%, transparent); }
+.lib-add { display: flex; gap: 8px; flex-wrap: wrap; }
+.lib-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 11px; border: 1px solid var(--lib-line); background: var(--lib-soft); color: inherit; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: filter .15s, transform .12s, background .15s; }
+.lib-btn:hover { background: color-mix(in srgb, currentColor 12%, transparent); }
+.lib-btn:active { transform: scale(.97); }
+.lib-btn.is-primary { background: var(--lib-pri); border-color: transparent; color: var(--color-on-primary, #fff); }
+.lib-btn.is-primary:hover { filter: brightness(1.08); }
+.lib-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.lib-spacer { flex: 1; }
+.lib-seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 11px; border: 1px solid var(--lib-line); background: var(--lib-soft); }
+.lib-seg button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 12px; border-radius: 8px; cursor: pointer; opacity: .75; }
+.lib-seg button.is-on { background: var(--lib-pri); color: var(--color-on-primary, #fff); opacity: 1; }
+.lib-seg--icons button { padding: 6px 9px; }
+.lib-sel { border: 1px solid var(--lib-line); background: var(--lib-soft); color: inherit; font: inherit; font-size: 13px; padding: 8px 10px; border-radius: 10px; }
+.lib-chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 6px; scrollbar-width: thin; }
+.lib-chip { --k: var(--lib-pri); flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--lib-line); background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s; }
+.lib-chip svg { color: var(--k); }
+.lib-chip b { font-size: 11.5px; padding: 1px 7px; border-radius: 999px; background: var(--lib-soft); font-weight: 700; }
+.lib-chip:hover { background: var(--lib-soft); }
+.lib-chip.is-on { background: color-mix(in srgb, var(--k) 16%, transparent); border-color: var(--k); }
+
+.lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 12px; }
+.lib-rows { display: flex; flex-direction: column; gap: 6px; }
+.lib-skel { height: 190px; border-radius: 14px; background: var(--lib-soft); animation: lib-pulse 1.2s ease-in-out infinite; }
+@keyframes lib-pulse { 50% { opacity: .45; } }
+
+.lib-card { --k: var(--lib-pri); position: relative; border: 1px solid var(--lib-line); border-radius: 14px; background: var(--lib-soft); overflow: hidden; transition: border-color .15s, transform .15s, box-shadow .15s; }
+.lib-card:hover { border-color: color-mix(in srgb, var(--k) 55%, transparent); transform: translateY(-2px); box-shadow: 0 8px 22px -12px rgba(0,0,0,.45); }
+.lib-card.is-sel { border-color: var(--lib-pri); box-shadow: 0 0 0 2px color-mix(in srgb, var(--lib-pri) 40%, transparent); }
+.lib-card__open { display: flex; flex-direction: column; width: 100%; text-align: start; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; padding: 0; }
+.lib-card__txt { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px 12px; min-width: 0; }
+.lib-card__txt strong { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lib-card__txt small { font-size: 11.5px; opacity: .7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lib-thumb { --k: var(--lib-pri); height: 112px; display: grid; place-items: center; align-content: center; gap: 6px; color: var(--k); background: linear-gradient(135deg, color-mix(in srgb, var(--k) 20%, transparent), color-mix(in srgb, var(--k) 6%, transparent)); overflow: hidden; }
+.lib-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lib-thumb small { max-width: 90%; font-size: 11.5px; opacity: .8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lib-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px; }
+.lib-tags i { font-style: normal; font-size: 10.5px; padding: 1px 7px; border-radius: 999px; color: var(--t); background: color-mix(in srgb, var(--t) 16%, transparent); }
+.lib-check { position: absolute; inset-block-start: 8px; inset-inline-start: 8px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 8px; background: rgba(0,0,0,.45); backdrop-filter: blur(4px); opacity: 0; transition: opacity .15s; cursor: pointer; }
+.lib-check input { width: 15px; height: 15px; margin: 0; cursor: pointer; accent-color: var(--lib-pri); }
+.lib-card:hover .lib-check, .lib-card:focus-within .lib-check, .lib-card.is-sel .lib-check, .lib:has(.lib-sel-bar) .lib-check { opacity: 1; }
+.lib-card__act { position: absolute; inset-block-start: 8px; inset-inline-end: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity .15s; }
+.lib-card__act button { width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 8px; background: rgba(0,0,0,.5); color: #fff; cursor: pointer; backdrop-filter: blur(4px); }
+.lib-card__act button.is-on { color: #ffd60a; }
+.lib-card:hover .lib-card__act, .lib-card:focus-within .lib-card__act { opacity: 1; }
+@media (hover: none) { .lib-card__act, .lib-check { opacity: 1; } }
+
+/* list view */
+.lib-rows .lib-card { border-radius: 12px; }
+.lib-rows .lib-card:hover { transform: none; }
+.lib-rows .lib-card__open { flex-direction: row; align-items: center; gap: 12px; padding: 8px 12px; padding-inline-start: 44px; padding-inline-end: 84px; }
+.lib-rows .lib-card__txt { padding: 0; flex: 1; }
+.lib-rows .lib-check { inset-block-start: 50%; transform: translateY(-50%); opacity: 1; background: transparent; }
+.lib-rows .lib-card__act { inset-block-start: 50%; transform: translateY(-50%); opacity: 1; }
+.lib-rows .lib-card__act button { background: var(--lib-soft); color: inherit; }
+.lib-ico { flex-shrink: 0; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; color: var(--k); background: color-mix(in srgb, var(--k) 15%, transparent); }
+.lib-path { opacity: .55 !important; }
+
+.lib-empty { display: grid; place-items: center; gap: 8px; text-align: center; padding: 60px 16px; opacity: .8; }
+.lib-empty small { max-width: 380px; opacity: .75; }
+.lib-err { padding: 10px 14px; border-radius: 10px; background: color-mix(in srgb, var(--color-danger, #d33) 14%, transparent); color: var(--color-danger, #d33); font-size: 13px; }
+.lib-note { padding: 10px 14px; border-radius: 10px; background: var(--lib-soft); font-size: 13px; }
+.lib-link { border: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; font: inherit; }
+
+/* selection bar */
+.lib-sel-bar { position: fixed; inset-inline: 0; inset-block-end: 18px; margin-inline: auto; width: max-content; max-width: calc(100vw - 24px); z-index: 60; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 10px; border-radius: 16px; background: var(--color-surface-elevated, #1c1c1e); color: var(--color-text-on-elevated, #fff); box-shadow: 0 14px 40px -8px rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.12); }
+.lib-sel-bar b { padding: 0 8px; font-size: 13px; }
+.lib-sel-bar button { display: inline-flex; align-items: center; gap: 6px; border: 0; background: rgba(255,255,255,.1); color: inherit; font: inherit; font-size: 12.5px; font-weight: 600; padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+.lib-sel-bar button:hover { background: rgba(255,255,255,.2); }
+.lib-sel-bar button.is-primary { background: var(--lib-pri); color: var(--color-on-primary, #fff); }
+.lib-busy, .lib-toast { position: fixed; inset-inline: 0; margin-inline: auto; width: max-content; max-width: calc(100vw - 24px); z-index: 80; display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; background: #1c1c1e; color: #fff; font-size: 13px; box-shadow: 0 10px 30px -6px rgba(0,0,0,.5); }
+.lib-busy { inset-block-start: 76px; }
+.lib-busy svg { animation: lib-spin 1s linear infinite; }
+.lib-toast { inset-block-start: 20px; animation: lib-in .2s ease both; }
+.lib-toast.is-error { background: #8e1b1b; }
+@keyframes lib-spin { to { transform: rotate(360deg); } }
+@keyframes lib-in { from { opacity: 0; transform: translateY(-8px); } }
+.lib-drop { position: fixed; inset: 0; z-index: 90; display: grid; place-content: center; justify-items: center; gap: 10px; background: color-mix(in srgb, var(--lib-pri) 22%, rgba(0,0,0,.55)); color: #fff; border: 3px dashed #fff; pointer-events: none; }
+
+/* preview / dialogs */
+.lib-pv { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.lib-pv__meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.lib-pv__meta small { opacity: .65; }
+.lib-pv__kind { --k: var(--lib-pri); display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; color: var(--k); background: color-mix(in srgb, var(--k) 15%, transparent); }
+.lib-pv__img { max-width: 100%; max-height: 55vh; border-radius: 10px; margin-inline: auto; display: block; background: #000; }
+.lib-pv__pdf { width: 100%; height: 60vh; border: 1px solid var(--lib-line); border-radius: 10px; background: #fff; }
+.lib-pv__text { margin: 0; max-height: 50vh; overflow: auto; padding: 12px 14px; border-radius: 10px; background: color-mix(in srgb, currentColor 7%, transparent); font: 12.5px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
+.lib-pv__ph { display: grid; place-items: center; gap: 8px; text-align: center; padding: 36px 12px; opacity: .65; }
+.lib-pv__link { display: flex; flex-direction: column; gap: 12px; }
+.lib-pv__link > a { word-break: break-all; }
+.lib-pv__tags { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.lib-pv__lbl { font-size: 12px; font-weight: 700; opacity: .6; }
+.lib-pv__tags input { border: 1px dashed var(--lib-line); background: transparent; color: inherit; font: inherit; font-size: 12.5px; padding: 4px 10px; border-radius: 999px; width: 130px; }
+.lib-tag { border: 0; cursor: pointer; font: inherit; font-size: 12px; padding: 3px 10px; border-radius: 999px; color: var(--t); background: color-mix(in srgb, var(--t) 16%, transparent); }
+.lib-form { display: flex; flex-direction: column; gap: 12px; }
+.lib-form label { display: flex; flex-direction: column; gap: 5px; }
+.lib-form label > span { font-size: 12px; font-weight: 700; opacity: .7; }
+.lib-form input, .lib-form select, .lib-form textarea { border: 1px solid var(--lib-line); background: var(--lib-soft); color: inherit; font: inherit; padding: 9px 12px; border-radius: 10px; }
+.lib-form textarea.is-mono { font: 12.5px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.lib-form small { opacity: .65; line-height: 1.5; }
+.lib-move { display: flex; flex-direction: column; gap: 10px; }
+.lib-move input { border: 1px solid var(--lib-line); background: var(--lib-soft); color: inherit; font: inherit; padding: 9px 12px; border-radius: 10px; }
+.lib-move ul { list-style: none; margin: 0; padding: 0; max-height: 38vh; overflow: auto; display: flex; flex-direction: column; gap: 2px; }
+.lib-move li button { width: 100%; display: flex; align-items: center; gap: 8px; text-align: start; border: 0; background: transparent; color: inherit; font: inherit; padding: 8px 10px; border-radius: 9px; cursor: pointer; }
+.lib-move li button:hover { background: var(--lib-soft); }
+.lib-move__none { opacity: .6; padding: 8px 10px; }
+.lib-move__auto { display: flex; align-items: center; gap: 12px; text-align: start; border: 1px solid var(--lib-pri); background: color-mix(in srgb, var(--lib-pri) 12%, transparent); color: inherit; font: inherit; padding: 12px 14px; border-radius: 12px; cursor: pointer; }
+.lib-move__auto span { display: flex; flex-direction: column; gap: 2px; }
+.lib-move__auto small { opacity: .75; }
+
+@media (max-width: 640px) {
+  .lib-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .lib-add { width: 100%; }
+  .lib-add .lib-btn { flex: 1; justify-content: center; }
+  .lib-rows .lib-card__open { padding-inline-end: 76px; }
+}
+@media (prefers-reduced-motion: reduce) { .lib-card, .lib-skel, .lib-toast, .lib-busy svg { animation: none; transition: none; } }
+
+/* smart folders */
+.lib-smart { display: flex; gap: 8px; align-items: center; overflow-x: auto; padding: 2px 0 4px; scrollbar-width: thin; }
+.lib-smart__lbl { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; opacity: .6; }
+.lib-sf { flex-shrink: 0; display: inline-flex; align-items: stretch; border-radius: 12px; border: 1px solid var(--lib-line); background: var(--lib-soft); overflow: hidden; }
+.lib-sf.is-on { border-color: var(--lib-pri); background: color-mix(in srgb, var(--lib-pri) 16%, transparent); }
+.lib-sf button { border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.lib-sf__main { display: inline-flex; align-items: center; gap: 7px; padding: 7px 4px 7px 12px; font-size: 13px; font-weight: 600; }
+.lib-sf__main b { font-size: 11.5px; padding: 1px 7px; border-radius: 999px; background: var(--lib-soft); }
+.lib-sf__edit { padding: 0 10px; opacity: .45; }
+.lib-sf__edit:hover { opacity: 1; }
+.lib-sf__new { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 12px; border: 1px dashed var(--lib-line); background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; opacity: .8; }
+.lib-sf__new:hover { opacity: 1; background: var(--lib-soft); }
+.lib-presets { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.lib-presets > span { font-size: 12px; font-weight: 700; opacity: .65; }
+.lib-presets .lib-chip { padding: 5px 11px; font-size: 12.5px; }
+.lib-form__grp { display: flex; flex-direction: column; gap: 6px; }
+.lib-form__grp > span { font-size: 12px; font-weight: 700; opacity: .7; }
+.lib-form__row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.lib-form__check { flex-direction: row !important; align-items: center; gap: 8px !important; }
+.lib-form__check span { opacity: 1 !important; font-size: 13px !important; }
+.lib-form input[aria-invalid="true"] { border-color: var(--color-danger, #d33); }
+.lib-form__count { font-weight: 600; }
+.lib-danger { color: var(--color-danger, #d33) !important; margin-inline-end: auto; }
+
+/* ---- easier multi-select ---- */
+.lib-card { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.lib-check { width: 30px; height: 30px; border-radius: 10px; touch-action: manipulation; }
+.lib-check input { width: 18px; height: 18px; }
+.lib-card.is-sel .lib-check { background: var(--lib-pri); }
+.lib-card.is-sel .lib-check input { accent-color: #fff; }
+.lib-grid .lib-card.is-sel { transform: scale(.975); }
+.lib:has(.lib-sel-bar) .lib-card:hover { transform: none; }
+.lib:has(.lib-sel-bar) .lib-grid .lib-card.is-sel { transform: scale(.975); }
+.lib-btn.is-on { border-color: var(--lib-pri); background: color-mix(in srgb, var(--lib-pri) 16%, transparent); }
+.lib-sel-hint { font-weight: 600; opacity: .85; }

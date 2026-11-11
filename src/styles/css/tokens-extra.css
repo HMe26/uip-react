@@ -1,0 +1,38 @@
+/* ==========================================================================
+   Shared UI tokens — the values pages kept hard-coding (radius 12/14/16, control height 40, card shadow…).
+   Additive only: new `--ui-*` names, nothing in variables.css is redefined, so no existing page changes.
+   Use these (and the .ui-* kit in ui-kit.css) for any NEW or reworked screen instead of literals.
+   ========================================================================== */
+:root {
+  /* shape */
+  --ui-radius-xs: 6px;
+  --ui-radius-ctl: 12px;     /* inputs, buttons, selects, chips-with-border */
+  --ui-radius-card: 16px;    /* cards, panels, list rows */
+  --ui-radius-hero: 20px;    /* page heroes, big containers */
+  /* controls */
+  --ui-ctl-h: 40px;
+  --ui-ctl-h-sm: 32px;
+  --ui-ctl-h-touch: 44px;    /* same as --tap-target-min */
+  /* rhythm */
+  --ui-gap-xs: 6px;
+  --ui-gap-sm: 10px;
+  --ui-gap-md: 14px;
+  --ui-gap-lg: 18px;
+  --ui-pad-card: 16px;
+  --ui-pad-card-lg: 20px;
+  /* elevation */
+  --ui-shadow-card: 0 1px 2px rgba(20, 28, 70, .04), 0 10px 28px -18px rgba(20, 28, 70, .14);   /* = --ap-card-shadow of the admin pages */
+  --ui-shadow-pop: 0 12px 32px -12px rgba(20, 28, 70, .28);
+  --ui-ring: 0 0 0 3px rgba(var(--color-primary-rgb), .16);
+  /* semantic tints derived from the existing palette (work in light + dark because they use the rgb triplets) */
+  --ui-tint-primary: rgba(var(--color-primary-rgb), .12);
+  --ui-tint-success: rgba(var(--color-success-rgb), .14);
+  --ui-tint-warning: rgba(var(--color-warning-rgb), .16);
+  --ui-tint-danger: rgba(var(--color-danger-rgb), .14);
+  /* surfaces */
+  --ui-surface: var(--bg-surface);
+  --ui-surface-muted: var(--bg-muted, var(--bg-canvas));
+  --ui-border: var(--border-subtle);
+  /* breakpoints (documentation only — custom properties can't be used inside @media):
+     phone ≤ 640 · tablet ≤ 900 · small laptop ≤ 1180 */
+}

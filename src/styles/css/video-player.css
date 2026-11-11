@@ -1,0 +1,276 @@
+/* Custom video player (components/VideoPlayer.jsx) */
+.vp {
+  --vp-accent: #6ea8ff;
+  --vp-text: #f4f6fb;
+  --vp-muted: rgba(244, 246, 251, .72);
+  container-type: size; position: relative; display: block; width: 100%; max-width: 100%; max-height: 100%;
+  aspect-ratio: 16 / 9; background: #000; border-radius: 12px; overflow: hidden;
+  color: var(--vp-text); outline: none; user-select: none; -webkit-user-select: none;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, .5); font-family: inherit; isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+.vp:focus-visible { box-shadow: 0 0 0 2px var(--vp-accent), 0 20px 70px rgba(0, 0, 0, .5); }
+.vp .vp__video { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; max-width: none !important; max-height: none !important; object-fit: contain !important; background: #000; display: block; cursor: pointer; transform: none; }
+.vp.is-full, .vp.is-pip, .vp:fullscreen { border-radius: 0 !important; aspect-ratio: auto !important; width: 100vw !important; height: 100vh !important; max-width: none !important; max-height: none !important; }
+.vp.is-playing:not(.is-ui) { cursor: none; }
+.vp.is-playing:not(.is-ui) .vp__video { cursor: none; }
+
+/* bottom control layer */
+.vp__ui {
+  position: absolute; inset-inline: 0; bottom: 0; z-index: 3; padding: 38px 12px 8px;
+  background: linear-gradient(to top, rgba(0, 0, 0, .82), rgba(0, 0, 0, .45) 55%, transparent);
+  opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity .22s ease, transform .22s ease;
+}
+.vp.is-ui .vp__ui { opacity: 1; transform: none; }
+/* the gradient strip itself is click-through (so the big play button / video stay reachable in small players); only the controls catch clicks */
+.vp__ui { pointer-events: none !important; }
+.vp.is-ui .vp__bar, .vp.is-ui .vp__row { pointer-events: auto; }
+
+/* timeline */
+.vp__bar { position: relative; height: 18px; display: flex; align-items: center; cursor: pointer; touch-action: none; outline: none; }
+.vp__track { position: relative; width: 100%; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .25); transition: height .15s ease; overflow: hidden; }
+.vp__bar:hover .vp__track, .vp__bar:focus-visible .vp__track { height: 6px; }
+.vp__buf { position: absolute; inset-block: 0; left: 0; background: rgba(255, 255, 255, .32); }
+.vp__fill { position: absolute; inset-block: 0; left: 0; background: var(--vp-accent); }
+.vp__thumb {
+  position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 6px rgba(0, 0, 0, .5); transform: scale(0); transition: transform .15s ease; pointer-events: none;
+}
+.vp__bar:hover .vp__thumb, .vp__bar:focus-visible .vp__thumb { transform: scale(1); }
+.vp__tip {
+  position: absolute; bottom: 22px; transform: translateX(-50%); padding: 3px 8px; border-radius: 7px;
+  background: rgba(12, 15, 24, .92); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap;
+}
+
+/* buttons row */
+.vp__row { display: flex; align-items: center; gap: 2px; }
+.vp__spacer { flex: 1; }
+.vp__btn {
+  height: 38px; min-width: 38px; padding: 0 6px; display: grid; place-items: center; border: 0; border-radius: 10px;
+  background: none; color: var(--vp-text); cursor: pointer; font: inherit; transition: background .15s ease, transform .1s ease;
+}
+.vp__btn:hover, .vp__btn.is-on { background: rgba(255, 255, 255, .16); }
+.vp__btn:active { transform: scale(.94); }
+.vp__btn:focus-visible { outline: 2px solid var(--vp-accent); outline-offset: -2px; }
+.vp__btn b { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.vp__time { margin-inline: 8px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--vp-muted); white-space: nowrap; }
+.vp__time i { opacity: .55; font-style: normal; margin-inline: 2px; }
+
+/* volume: popover above the speaker button (works at any player size; also on keyboard focus) */
+.vp__vol { position: relative; display: flex; align-items: center; }
+.vp__volpop {
+  position: absolute; bottom: 44px; inset-inline-start: -6px; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px;
+  background: rgba(20, 24, 36, .96); border: 1px solid rgba(255, 255, 255, .12); box-shadow: 0 14px 40px rgba(0, 0, 0, .55);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity .15s ease, transform .15s ease;
+}
+/* invisible bridge so the popover does not close while the pointer travels from the button to it */
+.vp__volpop::after { content: ''; position: absolute; inset-inline: 0; bottom: -12px; height: 12px; }
+.vp__vol:hover .vp__volpop, .vp__vol:focus-within .vp__volpop { opacity: 1; transform: none; pointer-events: auto; }
+.vp__volnum { min-width: 26px; font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; text-align: end; color: var(--vp-muted); }
+.vp .vp__range {
+  -webkit-appearance: none !important; appearance: none !important; display: block !important; width: 110px !important; height: 5px !important; margin: 0 !important; padding: 0 !important;
+  border: 0 !important; border-radius: 5px !important; outline: none; cursor: pointer; box-shadow: none !important;
+  background: linear-gradient(to right, var(--vp-accent) var(--p, 100%), rgba(255, 255, 255, .28) var(--p, 100%)) !important;
+}
+.vp .vp__range::-webkit-slider-runnable-track { height: 5px; background: transparent; border-radius: 5px; }
+.vp .vp__range::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -4.5px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 5px rgba(0, 0, 0, .5); }
+.vp .vp__range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 0; }
+.vp .vp__range:focus-visible { outline: 2px solid var(--vp-accent); outline-offset: 4px; }
+
+/* speed menu: compact grid so it fits even inside a small chat player */
+.vp__menuwrap { position: relative; }
+.vp__menu {
+  position: absolute; bottom: 44px; right: 0; left: auto; width: 212px; max-width: calc(100vw - 24px); max-height: min(260px, calc(100cqh - 72px)); overflow: auto; padding: 8px; border-radius: 14px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+  background: rgba(20, 24, 36, .96); border: 1px solid rgba(255, 255, 255, .12); box-shadow: 0 14px 40px rgba(0, 0, 0, .55);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); animation: vp-pop .16s ease;
+}
+.vp__menu-title { grid-column: 1 / -1; padding: 2px 4px 4px; font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--vp-muted); }
+.vp__menu button {
+  display: grid; place-items: center; padding: 7px 0; border: 0; border-radius: 9px; background: rgba(255, 255, 255, .07);
+  color: var(--vp-text); font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; font-variant-numeric: tabular-nums;
+}
+.vp__menu button:hover { background: rgba(255, 255, 255, .16); }
+.vp__menu button.is-on { background: var(--vp-accent); color: #0b1020; }
+.vp__tick { display: none; }
+
+/* big play, spinner, flash, error */
+.vp__big {
+  position: absolute; z-index: 2; top: 50%; left: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; border: 0; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; cursor: pointer;
+  background: linear-gradient(135deg, rgba(110, 168, 255, .95), rgba(88, 112, 255, .95));
+  box-shadow: 0 10px 34px rgba(60, 90, 255, .5), 0 0 0 8px rgba(255, 255, 255, .12); transition: transform .15s ease;
+}
+.vp__big svg { margin-inline-start: 3px; }
+.vp__big:hover { transform: scale(1.07); }
+.vp__spinner {
+  position: absolute; z-index: 2; top: 50%; left: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, .25); border-top-color: #fff; animation: vp-spin .8s linear infinite; pointer-events: none;
+}
+.vp__flash {
+  position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px 18px; border-radius: 999px;
+  background: rgba(0, 0, 0, .6); font-size: 18px; font-weight: 800; pointer-events: none; animation: vp-flash .65s ease forwards;
+}
+.vp__error {
+  position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  padding: 20px; text-align: center; background: rgba(8, 10, 18, .92);
+}
+.vp__error span { font-size: 13px; color: var(--vp-muted); }
+.vp__error button {
+  margin-top: 8px; padding: 8px 18px; border: 0; border-radius: 10px; background: var(--vp-accent); color: #0b1020; font: inherit; font-weight: 800; cursor: pointer;
+}
+
+@keyframes vp-spin { to { transform: rotate(360deg); } }
+@keyframes vp-pop { from { opacity: 0; transform: translateY(6px) scale(.97); } }
+@keyframes vp-flash { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.85); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .vp *, .vp { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* compact (chat bubbles, small screens) */
+@media (max-width: 640px) {
+  .vp__ui { padding: 30px 8px 4px; }
+  .vp__btn { height: 34px; min-width: 34px; }
+  .vp__btn--skip { display: none; }
+  .vp__time { font-size: 12px; margin-inline: 4px; }
+  .vp__big { width: 58px; height: 58px; margin: -29px 0 0 -29px; }
+}
+
+/* placement inside each host */
+.st-fv .vp, .st-fv__stage .vp { width: min(1100px, 100%); max-height: 100%; }
+.msg-attach-video--inline .vp { border-radius: inherit; box-shadow: none; }
+.msg-videoviewer .vp { width: min(1200px, 96vw); max-height: 92vh; }
+.pp-lightbox__stage .vp { width: min(90vw, 960px); max-height: 78vh; }
+
+/* narrow hosts (chat bubble): trim the control row */
+.msg-attach-video--inline .vp__btn--skip { display: none; }
+.msg-attach-video--inline { max-width: min(420px, 100%); }
+
+/* subtitles */
+.vp__cap {
+  position: absolute; z-index: 2; inset-inline: 8%; bottom: 14px; text-align: center; pointer-events: none; white-space: pre-line;
+  font-size: clamp(13px, 2.6cqw, 30px); font-weight: 700; line-height: 1.45; color: #fff; text-shadow: 0 1px 3px #000, 0 0 8px rgba(0, 0, 0, .8);
+  transition: bottom .2s ease;
+}
+.vp__cap { padding: 0; }
+.vp.is-ui .vp__cap { bottom: 78px; }
+.vp__btn.is-cc { color: var(--vp-accent); box-shadow: inset 0 -2px 0 var(--vp-accent); border-radius: 10px 10px 4px 4px; }
+.vp__menu--cc { display: flex; flex-direction: column; width: min(260px, calc(100cqw - 16px)); max-width: calc(100cqw - 16px); gap: 3px; box-sizing: border-box; }
+.vp__menu--cc button { display: block; text-align: start; padding: 8px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vp__menu--cc .vp__menu-load { margin-top: 4px; background: rgba(110, 168, 255, .16); color: #cfe0ff; }
+
+/* subtitle menu: compact, never taller than the player, slim scrollbar instead of the native arrows */
+.vp__menu { overscroll-behavior: contain; }
+.vp__menu::-webkit-scrollbar { width: 6px; }
+.vp__menu::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.vp__menu::-webkit-scrollbar-track { background: transparent; }
+.vp__menu::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .35); border-radius: 6px; }
+.vp__menu--cc { max-height: min(340px, calc(100cqh - 60px)); padding: 6px; gap: 2px; }
+.vp__menu--cc .vp__menu-title { position: sticky; top: -6px; z-index: 1; margin: -6px -6px 2px; padding: 8px 10px 6px; background: rgba(20, 24, 36, .98); }
+.vp__menu--cc button { padding: 7px 10px; font-size: 12.5px; }
+.vp__menu-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 2px; }
+.vp__menu--cc .vp__menu-chips .vp__menu-load { margin-top: 0; padding: 7px 4px; text-align: center; white-space: nowrap; }
+@container (max-height: 260px) {
+  .vp__menu--cc .vp__menu-sub { display: none; }
+  .vp__menu--cc button { padding: 5px 8px; font-size: 12px; }
+}
+
+/* automatic subtitles */
+.vp__menu--cc .vp__menu-load { white-space: normal; line-height: 1.35; }
+.vp__menu-sub { margin-top: 6px; padding: 2px 4px 0; font-size: 11px; font-weight: 700; color: var(--vp-muted); }
+.vp__menu-auto { display: grid; gap: 6px; margin-top: 6px; padding: 8px 10px; border-radius: 9px; background: rgba(110, 168, 255, .14); font-size: 12.5px; font-weight: 700; }
+.vp__menu-bar { display: block; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .16); overflow: hidden; }
+.vp__menu-bar i { display: block; height: 100%; border-radius: 4px; background: var(--vp-accent); transition: width .4s ease; }
+.vp__menu--cc .vp__menu-cancel { justify-self: start; padding: 4px 10px; font-size: 12px; background: rgba(255, 255, 255, .12); }
+.vp__menu-err { margin-top: 4px; padding: 6px 10px; border-radius: 9px; background: rgba(255, 99, 99, .16); color: #ffd0d0; font-size: 12px; font-weight: 600; line-height: 1.4; }
+.vp__btn.is-busy { animation: vp-pulse 1.2s ease-in-out infinite; }
+@keyframes vp-pulse { 50% { opacity: .35; } }
+
+/* ---- subtitle menu: final polish (small chat players) ---------------------------------------- */
+.vp__menu--cc { padding: 8px; gap: 4px; border-radius: 16px; }
+.vp__menu--cc > * { flex: 0 0 auto; min-height: 0; }          /* children never get squashed when the menu is shorter than its content */
+.vp__menu--cc button { min-height: 34px; line-height: 1.2; display: flex; align-items: center; gap: 8px; border-radius: 10px; }
+.vp__menu--cc .vp__menu-title { min-height: 0; padding: 2px 6px 6px; font-size: 11px; }
+/* selected row: soft tint + accent ring + check, instead of a solid bar */
+.vp__menu--cc button.is-on { background: rgba(110, 168, 255, .2); color: #fff; box-shadow: inset 0 0 0 1.5px var(--vp-accent); }
+.vp__menu--cc button[role="menuitemradio"]::before { content: ''; flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .45); }
+.vp__menu--cc button[role="menuitemradio"].is-on::before { background: var(--vp-accent); box-shadow: none; }
+/* generate chips: three equal pills */
+.vp__menu--cc .vp__menu-chips { gap: 6px; margin: 2px 0; }
+.vp__menu--cc .vp__menu-chips .vp__menu-load { display: flex; justify-content: center; min-height: 34px; padding: 6px 4px; background: rgba(110, 168, 255, .14); color: #dbe8ff; border-radius: 999px; }
+.vp__menu--cc .vp__menu-chips .vp__menu-load:hover { background: rgba(110, 168, 255, .28); }
+.vp__menu--cc > .vp__menu-load { justify-content: center; background: rgba(255, 255, 255, .06); color: var(--vp-muted); }
+.vp__menu--cc > .vp__menu-load:hover { background: rgba(255, 255, 255, .14); color: #fff; }
+.vp__menu--cc .vp__menu-auto { margin-top: 2px; }
+
+/* short players (chat bubble): drop the headings, tighten rows so everything fits without scrolling */
+@container (max-height: 320px) {
+  .vp__menu--cc { max-height: calc(100cqh - 54px); padding: 6px; gap: 3px; }
+  .vp__menu--cc .vp__menu-title,
+  .vp__menu--cc .vp__menu-sub { display: none; }
+  .vp__menu--cc button { min-height: 28px; padding: 4px 10px; font-size: 12px; }
+  .vp__menu--cc .vp__menu-chips .vp__menu-load { min-height: 28px; }
+}
+
+/* anchor the subtitle menu to the PLAYER (not to the CC button) so it is never cut off in narrow players */
+.vp__menuwrap--cc { position: static; }
+.vp__menu--cc { left: auto; right: 8px; inset-inline-end: auto; bottom: 60px; }
+
+/* floating window (Document Picture-in-Picture): our own controls fill it */
+.vp.is-pip { box-shadow: none; }
+.vp.is-pip .vp__video { cursor: pointer; }
+.vp.is-pip .vp__btn--skip { display: none; }
+@media (min-width: 560px) { .vp.is-pip .vp__btn--skip { display: grid; } }
+/* what stays in the page while the video is in the floating window */
+.vp--placeholder { background-color: #0b0e17; background-size: cover; background-position: center; display: grid; place-items: center; }
+.vp--placeholder::before { content: ''; position: absolute; inset: 0; background: rgba(8, 10, 18, .72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.vp__pipnote { position: relative; display: grid; justify-items: center; gap: 8px; padding: 12px; text-align: center; font-size: 13px; font-weight: 700; color: var(--vp-text); }
+.vp__pipnote button { margin-top: 2px; padding: 7px 16px; border: 0; border-radius: 999px; background: var(--vp-accent); color: #0b1020; font: inherit; font-weight: 800; cursor: pointer; }
+
+/* narrow players (chat bubble ~320px): the whole control row must fit, the full-screen button is never clipped */
+.vp__row { min-width: 0; }
+.vp__btn--full { flex: none; }
+@container (max-width: 460px) {
+  .vp__ui { padding-inline: 8px; }
+  .vp__row { gap: 0; }
+  .vp__btn { height: 34px; min-width: 34px; padding: 0 4px; }
+  .vp__time { margin-inline: 4px; font-size: 12px; }
+}
+/* mouse / trackpad: same as before (floating-window button hidden only in very small players) */
+@container (max-width: 300px) {
+  @media (pointer: fine) { .vp__btn--pip { display: none; } }
+}
+@container (max-width: 250px) {
+  .vp__vol { display: none; }
+}
+/* touch screens: the floating-window button always stays. To make room the mute control goes first (the phone's volume keys
+   do that job), then the +/-10s skips on very narrow players */
+@media (pointer: coarse) {
+  @container (max-width: 400px) { .vp__vol { display: none; } }
+  @container (max-width: 290px) { .vp__btn--skip { display: none; } }
+}
+
+/* volume boost menu — compact popover anchored to its button, never wider than the player */
+.vp__menu--boost { display: block; width: 224px; max-width: calc(100cqw - 16px); max-height: calc(100cqh - 56px); overflow: auto; padding: 12px; box-sizing: border-box; border-radius: 16px; }
+.vp__menu--boost .vb-panel__presets button, .vp__menu--boost .vb-panel__value { display: block; place-items: unset; }
+.vp__menu--boost .vb-panel__presets button { padding: 7px 0; }
+.vp__btn--boost b { font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.vp__btn--boost.is-boosted { color: #ffb454; }
+.vp__menu--boost .vb-panel__value.is-on { background: rgba(255, 180, 84, .18); color: #ffb454; }
+
+/* Narrow player (chat bubble on a phone): the control row used to overflow and cut off the fullscreen button.
+   Everything stays on one line: smaller buttons, no on-screen volume button (the phone has hardware volume keys),
+   and the fullscreen button can never be pushed out. */
+.vp__row { min-width: 0; }
+.vp__row > * { flex-shrink: 0; }
+.vp__row > .vp__time { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: clip; }
+.vp__row > .vp__spacer { flex: 1 1 0; min-width: 0; }
+@container (max-width: 360px) {
+  .vp__ui { padding-inline: 4px; }
+  .vp__btn { height: 30px; min-width: 30px; padding: 0 3px; }
+  .vp__vol { display: none; }
+  .vp__time { font-size: 11px; margin-inline: 2px; }
+  .vp__row { gap: 0; }
+}
+@container (max-width: 250px) {
+  .vp__btn--boost, .vp__menuwrap--boost { display: none; }
+}

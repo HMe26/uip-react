@@ -1,0 +1,63 @@
+/* Sticky notes + desktop widgets (desktop/Widgets.jsx). The layer sits above the icons and below the windows. */
+.os-widgets { position: absolute; inset: var(--mb-h, 0px) 0 var(--dock-h, 48px); pointer-events: none; isolation: isolate; overflow: hidden; }
+.os-wgt { position: absolute; pointer-events: auto; display: flex; flex-direction: column; border-radius: 14px; box-shadow: 0 8px 28px rgba(0, 0, 0, .32), 0 1px 0 rgba(255, 255, 255, .25) inset; overflow: hidden; color: #fff; background: rgba(24, 26, 36, .58); backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4); }
+.os-wgt__bar { height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 0 6px; cursor: grab; touch-action: none; opacity: .0; transition: opacity .15s; }
+.os-wgt:hover .os-wgt__bar, .os-wgt:focus-within .os-wgt__bar { opacity: 1; }
+.os-wgt__bar:active { cursor: grabbing; }
+.os-wgt__x { margin-inline-start: auto; width: 18px; height: 18px; padding: 0; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(0, 0, 0, .22); color: inherit; cursor: pointer; }
+.os-wgt__x:hover { background: rgba(255, 69, 58, .85); color: #fff; }
+.os-wgt__dots { display: inline-flex; gap: 5px; }
+.os-wgt__dot { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .25); cursor: pointer; }
+.os-wgt__dot.is-on { outline: 2px solid rgba(0, 0, 0, .45); outline-offset: 1px; }
+.os-wgt__body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.os-wgt__rs { position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, rgba(128, 128, 128, .55) 55% 65%, transparent 65% 75%, rgba(128, 128, 128, .55) 75% 85%, transparent 85%); }
+
+/* sticky notes keep a paper colour and dark text in every theme */
+.os-wgt--note { color: #2b2a22; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.os-wgt--note.is-yellow, .os-wgt__dot.is-yellow { background: #fff2a8; }
+.os-wgt--note.is-pink, .os-wgt__dot.is-pink { background: #ffc9de; }
+.os-wgt--note.is-blue, .os-wgt__dot.is-blue { background: #bfe3ff; }
+.os-wgt--note.is-green, .os-wgt__dot.is-green { background: #c8f2c2; }
+.os-wgt--note.is-purple, .os-wgt__dot.is-purple { background: #e3d1ff; }
+.os-wgt--note .os-wgt__body textarea { flex: 1; width: 100%; min-height: 0; padding: 4px 12px 14px; border: 0; outline: 0; resize: none; background: transparent; color: inherit; font: 500 14px/1.5 var(--font-body, system-ui, sans-serif); }
+.os-wgt--note .os-wgt__body textarea::placeholder { color: rgba(43, 42, 34, .5); }
+
+.wg-clock { padding: 4px 16px 16px; text-align: center; user-select: none; }
+.wg-clock__t { font-size: 44px; font-weight: 300; letter-spacing: -.02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.wg-clock__d { margin-top: 4px; font-size: 13px; opacity: .85; }
+
+.wg-cal { padding: 0 12px 12px; }
+.wg-cal__bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.wg-cal__bar button { height: 24px; min-width: 24px; padding: 0 4px; border: 0; border-radius: 6px; background: transparent; color: inherit; cursor: pointer; font: 600 13px/1 inherit; }
+.wg-cal__bar button:hover { background: rgba(255, 255, 255, .15); }
+.wg-cal__g { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; font-size: 12px; }
+.wg-cal__h { opacity: .6; padding: 3px 0; font-size: 11px; }
+.wg-cal__c { padding: 5px 0; border-radius: 50%; font-variant-numeric: tabular-nums; }
+.wg-cal__c.is-today { background: var(--os-accent, #0a84ff); color: #fff; font-weight: 700; }
+
+.wg-todo { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 4px; padding: 0 12px 14px; }
+.wg-todo__title { width: 100%; border: 0; outline: 0; background: transparent; color: inherit; font: 700 15px/1.3 inherit; padding: 2px 0; }
+.wg-todo__title::placeholder, .wg-todo__add::placeholder { color: rgba(255, 255, 255, .5); }
+.wg-todo__count { font-size: 11px; opacity: .65; }
+.wg-todo__list { list-style: none; margin: 0; padding: 0; flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.wg-todo__list li { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 3px 0; }
+.wg-todo__list li span { flex: 1; min-width: 0; word-break: break-word; }
+.wg-todo__list li.is-done span { text-decoration: line-through; opacity: .5; }
+.wg-todo__list li button { width: 18px; height: 18px; padding: 0; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: inherit; opacity: 0; cursor: pointer; }
+.wg-todo__list li:hover button { opacity: .8; }
+.wg-todo__add { width: 100%; padding: 7px 9px; border: 0; outline: 0; border-radius: 8px; background: rgba(255, 255, 255, .14); color: inherit; font: 13px/1.2 inherit; }
+.wg-todo__add:focus { background: rgba(255, 255, 255, .22); }
+
+/* phone home screen (MobileWidgets): cards in the page flow, controls always visible */
+.mos-wgts { display: flex; flex-direction: column; gap: 12px; margin: 14px 0 6px; }
+.mos-wgts .os-wgt { position: relative; width: auto; height: auto; box-shadow: 0 4px 16px rgba(0, 0, 0, .25); }
+.mos-wgts .os-wgt__bar { opacity: 1; cursor: default; height: 28px; }
+.mos-wgts .os-wgt__x { width: 24px; height: 24px; }
+.mos-wgts .os-wgt__dot { width: 18px; height: 18px; }
+.mos-wgts .os-wgt--note .os-wgt__body textarea { min-height: 120px; font-size: 16px; -webkit-user-select: text; user-select: text; }
+.mos-wgts .wg-todo { min-height: 0; }
+.mos-wgts .wg-todo__title, .mos-wgts .wg-todo__add { font-size: 16px; -webkit-user-select: text; user-select: text; }
+.mos-wgts .wg-todo__list { max-height: 260px; }
+.mos-wgts .wg-todo__list li { padding: 6px 0; font-size: 15px; }
+.mos-wgts .wg-todo__list li button { opacity: .7; width: 26px; height: 26px; }
+.mos-wgts .wg-todo__list li input[type="checkbox"] { width: 20px; height: 20px; }

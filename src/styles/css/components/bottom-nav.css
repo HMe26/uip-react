@@ -1,0 +1,107 @@
+/* components/bottom-nav.css — persistent mobile bottom navigation.
+   Desktop keeps the sidebar as the only navigation surface; on mobile the
+   sidebar becomes an off-canvas drawer (see responsive.css) AND this bar
+   surfaces the 4 highest-priority destinations for the role plus a "More"
+   button that opens that same drawer for everything else. This is a
+   mobile-specific navigation pattern (Category D), not a shrunk sidebar.
+   Status: Active — Mobile Re-Architecture Phase 1 (Global Shell)
+   @package UIPE */
+
+.bottom-nav { display: none; }
+
+@media (max-width: 768px) {
+  body.has-bottom-nav .app-shell__main {
+    padding-bottom: calc(60px + var(--safe-bottom) + var(--space-5));
+  }
+
+  /* The avatar menu is a fixed sheet: stop it above the bar instead of sliding underneath it. */
+  body.has-bottom-nav .dropdown > .dropdown__menu,
+  body:has(.bottom-nav) .dropdown > .dropdown__menu {
+    max-height: calc(100dvh - var(--topbar-height) - var(--safe-top) - 60px - var(--safe-bottom) - 40px);
+    overscroll-behavior: contain;
+  }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: var(--z-sticky);
+    height: calc(60px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
+    box-shadow: 0 -8px 24px rgba(10, 15, 30, 0.06);
+  }
+
+  .bottom-nav__item {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 2px;
+    color: var(--text-secondary);
+    position: relative;
+  }
+  .bottom-nav__item svg { width: 21px; height: 21px; flex-shrink: 0; }
+  .bottom-nav__item span {
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .bottom-nav__item.is-active { color: var(--color-primary); }
+  .bottom-nav__item.is-active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 28px;
+    height: 3px;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    background: var(--color-primary);
+  }
+  .bottom-nav__icon { position: relative; display: inline-flex; font-style: normal; }
+  .bottom-nav__badge {
+    position: absolute;
+    top: -7px;
+    inset-inline-start: calc(100% - 10px);
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: #e5484d;
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 800;
+    line-height: 18px;
+    text-align: center;
+    box-shadow: 0 0 0 2px var(--bg-surface);
+    pointer-events: none;
+  }
+  .bottom-nav__item .bottom-nav__dot {
+    position: absolute;
+    top: 4px;
+    inset-inline-start: calc(50% + 6px);
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--color-danger);
+  }
+}
+
+/* Landscape phones: don't let a 60px bar eat too much of a short viewport,
+   and don't fight the sidebar-as-drawer which stays available via "More". */
+@media (max-width: 900px) and (max-height: 480px) and (orientation: landscape) {
+  .bottom-nav { display: none; }
+  body.has-bottom-nav .app-shell__main { padding-bottom: var(--space-4); }
+}
+
+@media print {
+  .bottom-nav { display: none !important; }
+}

@@ -1,0 +1,91 @@
+/* ==========================================================================
+   light-dark.css — Dark mode when it is entered FROM Light.
+   Active only on <html data-palette="white" data-theme="dark">
+   (ThemeContext / theme-boot.js set this when the last light look was "Light";
+    coming from Classic keeps the classic dark = palette "insight").
+
+   It is the dark twin of light-mode.css: same shapes (rounded cards, filled sidebar
+   items, solid indigo active item, Inter headings), neutral charcoal surfaces.
+   Loaded after light-mode.css so it wins over its hard-coded light colours.
+   ========================================================================== */
+
+html[data-palette="white"][data-theme="dark"],
+html[data-palette="white"][data-theme="dark"] .app-shell {
+  color-scheme: dark;
+  --bg-canvas: #14171F;
+  --bg-sidebar: #11151D;
+  --bg-surface: #1C2130;
+  --bg-muted: #161B27;
+  --bg-raised: #252D3F;
+  --text-primary: #F3F5FA;
+  --text-secondary: #8F9AB5;
+  --border-subtle: rgba(255, 255, 255, .07);
+  --border-strong: rgba(255, 255, 255, .14);
+
+  --color-primary: #635BFF;
+  --color-primary-hover: #7A73FF;
+  --color-primary-rgb: 99, 91, 255;
+  --color-on-primary: #FFFFFF;
+  --color-success: #2FD1A0;  --color-success-rgb: 47, 209, 160;
+  --color-warning: #F0B33A;  --color-warning-rgb: 240, 179, 58;
+  --color-danger:  #FF6B7A;  --color-danger-rgb: 255, 107, 122;
+  --st-info: #7B8BFF;
+  --st-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 10px 28px -14px rgba(0, 0, 0, .6);
+  --glass-bg: rgba(255, 255, 255, .04);
+  --glass-border: rgba(255, 255, 255, .08);
+}
+html[data-palette="white"][data-theme="dark"] body,
+html[data-palette="white"][data-theme="dark"] .app-shell { background: var(--bg-canvas); }
+
+/* ---- sidebar: charcoal, flat items like Light, soft indigo active item ---- */
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar {
+  --sb-top: #11151D;
+  --sb-bottom: #11151D;
+  --sb-text: #AEB7CF;
+  --sb-text-strong: #F3F5FA;
+  --sb-border: rgba(255, 255, 255, .07);
+  --sb-rule: rgba(255, 255, 255, .06);
+  --sb-hover: rgba(255, 255, 255, .06);
+  --sb-card: #1C2130;
+  --sb-tint: rgba(99, 91, 255, .20);
+  --sb-gold: #635BFF;
+  --sb-gold-rgb: 99, 91, 255;
+  --sb-gold-soft: #A8A3FF;
+  --sb-on-gold: #FFFFFF;
+  --border-strong: rgba(255, 255, 255, .14);
+  background: #11151D;
+  border-inline-end: 1px solid var(--sb-border);
+  box-shadow: none;
+}
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__nav { }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-thumb { background: #2C3550; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__section-title { color: #8A93AD; opacity: 1; font-weight: 700; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__section-title::after { display: none; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link { border-radius: 12px; padding: 10px 12px; font-weight: 500; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active::before { display: none; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active { font-weight: 700; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link { background: none; color: var(--sb-text); }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link:hover { background: var(--sb-hover); color: #fff; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active { background: var(--sb-tint); color: #B9B5FF; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active svg { color: #8F89FF; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-disabled:hover { background: none; color: var(--sb-text); }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__count { background: #635BFF; color: #fff; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active .sidebar__count { box-shadow: none; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .badge-coming-soon { background: rgba(255, 255, 255, .08); color: var(--sb-text); border-color: var(--sb-border); }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__promo { border-color: rgba(99, 91, 255, .35); color: #8F89FF; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__promo a { color: #A8A3FF; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .theme-switch { background: #1C2130; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .theme-switch button { color: var(--sb-text); }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .theme-switch button.is-active { background: #2C3550; color: #fff; box-shadow: none; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .theme-switch button.is-active svg { color: #A8A3FF; }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__ai-btn { background: linear-gradient(135deg, #7A73FF, #635BFF); box-shadow: 0 8px 18px -8px rgba(99, 91, 255, .75); }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__user-avatar { background: linear-gradient(135deg, #7A73FF, #635BFF); }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar a.sidebar__user:hover { background: var(--sb-card); border-color: var(--sb-border); }
+html[data-palette="white"][data-theme="dark"] .app-shell.app-shell--insight .sidebar .sidebar__logo { box-shadow: 0 6px 16px -6px rgba(99, 91, 255, .55); }
+
+/* ---- topbar, cards, tables ------------------------------------------------ */
+html[data-palette="white"][data-theme="dark"] .app-shell .topbar { background: #11151D; border-bottom: 1px solid var(--border-subtle); box-shadow: none; }
+html[data-palette="white"][data-theme="dark"] .app-shell .topbar__search { background: #1A2030; border-color: var(--border-subtle); }
+html[data-palette="white"][data-theme="dark"] .app-shell table th { background: var(--bg-muted); }
+html[data-palette="white"][data-theme="dark"] .app-shell--staff .btn-outline { color: var(--text-primary); }
+html[data-palette="white"][data-theme="dark"] .app-shell--staff .ac-hero__actions .btn-ghost:hover { background: var(--bg-raised); }

@@ -1,0 +1,29 @@
+/* typography.css — type scale utility classes */
+.text-display-xl { font-family: var(--font-display); font-size: var(--text-display-xl); font-weight: 800; line-height: var(--leading-tight); }
+.text-display-lg { font-family: var(--font-display); font-size: var(--text-display-lg); font-weight: 700; line-height: var(--leading-tight); }
+.text-h1 { font-family: var(--font-display); font-size: var(--text-h1); font-weight: 700; }
+.text-h2 { font-family: var(--font-display); font-size: var(--text-h2); font-weight: 700; }
+.text-h3 { font-family: var(--font-display); font-size: var(--text-h3); font-weight: 600; }
+.text-body { font-size: var(--text-body); }
+.text-small { font-size: var(--text-small); }
+.text-caption { font-size: var(--text-caption); letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-secondary); }
+.text-muted { color: var(--text-secondary); }
+.text-mono { font-family: var(--font-mono); }
+.text-h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; }
+
+/* ---- Serif display type, platform-wide (Academic Staff look) ------------------
+   · Arabic headings use Amiri (Playfair has no Arabic glyphs); weight 700 is its
+     real bold, so 800 would be a faux-bold.
+   · Playfair's default numerals are old-style (864 → descending digits); big
+     numbers in dashboards read better as lining, tabular figures. */
+[dir="rtl"] {
+  --font-display: 'Amiri', 'Cairo', 'Georgia', serif;
+}
+[dir="rtl"] :is(h1, h2, h3, h4, .text-display-xl, .text-display-lg, .text-h1, .text-h2, .text-h3, .text-h4,
+  .card-stat__value, .stf-kpi__value, .fc-kpi__value, .ac-stat__value, .readiness-ring__score, .sidebar__brand-name) {
+  font-weight: 700;
+}
+:is(h1, h2, h3, h4, .text-display-xl, .text-display-lg, .text-h1, .text-h2, .text-h3, .text-h4,
+  .card-stat__value, .stf-kpi__value, .fc-kpi__value, .ac-stat__value, .readiness-ring__score) {
+  font-variant-numeric: lining-nums tabular-nums;
+}

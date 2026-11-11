@@ -1,0 +1,26 @@
+// Auto-extracted from api/app/Views/student/group-hub.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Add': 'إضافة',
+  'Announcements': 'الإعلانات',
+  'Description (optional)': 'وصف (اختياري)',
+  'Details (optional)': 'التفاصيل (اختياري)',
+  'Due': 'موعد التسليم',
+  'Files': 'الملفات',
+  'Group Chat': 'دردشة المجموعة',
+  'No activity yet.': 'لا يوجد نشاط بعد.',
+  'No group announcements yet.': 'لا توجد إعلانات في المجموعة بعد.',
+  'No shared files yet.': 'لا توجد ملفات مشتركة بعد.',
+  'No tasks yet.': 'لا توجد مهام بعد.',
+  'Post': 'نشر',
+  'Task title': 'عنوان المهمة',
+  'Tasks': 'المهام',
+  'Timeline': 'النشاط',
+  'Title': 'العنوان',
+  'Unassigned': 'بدون تكليف',
+  'Upload': 'رفع',
+  'completed a task:': 'أكمل مهمة:',
+  'created a task:': 'أنشأ مهمة:',
+  'posted an announcement:': 'نشر إعلانًا:',
+  'uploaded a file:': 'رفع ملفًا:',
+};

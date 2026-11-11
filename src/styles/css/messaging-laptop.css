@@ -1,0 +1,74 @@
+/* messaging-laptop.css — roomier Messages page on laptop / desktop (≥1001px).
+   Loaded AFTER every portal stylesheet (see index.css) so one block covers
+   all portals (insight / student / staff / faculty / admin / security).
+   Selectors start with `body.msg-page-active` to win over the per-portal
+   `.app-shell--xxx .msg-*` rules by specificity, without touching them.
+
+   What it does:
+   1) Wins back vertical space: tighter page chrome (breadcrumb, title, main
+      padding) — the chat card is height-bound to the viewport, so every
+      pixel saved above it becomes visible messages.
+   2) Wins back horizontal space: lifts the 1180/1440px content cap on this
+      page only and widens the conversation list slightly.
+   3) Slightly larger bubbles, avatars and composer for comfortable reading.
+   Phones/tablets (≤1000px) are untouched — messaging-mobile.css owns them. */
+
+@media (min-width: 1001px) {
+  /* 1) page chrome ------------------------------------------------------ */
+  body.msg-page-active main.app-shell__main {
+    max-width: none;
+    padding: var(--space-4) var(--space-5) var(--space-4);
+  }
+  body.msg-page-active main.app-shell__main .breadcrumb { margin-bottom: 2px; font-size: var(--text-caption); }
+  body.msg-page-active .msg-page-header { margin-bottom: 10px !important; gap: var(--space-3); }
+  body.msg-page-active .msg-page-header h1 { margin: 0; font-size: 26px; line-height: 1.2; }
+  body.msg-page-active .msg-page-header p { margin: 2px 0 0; font-size: var(--text-small); }
+
+  body.msg-page-active .msg-app,
+  body.msg-page-active .app-shell--insight .msg-app {
+    margin: 0 calc(var(--space-5) * -1 + var(--space-2)) 0;
+    min-height: 560px;
+    --msg-header-h: 72px;
+  }
+
+  /* 2) widths ----------------------------------------------------------- */
+  html body.msg-page-active .msg-app[data-msg-app] { --msg-rail-w: 300px; }
+
+  /* 3) conversation list ------------------------------------------------ */
+  body.msg-page-active .msg-app .msg-conv { padding: 14px 18px; gap: 12px; }
+  body.msg-page-active .msg-app .msg-conv__name { font-size: 15px; }
+  body.msg-page-active .msg-app .msg-conv__preview { font-size: 13.5px; }
+  body.msg-page-active .msg-app .msg-conv__time { font-size: 12px; }
+  body.msg-page-active .msg-app .msg-avatar { width: 48px; height: 48px; font-size: 16px; }
+  body.msg-page-active .msg-app .msg-avatar--sm { width: 30px; height: 30px; font-size: 12px; }
+
+  /* 4) thread ----------------------------------------------------------- */
+  body.msg-page-active .msg-app .msg-thread__header { padding: 0 24px; }
+  body.msg-page-active .msg-app .msg-thread__peer-meta strong { font-size: 18px; }
+  body.msg-page-active .msg-app .msg-thread__scroll { padding: 20px 28px; }
+  body.msg-page-active .msg-app .msg-messages { gap: 10px; }
+  body.msg-page-active .msg-app .msg-row { max-width: 82%; }
+  body.msg-page-active .msg-app .msg-bubble { font-size: 16px; line-height: 1.55; padding: 12px 18px; }
+  body.msg-page-active .msg-app .msg-sender-name { font-size: 13px; }
+
+  /* 5) composer --------------------------------------------------------- */
+  body.msg-page-active .msg-app .msg-composer { padding: 12px 24px 16px; }
+  body.msg-page-active .msg-app .msg-composer__input { min-height: 52px; font-size: 16px; padding: 14px 18px; }
+}
+
+/* Wide laptops/desktops: a bit more room for the conversation list. */
+@media (min-width: 1280px) {
+  html body.msg-page-active .msg-app[data-msg-app] { --msg-rail-w: 350px; }
+}
+
+/* Short screens (typical 1366×768 / 125%-scaled laptops, ~600–760px tall):
+   the page title only costs height — drop it and let the card fill the screen. */
+@media (min-width: 1001px) and (max-height: 860px) {
+  body.msg-page-active .msg-page-header p { display: none; }
+}
+@media (min-width: 1001px) and (max-height: 760px) {
+  body.msg-page-active .msg-page-header { display: none; }
+  body.msg-page-active main.app-shell__main { padding-top: var(--space-3); padding-bottom: var(--space-3); }
+  body.msg-page-active .msg-app,
+  body.msg-page-active .app-shell--insight .msg-app { min-height: 480px; --msg-header-h: 64px; }
+}

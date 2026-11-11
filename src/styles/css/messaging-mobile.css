@@ -1,0 +1,268 @@
+/* messaging-mobile.css — responsive layer for the Messages page.
+   Loaded AFTER insight-portal.css on purpose: that file sets desktop-sized
+   paddings (84px header, 28px thread padding, 14px/18px bubbles) with no
+   mobile reset, which is what made the chat feel cramped on phones.
+   Selectors start with `body.msg-page-active` so they win by specificity
+   over `.app-shell--insight .msg-*` without needing !important. */
+
+/* ---------------------------------------------------------------- tablet */
+@media (max-width: 1000px) {
+  body.msg-page-active .msg-app .msg-thread__header { padding: 0 16px; }
+  body.msg-page-active .msg-app .msg-thread__scroll { padding: 18px 16px; }
+  body.msg-page-active .msg-app .msg-composer { padding: 12px 16px 14px; }
+  body.msg-page-active .msg-app .msg-row { max-width: 85%; }
+}
+
+/* ----------------------------------------------------------------- phone */
+@media (max-width: 760px) {
+  /* 1) Shell: leave room for the fixed bottom nav (it used to cover the
+        composer), and tighten the page padding. */
+  body.msg-page-active main.app-shell__main,
+  body.msg-page-active .app-shell--insight .app-shell__main {
+    padding: 12px 12px calc(60px + var(--safe-bottom) + 12px);
+  }
+  body.msg-page-active .msg-page-header { margin-bottom: 12px !important; }
+  body.msg-page-active .msg-page-header h1 { font-size: 22px; }
+  body.msg-page-active .msg-page-header p { display: none; }
+
+  body.msg-page-active .msg-app,
+  body.msg-page-active .app-shell--insight .msg-app {
+    --msg-header-h: 60px;
+    margin: 0;
+    min-height: 0;
+    border-radius: 16px;
+  }
+
+  /* 2) Thread open = chat mode (WhatsApp/Telegram style): hide page title
+        and bottom nav, the card becomes full-bleed and the composer sits
+        at the very bottom of the screen. */
+  body.msg-page-active.msg-thread-open .msg-page-header,
+  body.msg-page-active.msg-thread-open .bottom-nav { display: none; }
+  body.msg-page-active.msg-thread-open main.app-shell__main,
+  body.msg-page-active.msg-thread-open .app-shell--insight .app-shell__main {
+    padding: 0;
+  }
+  body.msg-page-active.msg-thread-open .msg-app,
+  body.msg-page-active.msg-thread-open .app-shell--insight .msg-app {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* 3) Header: compact, with a real back button. */
+  body.msg-page-active .msg-app .msg-thread__header { padding: 0 8px; gap: 4px; }
+  body.msg-page-active .msg-app .msg-thread__back { display: inline-flex; flex-shrink: 0; }
+  [dir="rtl"] body.msg-page-active .msg-app .msg-thread__back svg,
+  body.msg-page-active [dir="rtl"] .msg-thread__back svg { transform: scaleX(-1); }
+  body.msg-page-active .msg-app .msg-thread__peer { gap: 10px; }
+  body.msg-page-active .msg-app .msg-thread__peer .msg-avatar { width: 40px; height: 40px; font-size: 14px; }
+  body.msg-page-active .msg-app .msg-thread__peer-meta strong { font-size: 16px; }
+  body.msg-page-active .msg-app .msg-thread__status { font-size: 12px; }
+  body.msg-page-active .msg-app .msg-icon-btn { width: 40px; height: 40px; }
+
+  /* 4) Rail (conversation list). */
+  body.msg-page-active .msg-app .msg-rail__head { padding: 14px 14px 8px !important; }
+  body.msg-page-active .msg-app .msg-rail__search { margin-inline: 12px; }
+  body.msg-page-active .msg-app .msg-rail__tabs { padding: 0 12px 8px; overflow-x: auto; flex-wrap: nowrap; }
+  body.msg-page-active .msg-app .msg-conv { padding: 12px 14px; gap: 12px; }
+  body.msg-page-active .msg-app .msg-conv .msg-avatar { width: 46px; height: 46px; font-size: 15px; }
+
+  /* 5) Messages. */
+  body.msg-page-active .msg-app .msg-thread__scroll { padding: 12px 10px; overscroll-behavior: contain; }
+  body.msg-page-active .msg-app .msg-row { max-width: 88%; gap: 6px; }
+  body.msg-page-active .msg-app .msg-row .msg-avatar,
+  body.msg-page-active .msg-app .msg-row .msg-avatar--sm { width: 28px; height: 28px; font-size: 11px; flex-shrink: 0; }
+  body.msg-page-active .msg-app .msg-bubble,
+  body.msg-page-active .msg-app.msg-app .msg-row.is-mine .msg-bubble {
+    padding: 9px 13px;
+    font-size: 15px;
+    line-height: 1.45;
+    border-radius: 18px;
+  }
+  body.msg-page-active .msg-app .msg-sender-name { margin-inline-start: 8px; }
+  body.msg-page-active .msg-app .msg-day-sep { margin: 12px 0 8px; }
+
+  /* 6) Composer: one tight block pinned above the safe area / keyboard.
+        Toolbar scrolls sideways instead of wrapping into a second line. */
+  body.msg-page-active .msg-app .msg-composer {
+    padding: 6px 10px calc(8px + var(--safe-bottom));
+    background: var(--bg-surface);
+  }
+  body.msg-page-active .msg-app .msg-composer__toolbar {
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-bottom: 4px;
+  }
+  body.msg-page-active .msg-app .msg-composer__toolbar::-webkit-scrollbar { display: none; }
+  body.msg-page-active .msg-app .msg-composer__toolbar .msg-icon-btn { flex-shrink: 0; width: 38px; height: 38px; }
+  body.msg-page-active .msg-app .msg-composer__input-row { gap: 8px; }
+  body.msg-page-active .msg-app .msg-composer__input {
+    min-height: 44px;
+    max-height: 120px;
+    padding: 11px 14px;
+    border-radius: 22px;
+    font-size: 16px; /* >=16px stops iOS zoom-on-focus */
+  }
+  body.msg-page-active .msg-app .msg-send-btn { width: 44px; height: 44px; border-radius: 50%; }
+
+  /* 7) Popovers/panels must never overflow the screen. */
+  body.msg-page-active .msg-app .msg-emoji-popover,
+  body.msg-page-active .msg-app .msg-mention-popover { max-width: calc(100vw - 24px); inset-inline-start: 0; }
+  body.msg-page-active .msg-app .msg-info { width: 100%; }
+  .msg-toast { inset-inline: 12px; max-width: none; }
+}
+
+/* Very small phones. */
+@media (max-width: 360px) {
+  body.msg-page-active .msg-app .msg-row { max-width: 92%; }
+  body.msg-page-active .msg-app .msg-thread__header-actions .msg-icon-btn { width: 36px; }
+}
+
+/* Landscape phones: the bottom nav is already hidden by bottom-nav.css, so
+   don't reserve space for it. */
+@media (max-width: 900px) and (max-height: 480px) and (orientation: landscape) {
+  body.msg-page-active main.app-shell__main,
+  body.msg-page-active .app-shell--insight .app-shell__main { padding-bottom: 12px; }
+  body.msg-page-active .msg-app { --msg-header-h: 48px; }
+}
+
+/* ==========================================================================
+   Phone inbox = native messenger screen (WhatsApp / Telegram style)
+   --------------------------------------------------------------------------
+   Before: the conversation list lived in a rounded card INSIDE the normal page
+   (breadcrumb + padding + floating top bar around it). The card was only as tall
+   as its content, so the page scrolled and an empty band appeared under it.
+   Now: while the list is showing (no chat open) the messenger is pinned to the
+   screen - from the very top down to the bottom navigation - edge to edge, with
+   its own header (title / new chat / menu / search / filters) and a list that
+   scrolls inside it. Opening a chat keeps the existing full-bleed chat mode.
+   ========================================================================== */
+@media (max-width: 760px) {
+  html:has(body.msg-page-active:not(.msg-thread-open)),
+  body.msg-page-active:not(.msg-thread-open) { overflow: hidden; overscroll-behavior: none; }
+
+  html body.msg-page-active:not(.msg-thread-open) .msg-app[data-msg-app] {
+    position: fixed;
+    inset: 0 0 calc(60px + var(--safe-bottom, 0px)) 0;   /* bottom = bottom navigation height */
+    z-index: calc(var(--z-sticky, 200) + 10);             /* above the sticky top bar (z-sticky), below modals */
+    width: 100%; height: auto; min-height: 0; margin: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    border: 0; border-radius: 0; box-shadow: none;
+    background: var(--bg-surface);
+  }
+  html body.msg-page-active:not(.msg-thread-open) .msg-app[data-msg-app] > .msg-rail {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 0; box-shadow: none; background: var(--bg-surface);
+  }
+  /* the list takes ALL the remaining height and scrolls inside */
+  html body.msg-page-active:not(.msg-thread-open) .msg-rail__list {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch; padding-bottom: 0;
+  }
+
+  /* flat, full-width rows with a hairline divider (instead of floating rounded cards) */
+  html body.msg-page-active .msg-app .msg-conv-row { border-bottom: 1px solid var(--border-subtle); }
+  html body.msg-page-active .msg-app .msg-conv-row:last-child { border-bottom: 0; }
+  html body.msg-page-active .msg-app .msg-conv { margin: 0; border-radius: 0; padding: 12px 16px; }
+  html body.msg-page-active .msg-app .msg-conv.is-active { background: transparent; }
+
+  /* no always-visible scrollbar strip on the edge of the list (touch scrolling needs none) */
+  html body.msg-page-active .msg-rail__list,
+  html body.msg-page-active .msg-search-results { scrollbar-width: none; }
+  html body.msg-page-active .msg-rail__list::-webkit-scrollbar,
+  html body.msg-page-active .msg-search-results::-webkit-scrollbar { display: none; width: 0; }
+
+  /* category chips: one swipeable row under the filters, same side padding, easier to tap */
+  html body.msg-page-active .msg-rail__categories {
+    flex: none; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 8px 12px;
+    scrollbar-width: none; border-bottom: 1px solid var(--border-subtle);
+  }
+  html body.msg-page-active .msg-rail__categories::-webkit-scrollbar { display: none; }
+  html body.msg-page-active .msg-rail__categories .msg-chip { flex: none; padding: 4px 12px; font-size: 12.5px; white-space: nowrap; }
+
+  /* attachment / voice / poll previews read as a label, not as chat text */
+  html body.msg-page-active .msg-app .msg-conv__preview.is-media { font-style: italic; }
+}
+
+/* ==========================================================================
+   Messages sections (Archived / Blocked / My reports / Trash) on phones + APK
+   --------------------------------------------------------------------------
+   Same idea as the inbox: a pinned full-screen page with a real app bar
+   (round back button + title), one swipeable row of section chips and a list
+   that scrolls inside. Replaces the old floating page: big empty header band,
+   clipped active tab, status chips wrapping to two rows, list inside a card.
+   ========================================================================== */
+.mc-title { display: none; }   /* desktop keeps the title in the top bar */
+
+@media (max-width: 760px) {
+  html:has(body.msg-center-active),
+  body.msg-center-active { overflow: hidden; overscroll-behavior: none; }
+
+  html body.msg-center-active .mc {
+    position: fixed; inset: 0 0 calc(60px + var(--safe-bottom, 0px)) 0; z-index: calc(var(--z-sticky, 200) + 10);
+    max-width: none; width: 100%; margin: 0; padding: 0; gap: 0;
+    background: var(--bg-surface);
+  }
+  /* app bar */
+  html body.msg-center-active .mc-top {
+    flex: none; flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 10px;
+    padding: calc(8px + env(safe-area-inset-top, 0px)) 12px 8px;
+  }
+  html body.msg-center-active .mc-back {
+    align-self: center; flex: none; width: 40px; height: 40px; padding: 0; justify-content: center;
+    border: 0; border-radius: 50%; background: var(--glass-bg);
+  }
+  html body.msg-center-active .mc-back span { display: none; }
+  html body.msg-center-active .mc-title {
+    display: block; flex: 1; min-width: 0; margin: 0; font-size: 19px; font-weight: 700; line-height: 1.2;
+    color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  html body.msg-center-active .mc-sub { display: none; }
+
+  /* section chips: one swipeable row, active one scrolled into view */
+  html body.msg-center-active .mc-tabs {
+    flex: none; width: 100%; max-width: 100%; gap: 8px; padding: 4px 12px 10px;
+    border: 0; border-bottom: 1px solid var(--border-subtle); border-radius: 0; background: transparent;
+    scroll-snap-type: x proximity; scroll-padding-inline: 12px;
+  }
+  html body.msg-center-active .mc-tab {
+    flex: none; scroll-snap-align: center; padding: 8px 14px; border-radius: 999px;
+    background: var(--glass-bg); font-size: 13.5px;
+  }
+  html body.msg-center-active .mc-tab.is-active { background: var(--color-primary); }
+
+  html body.msg-center-active .mc-alert { margin: 10px 12px 0; flex: none; }
+
+  /* the list: edge to edge, scrolls inside, no card chrome */
+  html body.msg-center-active .mc-card {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    border: 0; border-radius: 0; box-shadow: none; background: transparent;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  /* status filter: single row instead of wrapping into two */
+  html body.msg-center-active .mc-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 12px 14px 4px; }
+  html body.msg-center-active .mc-chips::-webkit-scrollbar { display: none; }
+  html body.msg-center-active .mc-chip { flex: none; white-space: nowrap; padding: 6px 12px; font-size: 13px; }
+  html body.msg-center-active .mc-toolbar { padding: 10px 14px; }
+  html body.msg-center-active .mc-report { padding: 14px; }
+  html body.msg-center-active .mc-toast { bottom: calc(72px + var(--safe-bottom, 0px)); }
+}
+
+/* ---------------------------------------------------------------------------
+   Phone, thread open: pin the chat to the VISIBLE viewport.
+   The thread used to sit inside the page (app-shell > main) whose height was 100dvh. In mobile browsers (Chrome / in-app browsers) the
+   address bar and the bottom bar change that height while you scroll, so the header slid under the top bar and the composer left a
+   blank strip at the bottom. A fixed layer sized from --vvh (set from window.visualViewport in Messages.jsx, falling back to dvh)
+   always matches what the user really sees. --------------------------------------------------------------------------- */
+@media (max-width: 760px) {
+  html body.msg-page-active.msg-thread-open .msg-app[data-msg-app] {
+    position: fixed !important; inset: 0 auto auto 0 !important; top: var(--vvt, 0px) !important;
+    width: 100vw !important; max-width: 100vw !important;
+    height: var(--vvh, 100dvh) !important; min-height: 0 !important; max-height: var(--vvh, 100dvh);
+    margin: 0 !important; z-index: 2000; background: var(--bg-canvas);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  html body.msg-page-active.msg-thread-open :is(.topbar, .bottom-nav, .app-shell__main > .breadcrumb) { visibility: hidden; }
+  html body.msg-page-active.msg-thread-open .msg-app .msg-composer { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  html body.msg-page-active.msg-thread-open .msg-app .msg-thread { min-height: 0; height: 100%; }
+}

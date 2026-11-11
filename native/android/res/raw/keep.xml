@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Keeps the resources the google-services plugin generates (read by name at runtime by Firebase) from being removed by shrinkResources. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@string/google_app_id,@string/gcm_defaultSenderId,@string/google_api_key,@string/google_storage_bucket,@string/project_id,@string/default_web_client_id,@string/firebase_database_url,@string/google_crash_reporting_api_key,@drawable/ic_stat_uip*,@color/uip_notification" />

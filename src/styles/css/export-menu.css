@@ -1,0 +1,41 @@
+/* export-menu.css — shared export format picker (components/ExportMenu.jsx) */
+.export-menu {
+  position: fixed; z-index: calc(var(--z-toast, 600) + 10); min-width: 220px; padding: 6px;
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-md, 12px);
+  background: var(--bg-surface); box-shadow: 0 14px 40px rgba(20, 28, 70, .22);
+  animation: uip-fade-in .12s ease both;
+}
+.export-menu__title { padding: 6px 10px 4px; font-size: 11.5px; font-weight: 600; letter-spacing: .02em; color: var(--text-secondary); }
+.export-menu__row { display: flex; align-items: center; gap: 2px; }
+.export-menu__eye {
+  flex: 0 0 auto; display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: var(--radius-sm, 8px);
+  background: transparent; color: var(--text-secondary); cursor: var(--cur-pointer, pointer);
+}
+.export-menu__eye:hover, .export-menu__eye:focus-visible { background: rgba(var(--color-primary-rgb, 79, 91, 232), .12); color: var(--color-primary); outline: none; }
+.export-menu__item {
+  flex: 1; display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 10px;
+  border: 0; border-radius: var(--radius-sm, 8px); background: transparent; font: inherit; color: var(--text-primary);
+  cursor: var(--cur-pointer, pointer); text-align: start;
+}
+.export-menu__item:hover, .export-menu__item:focus-visible { background: rgba(var(--color-primary-rgb, 79, 91, 232), .1); outline: none; }
+.export-menu__text { display: flex; flex-direction: column; line-height: 1.3; }
+.export-menu__text strong { font-size: 13.5px; font-weight: 600; }
+.export-menu__text small { font-size: 11.5px; color: var(--text-secondary); }
+.export-menu__badge {
+  flex: 0 0 auto; min-width: 40px; padding: 4px 0; border-radius: 6px; text-align: center;
+  font-size: 10.5px; font-weight: 800; letter-spacing: .04em; color: #fff; background: #6B7280;
+}
+.export-menu__badge--csv { background: #0E9F6E; }
+.export-menu__badge--xlsx { background: #1D7A46; }
+.export-menu__badge--pdf { background: #D14343; }
+.export-menu__badge--json { background: #B7791F; }
+.export-menu__badge--docx { background: #2B579A; }
+.export-menu__badge--md { background: #475569; }
+.export-menu__badge--html { background: #E34F26; }
+.export-menu__badge--txt { background: #64748B; }
+.export-menu__badge--xml { background: #7C3AED; }
+
+.export-menu__lang { display: flex; gap: 4px; margin: 2px 8px 8px; padding: 3px; border-radius: var(--radius-md, 10px); background: rgba(var(--color-primary-rgb, 79, 91, 232), 0.08); }
+.export-menu__lang button { flex: 1; height: 30px; border: 0; border-radius: 8px; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12.5px; font-weight: 600; cursor: var(--cur-pointer, pointer); }
+.export-menu__lang button.is-on { background: var(--bg-surface, #fff); color: var(--color-primary, #4F5BE8); box-shadow: 0 1px 3px rgba(10, 15, 30, 0.14); }
+.export-menu__lang button:focus-visible { outline: 2px solid var(--color-primary, #4F5BE8); outline-offset: 1px; }

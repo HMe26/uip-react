@@ -1,0 +1,52 @@
+/* [ANDROID-SAFE] Scoped to the exam lock shell (.app-shell--exam-lock) so instructor pages are not affected.
+   ==========================================================================
+   Student attempt - responsive fixes (phones / the Android app)
+   Question header, options and footer used to be single-row flex lines with no wrapping, so on a
+   narrow screen the pieces were squeezed on top of each other.
+   ========================================================================== */
+.app-shell--exam-lock, .exam-lock-loading { min-height: 100vh; min-height: 100dvh; }
+.app-shell--exam-lock .app-shell__main--exam-lock { min-width: 0; overflow-x: hidden; }
+.app-shell--exam-lock .ex-page > * { min-width: 0; }
+
+.app-shell--exam-lock .ex-q__top { flex-wrap: wrap; row-gap: 8px; }
+.app-shell--exam-lock .ex-q__tools { flex-wrap: wrap; align-items: center; gap: 8px; }
+.app-shell--exam-lock .ex-q__no, .app-shell--exam-lock .ex-flag-btn, .app-shell--exam-lock .ex-status { white-space: nowrap; flex-shrink: 0; }
+/* letter-spacing / uppercase break the joined Arabic letters */
+[dir='rtl'] .app-shell--exam-lock .ex-q__top, .app-shell--exam-lock :lang(ar) .ex-q__top { letter-spacing: 0; text-transform: none; }
+
+.app-shell--exam-lock .ex-q__prompt { max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
+.app-shell--exam-lock .ex-choice { align-items: flex-start; }
+.app-shell--exam-lock .ex-choice input { flex: 0 0 auto; margin: 2px 0 0; }
+.app-shell--exam-lock .ex-choice__text { line-height: 1.55; }
+.app-shell--exam-lock .ex-textarea { max-width: 100%; }
+
+.app-shell--exam-lock .ex-attempt-bar > div:first-child { flex: 1 1 180px; min-width: 0; }
+.app-shell--exam-lock .ex-attempt-bar h1 { overflow-wrap: anywhere; line-height: 1.35; }
+.app-shell--exam-lock .ex-attempt-bar__meta { flex-wrap: wrap; }
+
+/* the camera preview can be dragged away or shrunk, so it no longer needs to ignore the pointer */
+.app-shell--exam-lock .ex-cam-badge { opacity: .95; }
+
+@media (max-width: 640px) {
+  .app-shell--exam-lock .app-shell__main--exam-lock { padding: 10px 10px 28px; }
+  .app-shell--exam-lock .ex-page { gap: 12px; }
+  .app-shell--exam-lock .ex-attempt-bar { padding: 10px 12px; gap: 8px; }
+  .app-shell--exam-lock .ex-attempt-bar h1 { font-size: 14.5px; }
+  .app-shell--exam-lock .ex-attempt-bar__meta { gap: 8px; }
+  .app-shell--exam-lock .ex-timer { padding: 5px 10px; font-size: 14px; }
+  .app-shell--exam-lock .ex-card__pad { padding: 14px 12px; }
+  .app-shell--exam-lock .ex-q__top { font-size: 11.5px; letter-spacing: 0; }
+  .app-shell--exam-lock .ex-q__top > span[aria-hidden], .app-shell--exam-lock .ex-q__top > span:nth-child(2n):not(.ex-q__tools):not(.ex-q__no) { display: none; }
+  .app-shell--exam-lock .ex-q__tools { margin-inline-start: 0; width: 100%; justify-content: space-between; }
+  .app-shell--exam-lock .ex-q__prompt { font-size: 15px !important; line-height: 1.65; }
+  .app-shell--exam-lock .ex-palette { gap: 5px; }
+  .app-shell--exam-lock .ex-palette__dot { width: 34px; height: 34px; }
+  .app-shell--exam-lock .ex-choice { padding: 11px 12px; gap: 10px; font-size: 14px; }
+  .app-shell--exam-lock .ex-footer { flex-direction: column-reverse; align-items: stretch; gap: 10px; margin-top: 18px; padding-top: 14px; }
+  .app-shell--exam-lock .ex-footer__right { margin-inline-start: 0; width: 100%; }
+  .app-shell--exam-lock .ex-footer .btn { width: 100%; justify-content: center; }
+  .app-shell--exam-lock .ex-footer > .ex-card__sub { text-align: center; }
+  .app-shell--exam-lock .ex-cam-badge { width: 64px; inset-block-end: 8px; inset-inline-end: 8px; }
+  .app-shell--exam-lock .ex-cam-badge.is-small { width: 42px; height: 42px; }
+  .app-shell--exam-lock .ex-modal, .app-shell--exam-lock .ex-fs-overlay__box { padding: 18px; }
+}

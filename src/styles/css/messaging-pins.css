@@ -1,0 +1,87 @@
+/* Pinned messages: duration dialog, bar under the header, full list. */
+
+/* ---------- duration dialog ---------- */
+.pin-dlg {
+  width: 100%; max-width: 400px; padding: 24px 22px 18px; background: var(--bg-surface); color: var(--text-primary);
+  border-radius: 28px; box-shadow: 0 30px 80px -20px rgba(10, 14, 40, .55); animation: pin-pop .18s ease-out;
+}
+.pin-dlg__icon { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 12px; color: #c27803; background: rgba(245, 165, 36, .16); }
+.pin-dlg h3 { margin: 0 0 4px; font-size: 19px; line-height: 1.3; font-weight: 800; }
+.pin-dlg__sub { margin: 0 0 14px; font-size: 14px; color: var(--text-secondary); }
+.pin-dlg__msg {
+  display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; padding: 9px 12px; border-radius: 14px; background: var(--bg-canvas);
+  border-inline-start: 3px solid #f5a524; min-width: 0;
+}
+.pin-dlg__msg strong { font-size: 12.5px; }
+.pin-dlg__msg span { font-size: 13px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pin-dlg__opts { display: flex; flex-direction: column; gap: 6px; }
+.pin-opt {
+  display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1.5px solid var(--border-subtle); border-radius: 16px; background: none;
+  font: inherit; color: inherit; text-align: start; cursor: pointer; transition: border-color .14s, background .14s;
+}
+.pin-opt:hover { background: rgba(var(--color-primary-rgb), .05); }
+.pin-opt.is-on { border-color: var(--color-primary); background: rgba(var(--color-primary-rgb), .08); }
+.pin-opt__radio { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--text-secondary); display: grid; place-items: center; transition: border-color .14s; }
+.pin-opt.is-on .pin-opt__radio { border-color: var(--color-primary); }
+.pin-opt.is-on .pin-opt__radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--color-primary); }
+.pin-opt__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.pin-opt__text strong { font-size: 15px; font-weight: 700; }
+.pin-opt__text small { font-size: 12.5px; color: var(--text-secondary); }
+.pin-opt__ico { color: var(--color-primary); flex-shrink: 0; }
+.pin-dlg__foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.pin-btn { display: inline-flex; align-items: center; gap: 6px; height: 42px; padding: 0 22px; border-radius: 999px; border: 0; font: inherit; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: transform .1s, opacity .12s; }
+.pin-btn:active { transform: scale(.97); }
+.pin-btn:disabled { opacity: .55; cursor: default; }
+.pin-btn--ghost { background: none; color: var(--color-primary); }
+.pin-btn--ghost:hover { background: rgba(var(--color-primary-rgb), .08); }
+.pin-btn--solid { background: var(--text-primary); color: var(--bg-surface); }
+@keyframes pin-pop { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
+
+/* ---------- bar ---------- */
+.pinbar {
+  flex: none; /* never squeezed by the message list below */
+  flex-shrink: 0; display: flex; align-items: stretch; gap: 10px; padding: 7px 10px 7px 12px; min-height: 54px;
+  background: color-mix(in srgb, var(--bg-surface) 92%, #f5a524 8%); border-bottom: 1px solid var(--border-subtle);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+[dir="rtl"] .pinbar { padding: 7px 12px 7px 10px; }
+.pinbar__seg { flex-shrink: 0; width: 3px; display: flex; flex-direction: column; gap: 2px; padding: 1px 0; }
+.pinbar__seg i { flex: 1; border-radius: 3px; background: color-mix(in srgb, #f5a524 30%, transparent); transition: background .2s; }
+.pinbar__seg i.is-on { background: #f5a524; }
+.pinbar__main { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: start; cursor: pointer; }
+.pinbar__label { display: flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 800; color: #b45309; }
+.pinbar__label em { margin-inline-start: 4px; padding: 1px 7px; border-radius: 999px; font-style: normal; font-weight: 700; font-size: 10.5px; color: var(--text-secondary); background: color-mix(in srgb, var(--text-secondary) 14%, transparent); display: inline-flex; align-items: center; gap: 3px; }
+.pinbar__label em.is-forever { color: var(--color-primary); background: rgba(var(--color-primary-rgb), .1); }
+.pinbar__text { font-size: 13.5px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pinbar__text b { font-weight: 700; }
+.pinbar__actions { flex-shrink: 0; display: flex; align-items: center; gap: 2px; }
+.pinbar__btn { position: relative; min-width: 34px; height: 34px; padding: 0 6px; border: 0; border-radius: 50%; background: none; color: var(--text-secondary); display: inline-flex; align-items: center; justify-content: center; gap: 3px; cursor: pointer; transition: background .12s, color .12s; }
+.pinbar__btn span { font-size: 11px; font-weight: 800; }
+.pinbar__btn:hover { background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+.pinbar__btn:last-child:hover { background: rgba(var(--color-danger-rgb, 220, 58, 75), .1); color: var(--color-danger, #dc3a4b); }
+
+/* a message we jumped to */
+.is-flash { animation: pin-flash 1.8s ease-out; }
+@keyframes pin-flash { 0%, 30% { background: rgba(245, 165, 36, .28); } 100% { background: transparent; } }
+
+/* ---------- list ---------- */
+.pin-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.pin-item { display: flex; align-items: flex-start; gap: 4px; border-radius: 16px; transition: background .12s; }
+.pin-item:hover { background: rgba(var(--color-primary-rgb), .05); }
+.pin-item__main { flex: 1; min-width: 0; display: flex; gap: 10px; padding: 10px; border: 0; background: none; font: inherit; color: inherit; text-align: start; cursor: pointer; }
+.pin-item__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.pin-item__top { display: flex; justify-content: space-between; gap: 8px; }
+.pin-item__top strong { font-size: 13px; }
+.pin-item__top time { font-size: 11.5px; color: var(--text-secondary); }
+.pin-item__text { font-size: 13.5px; color: var(--text-primary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.pin-item__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-secondary); }
+.pin-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-weight: 700; color: #b45309; background: rgba(245, 165, 36, .16); }
+.pin-chip.is-forever { color: var(--color-primary); background: rgba(var(--color-primary-rgb), .1); }
+.pin-item__un { flex-shrink: 0; margin: 8px 6px 0 0; width: 32px; height: 32px; border: 0; border-radius: 50%; background: none; color: var(--text-secondary); display: grid; place-items: center; cursor: pointer; }
+[dir="rtl"] .pin-item__un { margin: 8px 0 0 6px; }
+.pin-item__un:hover { background: rgba(var(--color-danger-rgb, 220, 58, 75), .1); color: var(--color-danger, #dc3a4b); }
+.pin-empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 26px 12px; text-align: center; }
+.pin-empty span { width: 52px; height: 52px; border-radius: 18px; display: grid; place-items: center; color: #c27803; background: rgba(245, 165, 36, .16); margin-bottom: 4px; }
+.pin-empty small { color: var(--text-secondary); font-size: 13px; }
+
+@media (prefers-reduced-motion: reduce) { .pin-dlg, .is-flash { animation: none; } }

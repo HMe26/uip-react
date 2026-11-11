@@ -1,0 +1,1 @@
+import{s as e}from"./client-DIKyLPas.js";import{t}from"./AcademicStaffExamPicker-FfvX5xsE.js";var n=e();function r(){return(0,n.jsx)(t,{suffix:`attempts`,icon:`edit`,titleKey:`View Attempts & Grading`,descriptionKey:`Pick an exam to review attempts and grade submissions.`})}export{r as default};

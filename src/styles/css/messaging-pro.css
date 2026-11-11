@@ -1,0 +1,173 @@
+/* WhatsApp-style chat polish: emoji picker, attach sheet, ticks, jump-to-latest, link cards, reply jump. */
+
+/* ---------- emoji picker ---------- */
+.msg-emoji-popover.msg-emoji-popover--pro {
+  display: block; width: min(360px, calc(100vw - 24px)); padding: 0; max-height: none; overflow: hidden;
+  border-radius: 16px;
+}
+.emo-picker { display: flex; flex-direction: column; height: 340px; }
+.emo-search { display: flex; align-items: center; gap: 6px; padding: 10px 10px 6px; }
+.emo-search input {
+  flex: 1; min-width: 0; height: 36px; padding: 0 12px; border-radius: 999px; font: inherit; font-size: 14px;
+  border: 1px solid var(--border-subtle); background: var(--glass-bg); color: var(--text-primary); outline: none;
+}
+.emo-search input:focus { border-color: var(--color-primary); }
+.msg-emoji-popover .emo-close { width: 30px; height: 30px; font-size: 20px; line-height: 1; color: var(--text-secondary); border-radius: 50%; }
+.emo-body { flex: 1; overflow-y: auto; padding: 0 10px 8px; }
+.emo-title { margin: 10px 2px 4px; font-size: 12px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0; text-transform: none; }
+.emo-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; }
+.msg-emoji-popover .emo-btn { font-size: 22px; line-height: 1; padding: 5px 0; border-radius: 8px; text-align: center; }
+.msg-emoji-popover .emo-btn:hover { background: var(--glass-bg); transform: scale(1.15); }
+.emo-empty { padding: 24px 0; text-align: center; color: var(--text-secondary); font-size: 13.5px; }
+.emo-tabs { display: flex; justify-content: space-around; border-top: 1px solid var(--border-subtle); padding: 4px 6px; background: var(--bg-surface); }
+.msg-emoji-popover .emo-tab { font-size: 18px; padding: 6px 8px; opacity: .55; border-bottom: 2px solid transparent; border-radius: 6px 6px 0 0; }
+.msg-emoji-popover .emo-tab.is-on { opacity: 1; border-bottom-color: var(--color-primary); }
+
+/* ---------- ticks ---------- */
+.msg-ticks { margin-inline-start: 2px; color: var(--text-secondary); opacity: .85; flex-shrink: 0; }
+.msg-row.is-mine .msg-ticks { color: inherit; opacity: .75; }
+.msg-ticks.is-read, .msg-row.is-mine .msg-ticks.is-read { color: #34b7f1; opacity: 1; }
+
+/* ---------- jump to latest ---------- */
+.msg-jump-btn {
+  position: absolute; inset-inline-end: 18px; bottom: 96px; z-index: 15; width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-primary);
+  box-shadow: 0 4px 14px rgba(0,0,0,.18); display: flex; align-items: center; justify-content: center; cursor: var(--cur-pointer, pointer);
+  animation: att-pop .16s ease-out;
+}
+.msg-jump-btn:hover { background: var(--glass-bg); }
+.msg-jump-btn__count {
+  position: absolute; top: -8px; inset-inline-start: 50%; transform: translateX(-50%); min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 999px; background: var(--color-primary); color: #fff; font-size: 11px; font-weight: 700; line-height: 20px; text-align: center;
+}
+
+/* ---------- reply quote jump + flash ---------- */
+.msg-reply-quote.is-link { cursor: pointer; }
+.msg-reply-quote.is-link:hover { filter: brightness(.96); }
+.msg-row--flash { animation: msg-flash 1.5s ease-out; border-radius: 12px; }
+@keyframes msg-flash { 0%, 35% { background: rgba(99,102,241,.22); } 100% { background: transparent; } }
+
+/* ---------- link / location card ---------- */
+.lnk-card {
+  display: flex; align-items: center; gap: 10px; margin-top: 6px; padding: 8px 10px; border-radius: 10px; text-decoration: none; color: inherit;
+  background: rgba(0,0,0,.07); border-inline-start: 3px solid var(--color-primary); max-width: 320px;
+}
+.msg-row.is-mine .lnk-card { background: rgba(255,255,255,.16); border-inline-start-color: rgba(255,255,255,.8); }
+.lnk-card:hover { filter: brightness(.96); }
+.lnk-card__icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.08); flex-shrink: 0; }
+.lnk-card.is-map .lnk-card__icon { background: #0ea5a4; color: #fff; }
+.lnk-card__meta { display: flex; flex-direction: column; min-width: 0; line-height: 1.4; }
+.lnk-card__meta strong { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lnk-card__meta span { font-size: 11.5px; opacity: .75; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- mic ⇄ send ---------- */
+.msg-send-btn--mic { background: var(--color-primary); }
+.msg-send-btn--mic.is-recording { background: #e5484d; animation: msg-rec-pulse 1.2s infinite; }
+@keyframes msg-rec-pulse { 0% { box-shadow: 0 0 0 0 rgba(229,72,77,.45); } 100% { box-shadow: 0 0 0 12px rgba(229,72,77,0); } }
+
+/* ---------- location sharing (current + live) ---------- */
+.loc-card { display: block; width: 260px; max-width: 100%; border-radius: 12px; overflow: hidden; text-decoration: none; color: var(--text-primary, #1c2033); background: var(--surface, #fff); border: 1px solid rgba(0,0,0,.1); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.loc-card__maplink { display: block; color: inherit; text-decoration: none; }
+.loc-card__meta { display: flex; flex-direction: column; gap: 1px; padding: 8px 10px; line-height: 1.4; }
+.loc-card__meta strong { font-size: 13px; display: flex; align-items: center; gap: 6px; }
+.loc-card__meta span { font-size: 11.5px; opacity: .78; }
+.loc-card__stop { display: block; width: calc(100% - 20px); margin: 0 10px 10px; padding: 7px 10px; border: 0; border-radius: 8px; background: #e5484d; color: #fff; font-size: 12.5px; font-weight: 600; cursor: var(--cur-pointer, pointer); }
+.loc-card__stop:disabled { opacity: .6; }
+.loc-card--live.is-ended .loc-map { filter: grayscale(.85); }
+.loc-live-dot { width: 8px; height: 8px; border-radius: 50%; background: #1fa855; box-shadow: 0 0 0 0 rgba(31,168,85,.55); animation: loc-pulse 1.6s infinite; flex-shrink: 0; }
+
+.loc-map { position: relative; width: 100%; overflow: hidden; background: linear-gradient(135deg, #dfe9f3, #c9dcc4); direction: ltr; }
+.loc-map__tiles { position: absolute; width: 768px; height: 768px; transition: opacity .2s; }
+.loc-map__tiles img { position: absolute; width: 256px; height: 256px; max-width: none; user-select: none; -webkit-user-drag: none; }
+.loc-map__attr { position: absolute; inset-inline-end: 4px; bottom: 3px; font-size: 9px; padding: 0 4px; border-radius: 3px; background: rgba(255,255,255,.75); color: #333; }
+.loc-pin { position: absolute; left: 50%; top: 50%; width: 30px; height: 38px; transform: translate(-50%, -100%); filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); pointer-events: none; }
+.loc-pin svg { display: block; }
+.loc-pin__pulse { position: absolute; left: 50%; bottom: -4px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: rgba(31,168,85,.45); animation: loc-ring 1.8s infinite; }
+@keyframes loc-pulse { 0% { box-shadow: 0 0 0 0 rgba(31,168,85,.55); } 100% { box-shadow: 0 0 0 8px rgba(31,168,85,0); } }
+@keyframes loc-ring { 0% { transform: scale(.5); opacity: .9; } 100% { transform: scale(2.6); opacity: 0; } }
+
+.loc-share { display: flex; flex-direction: column; gap: 10px; }
+.loc-share__wait { height: 170px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: rgba(0,0,0,.06); font-size: 13px; opacity: .8; text-align: center; padding: 0 12px; }
+.loc-share__acc { margin: -4px 0 0; font-size: 11.5px; opacity: .7; text-align: center; }
+.loc-share__err { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--danger, #e5484d); }
+.loc-share__opt { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border: 1px solid var(--border, rgba(0,0,0,.12)); border-radius: 12px; background: transparent; color: inherit; text-align: start; cursor: var(--cur-pointer, pointer); }
+.loc-share__opt:hover:not(:disabled) { background: rgba(0,0,0,.04); }
+.loc-share__opt:disabled { opacity: .5; cursor: not-allowed; }
+.loc-share__opt strong { display: block; font-size: 14px; }
+.loc-share__opt small { display: block; font-size: 11.5px; opacity: .7; margin-top: 2px; }
+.loc-share__ico { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+.loc-share__ico.is-blue { background: #2b7de9; }
+.loc-share__ico.is-green { background: #1fa855; }
+.loc-share__live { display: flex; flex-direction: column; gap: 8px; }
+.loc-share__dur { display: flex; gap: 6px; }
+.loc-share__dur button { flex: 1; padding: 7px 6px; border: 1px solid var(--border, rgba(0,0,0,.15)); border-radius: 999px; background: transparent; color: inherit; font-size: 12.5px; cursor: var(--cur-pointer, pointer); }
+.loc-share__dur button.is-on { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+
+/* =====================================================================================================
+   Message styles.  Default = "light" bubbles (tinted, dark text - always readable).
+   html[data-msg-style="soft"] = solid brand bubbles (WhatsApp-like).  Switch: Settings > Chat.
+   ===================================================================================================== */
+html body .msg-app.msg-app[data-msg-app] .msg-bubble { border-radius: 14px; }
+html body .msg-app.msg-app[data-msg-app] .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  background: rgba(var(--color-primary-rgb), .13); color: var(--text-primary); box-shadow: none; border: 0;
+  border-inline-start: 3px solid var(--color-primary);
+}
+html body .msg-app.msg-app[data-msg-app] .msg-row:not(.is-mine) .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  border: 1px solid var(--border-subtle, rgba(0,0,0,.08)); box-shadow: none;
+}
+[data-theme="dark"] html body .msg-app.msg-app[data-msg-app] .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted),
+html[data-theme="dark"] body .msg-app.msg-app[data-msg-app] .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) { background: rgba(var(--color-primary-rgb), .24); }
+.msg-app[data-msg-app] .msg-row.is-mine .msg-bubble code { background: rgba(0,0,0,.08); }
+.msg-app[data-msg-app] .msg-row.is-mine .msg-bubble pre { background: rgba(0,0,0,.07); }
+.msg-app[data-msg-app] .msg-row.is-mine .msg-bubble .msg-mention { background: rgba(var(--color-primary-rgb), .18); color: var(--color-primary); }
+.msg-app[data-msg-app] .msg-row.is-mine .msg-bubble .msg-hashtag { color: var(--color-primary); }
+.msg-app[data-msg-app] .msg-row.is-mine .msg-reply-quote { background: rgba(0,0,0,.05); border-inline-start-color: var(--color-primary); }
+.msg-app[data-msg-app] .msg-row.is-mine .msg-attach-file { background: var(--bg-surface, #fff); border: 1px solid var(--border-subtle, rgba(0,0,0,.08)); }
+.msg-app[data-msg-app] .msg-row.is-mine .msg-audio-player button { background: var(--color-primary); }
+.msg-app[data-msg-app] .msg-row.is-mine .msg-poll__opt-fill { background: rgba(var(--color-primary-rgb), .2); }
+.msg-app[data-msg-app] .msg-row.is-mine .vm__play { background: var(--color-primary); color: #fff; }
+.msg-app[data-msg-app] .msg-row.is-mine .vm__wave span.is-done { background: var(--color-primary); }
+.msg-app[data-msg-app] .msg-row.is-mine .vm__speed,
+.msg-app[data-msg-app] .msg-row.is-mine .vm__dl,
+.msg-app[data-msg-app] .msg-row.is-mine .vm__dlopt { background: rgba(var(--color-primary-rgb), .14); color: var(--color-primary); }
+.msg-app[data-msg-app] .msg-row.is-mine .lnk-card { background: rgba(0,0,0,.05); border-inline-start-color: var(--color-primary); }
+.msg-app[data-msg-app] .msg-bubble a { text-decoration-thickness: 1px; text-underline-offset: 2px; }
+.msg-app[data-msg-app] .msg-bubble .msg-attach-file { text-decoration: none; }
+
+/* "Delete" under every sent message is clutter: it lives in the "more" menu; here it only appears on hover (desktop). */
+.msg-app[data-msg-app] .msg-undo-btn--del { opacity: 0; pointer-events: none; transition: opacity .12s; }
+.msg-app[data-msg-app] .msg-row:hover .msg-undo-btn--del,
+.msg-app[data-msg-app] .msg-undo-btn--del:focus-visible,
+.msg-app[data-msg-app] .msg-undo-btn--del[aria-expanded="true"] { opacity: 1; pointer-events: auto; }
+@media (hover: none), (max-width: 760px) {
+  .msg-app[data-msg-app] .msg-undo-btn--del { display: none; }
+}
+.msg-app[data-msg-app] .msg-meta-row { opacity: .85; }
+
+/* ---- "soft": solid brand bubbles, flat (no gradient / glow) ---- */
+html[data-msg-style="soft"] body .msg-app.msg-app[data-msg-app] .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  background: var(--color-primary); color: #fff; border: 0; border-radius: 16px; box-shadow: none;
+}
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .msg-bubble code { background: rgba(255,255,255,.2); }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .msg-bubble pre { background: rgba(255,255,255,.15); }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .msg-bubble .msg-mention { background: rgba(255,255,255,.25); color: #fff; }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .msg-bubble .msg-hashtag { color: #fff; }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .msg-reply-quote { background: rgba(255,255,255,.15); border-inline-start-color: #fff; }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .msg-attach-file { background: rgba(255,255,255,.18); border: 0; }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .msg-audio-player button { background: rgba(255,255,255,.3); }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .msg-poll__opt-fill { background: rgba(255,255,255,.2); }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .vm__play { background: #fff; color: var(--color-primary); }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .vm__wave span.is-done { background: #fff; }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .vm__speed,
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .vm__dl,
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .vm__dlopt { background: rgba(255,255,255,.22); color: #fff; }
+html[data-msg-style="soft"] .msg-app[data-msg-app] .msg-row.is-mine .lnk-card { background: rgba(255,255,255,.16); border-inline-start-color: rgba(255,255,255,.8); }
+
+/* Group voice / video call invitation card (posted in the chat when someone starts a group call) */
+.msg-app[data-msg-app] .msg-group-call { display: flex; flex-direction: column; gap: 8px; min-width: 190px; padding: 2px 0; }
+.msg-app[data-msg-app] .msg-group-call__head { font-weight: 600; }
+.msg-app[data-msg-app] .msg-group-call__join {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 14px; border: 0; border-radius: 999px;
+  background: var(--accent, #4f46e5); color: #fff; font: inherit; font-weight: 600; cursor: pointer;
+}
+.msg-app[data-msg-app] .msg-group-call__join:hover { filter: brightness(1.08); }

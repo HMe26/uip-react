@@ -1,0 +1,2 @@
+/* ltr.css — English (LTR) layout defaults (kept explicit for clarity/symmetry with rtl.css). */
+[dir="ltr"] .sidebar { left: 0; right: auto; }

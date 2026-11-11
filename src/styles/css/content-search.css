@@ -1,0 +1,18 @@
+/* "Inside files" search results (components/ContentMatches.jsx) */
+.cm { margin: 10px 0 4px; color: var(--g-fg, var(--text-primary)); }
+.cm-h { display: flex; align-items: baseline; gap: 10px; margin: 0 0 6px; padding: 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; color: var(--g-mute, var(--text-secondary)); }
+.cm-h small { font-weight: 500; text-transform: none; letter-spacing: 0; }
+.cm-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.cm-item { width: 100%; display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border: 0; border-radius: 8px; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.cm-item:hover, .cm-item:focus-visible { background: var(--g-hover, rgba(128, 128, 128, .14)); outline: none; }
+.cm-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.cm-top { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.cm-top b { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-top small { flex: 1; min-width: 0; font-size: 11.5px; color: var(--g-mute, var(--text-secondary)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-top em { flex-shrink: 0; font-style: normal; font-size: 11px; color: var(--g-mute, var(--text-secondary)); }
+.cm-line { display: flex; gap: 8px; align-items: baseline; font-size: 12px; line-height: 1.45; min-width: 0; }
+.cm-ln { flex: 0 0 34px; text-align: end; font-style: normal; font-variant-numeric: tabular-nums; color: var(--g-mute, var(--text-secondary)); }
+.cm-line code { flex: 1; min-width: 0; font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; overflow: hidden; text-overflow: ellipsis; color: inherit; }
+.cm mark { background: color-mix(in srgb, var(--os-accent, var(--color-primary, #0a84ff)) 35%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+.cm--compact .cm-h { padding: 0 4px; }
+.cm--compact .cm-item { padding: 6px 4px; }

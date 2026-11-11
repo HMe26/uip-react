@@ -1,0 +1,89 @@
+/* Virtual mode (UIPE OS): the platform's pages as windows of the My PC desktop. */
+
+/* ---- a platform page inside a window ------------------------------------------------------------------ */
+.vm-shell.app-shell { position: relative; display: block; min-height: 0; height: 100%; overflow: auto; background: var(--bg-canvas); color: var(--text-primary); overscroll-behavior: contain; }
+.vm-shell .app-shell__content { min-height: 100%; }
+.vm-shell.app-shell--insight .app-shell__main { padding: 22px 26px 44px; max-width: 1480px; }
+@media (max-width: 760px) { .vm-shell.app-shell--insight .app-shell__main { padding: 16px 14px 32px; } }
+/* pages that size themselves to the viewport (messages, the exam result…) fill the window instead */
+.vm-shell [data-msg-app], .vm-shell .msg-app { height: 100%; max-height: 100%; }
+.vm-err { display: grid; justify-items: center; gap: 12px; padding: 64px 16px; text-align: center; color: var(--text-secondary); }
+
+/* ---- app icon of a platform page (Dock / Start / desktop) -------------------------------------------- */
+.vm-tile { display: inline-grid; place-items: center; color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 1px 2px rgba(0,0,0,.25); }
+
+/* ---- the mode card ------------------------------------------------------------------------------------ */
+.vm-card { display: grid; grid-template-columns: minmax(180px, 240px) 1fr; gap: 22px; align-items: center; padding: 20px; border-radius: 18px; background: var(--bg-surface); border: 1px solid var(--border-subtle); }
+.vm-card.is-on { border-color: rgba(var(--color-primary-rgb, 99,102,241), .5); }
+.vm-card h3 { margin: 0 0 6px; font-size: 18px; letter-spacing: -.01em; }
+.vm-card p { margin: 0 0 10px; color: var(--text-secondary); line-height: 1.6; font-size: 14px; }
+.vm-card__pts { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 6px; font-size: 13.5px; }
+.vm-card__pts li { display: flex; align-items: center; gap: 8px; color: var(--text-primary); }
+.vm-card__pts svg { color: var(--color-primary, #6366f1); flex: none; }
+.vm-card__note { font-size: 13px !important; }
+.vm-card__note--warn { color: #b45309 !important; }
+.vm-card__note--err { color: var(--color-danger, #d33) !important; }
+.vm-card__btns { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 620px) { .vm-card { grid-template-columns: 1fr; } }
+
+/* mini desktop illustration */
+.vm-art { position: relative; aspect-ratio: 16 / 11; border-radius: 14px; overflow: hidden; background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 55%, #22d3ee 100%); box-shadow: 0 10px 28px rgba(37,99,235,.28); }
+.vm-art__bar { position: absolute; inset: 0 0 auto 0; height: 9%; background: rgba(255,255,255,.22); display: flex; gap: 4px; align-items: center; padding-inline: 6px; }
+.vm-art__bar i { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.8); }
+.vm-art__win { position: absolute; border-radius: 6px; background: rgba(255,255,255,.94); box-shadow: 0 6px 16px rgba(0,0,0,.25); padding: 14% 7% 6%; display: grid; gap: 5px; align-content: start; }
+.vm-art__win::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 11%; background: #e5e7eb; border-radius: 6px 6px 0 0; }
+.vm-art__win b { height: 6px; width: 45%; border-radius: 3px; background: #6366f1; }
+.vm-art__win u, .vm-art__win span { height: 4px; border-radius: 2px; background: #cbd5e1; display: block; text-decoration: none; }
+.vm-art__win--a { inset: 17% 38% 24% 8%; }
+.vm-art__win--b { inset: 25% 8% 18% 44%; }
+.vm-art__win--c { inset: 46% 52% 13% 20%; transform: scale(.9); }
+.vm-art__dock { position: absolute; inset: auto 22% 4% 22%; height: 11%; border-radius: 9px; background: rgba(255,255,255,.3); display: flex; gap: 6%; align-items: center; justify-content: center; }
+.vm-art__dock i { width: 12%; aspect-ratio: 1; border-radius: 28%; }
+
+/* top-bar dialog */
+.vm-modal { z-index: 1200; display: grid; place-items: center; padding: 16px; }
+.vm-modal__box { position: relative; width: min(720px, 100%); max-height: 92vh; overflow: auto; border-radius: 22px; background: var(--bg-surface); box-shadow: 0 30px 80px rgba(0,0,0,.4); }
+.vm-modal__box .vm-card { border: 0; }
+.vm-modal__x { position: absolute; top: 12px; inset-inline-end: 12px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: var(--bg-canvas); color: var(--text-secondary); display: grid; place-items: center; cursor: pointer; z-index: 1; }
+
+/* Settings ▸ UIPE OS tab inside the desktop */
+.vm-set { display: grid; gap: 14px; }
+.vm-set .vm-card { background: transparent; padding: 0; border: 0; }
+
+/* the desktop's "first run" welcome window */
+.vm-welcome { display: grid; gap: 14px; padding: 26px; text-align: start; }
+.vm-welcome h2 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
+.vm-welcome p { margin: 0; color: var(--text-secondary); line-height: 1.7; }
+.vm-welcome__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.vm-welcome__grid button { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-primary); cursor: pointer; text-align: start; font: inherit; font-size: 13.5px; }
+.vm-welcome__grid button:hover { border-color: var(--color-primary, #6366f1); }
+
+/* ---- pages that were written for a full browser tab, now living in a window ------------------------------------ */
+/* no top bar here, so nothing should keep room for one */
+.vm-shell { --topbar-height: 0px; --topbar-h: 0px; --safe-top: 0px; --safe-bottom: 0px; }
+/* "Full platform" messenger: it was position:fixed over the whole BROWSER (so it covered the window's title bar and the Dock and
+   ran under the menu bar). In a window it fills the WINDOW instead. */
+html body .vm-shell .msg-app[data-msg-app].is-full {
+  position: absolute !important; inset: 0 !important; z-index: 2; width: auto !important; max-width: none !important;
+  height: auto !important; min-height: 0 !important; padding-top: 0;
+}
+.vm-shell:has(.msg-app[data-msg-app].is-full) { overflow: hidden; }
+/* that rule hides .topbar / .sidebar of the real portal; the desktop's own windows must not be affected by it */
+html body:has(.msg-app[data-msg-app].is-full) .os :is(.topbar, .sidebar, .app-shell__main > .breadcrumb) { visibility: visible; }
+/* wide laptop / monitor: long text pages read better in a column than stretched edge to edge */
+.vm-shell .app-shell__main { margin-inline: auto; }
+
+/* ---- phone layout inside the mobile desktop (MobileShell) ------------------------------------------------------ */
+/* The phone CSS of Messages / the messages centre pins them to the BROWSER (position:fixed, bottom = the portal's 60px bottom bar, or
+   --vvh for an open chat), so inside the OS they covered the app bar + gesture bar and left a dead strip at the bottom.
+   In a window they fill the window instead. (Repeated attribute selectors = higher specificity than the page's own rules.) */
+@media (max-width: 760px) {
+  html body .vm-shell .msg-app[data-msg-app][data-msg-app][data-msg-app],
+  html body .vm-shell .mc.mc.mc {
+    position: absolute !important; inset: 0 !important; top: 0 !important; z-index: 2;
+    width: auto !important; max-width: none !important; height: auto !important; min-height: 0 !important; max-height: none !important;
+    margin: 0 !important; padding-top: 0 !important; border-radius: 0 !important;
+  }
+  .vm-shell:has(.msg-app[data-msg-app], .mc) { overflow: hidden; }
+  html body .vm-shell .msg-app .msg-composer { padding-bottom: 10px; }
+}

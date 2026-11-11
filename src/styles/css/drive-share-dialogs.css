@@ -1,0 +1,349 @@
+/* ==========================================================================
+   "Share" dialog (components/ShareDialog.jsx) and "My shared links" (components/MySharedLinks.jsx)
+   Responsive redesign — loaded after drive-share.css.
+
+   Why this file exists
+   ─────────────────────
+   1. my-pc.css has `.mp-seg button { width: 28px; height: 22px; display: grid }` — a rule made for the tiny
+      view-toggle in the file explorer toolbar. It leaked into these dialogs (same class name) and squeezed every
+      segmented button to 28px, so "1 day / 1 week / View & download / All / Active …" printed on top of each other.
+      Every rule below is scoped under `.st-modal-overlay .st-modal`, which out-ranks it whatever the load order
+      (and the desktop-OS variant `.os .mp-seg`).
+   2. The old dialogs scrolled twice (the modal AND the list inside it) and the title / buttons scrolled away.
+      Now: fixed header + one scrolling body + fixed footer.
+   3. Phones get a bottom sheet with big touch targets; tablets and laptops get a centred dialog.
+   ========================================================================== */
+
+/* ---------- 1. dialog shell: header / scrolling body / footer ---------- */
+.st-modal:has(.mp-share),
+.st-modal:has(.mp-sl) {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  max-height: min(92dvh, 900px);
+  border-radius: 20px;
+  box-shadow: 0 30px 80px -20px rgba(8, 12, 32, .55), 0 0 0 1px var(--border-subtle);
+}
+.st-modal:has(.mp-share) > h2,
+.st-modal:has(.mp-sl) > h2 {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 18px 22px 14px;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -.1px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.st-modal:has(.mp-share) > .st-modal__body,
+.st-modal:has(.mp-sl) > .st-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 22px;
+  color: var(--text-primary);
+
+}
+.st-modal:has(.mp-share) > .st-modal__actions,
+.st-modal:has(.mp-sl) > .st-modal__actions {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 12px 22px;
+  gap: 10px;
+  flex-wrap: nowrap;
+  align-items: center;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+.st-modal:has(.mp-share) > .st-modal__actions .btn,
+.st-modal:has(.mp-sl) > .st-modal__actions .btn { min-height: 42px; }
+.st-modal:has(.mp-share) > .st-modal__actions > .btn:first-child:not(:only-child) { margin-inline-end: auto; }
+
+.st-modal:has(.mp-share) { width: min(580px, 100%); }
+.st-modal.st-modal--wide:has(.mp-share) { width: min(580px, 100%); }
+.st-modal.st-modal--wide:has(.mp-sl) { width: min(860px, 100%); }
+
+/* ---------- 2. segmented controls (the bug) ---------- */
+.st-modal-overlay .st-modal .mp-seg {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  max-width: 100%;
+  padding: 4px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--bg-canvas);
+  transform: none;
+}
+.st-modal-overlay .st-modal .mp-seg button {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background .15s, color .15s, box-shadow .15s;
+}
+.st-modal-overlay .st-modal .mp-seg button:hover:not(:disabled):not(.is-on) { color: var(--text-primary); background: rgba(var(--color-primary-rgb), .07); }
+.st-modal-overlay .st-modal .mp-seg button.is-on {
+  background: var(--bg-surface);
+  color: var(--color-primary);
+  box-shadow: 0 2px 8px -2px rgba(20, 28, 70, .25), 0 0 0 1px rgba(var(--color-primary-rgb), .28);
+}
+.st-modal-overlay .st-modal .mp-seg button:disabled { opacity: .55; cursor: default; }
+.st-modal-overlay .st-modal .mp-seg button:focus-visible { outline: 2px solid rgba(var(--color-primary-rgb), .7); outline-offset: 1px; }
+.st-modal-overlay .st-modal .mp-seg--sm button { min-height: 34px; padding: 6px 10px; font-size: 12.5px; }
+/* five expiry choices: 3 + 2 on a phone */
+.st-modal-overlay .st-modal .mp-seg--wrap:not([role="tablist"]) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.st-modal-overlay .st-modal .mp-seg[role="tablist"] button { gap: 5px; padding-inline: 6px; }
+
+.st-modal .mp-share__group { align-items: stretch; }
+.st-modal .mp-share__group--full { gap: 8px; }
+.st-modal .mp-share__lbl { font-size: 12px; font-weight: 700; letter-spacing: .2px; color: var(--text-secondary); }
+
+/* ---------- 3. Share dialog ---------- */
+.mp-share { gap: 16px; }
+.mp-share__file { padding: 14px 16px; border-radius: 16px; }
+.mp-share__file strong { font-size: 14.5px; }
+.mp-share__new { padding: 18px; gap: 18px; border-radius: 18px; }
+.mp-share__group { gap: 8px; }
+.mp-share select, .mp-share input[type="number"], .mp-sl select, .mp-sl input[type="number"] { min-height: 40px; }
+.mp-share__create { height: 50px; font-size: 14.5px; border-radius: 14px; }
+
+.mp-gate-opt {
+  min-height: 56px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  transition: border-color .15s, background .15s;
+}
+.mp-gate-opt--pw { align-items: stretch; }
+.mp-gate-opt:hover { border-color: rgba(var(--color-primary-rgb), .3); }
+.mp-gate-opt:has(input:checked) { border-color: rgba(var(--color-primary-rgb), .45); background: rgba(var(--color-primary-rgb), .06); }
+.mp-gate-opt input[type="checkbox"] { width: 20px; height: 20px; margin-top: 0; align-self: center; }
+.mp-gate-opt__txt b { font-size: 13.5px; }
+.mp-pw { gap: 8px; }
+.mp-pw input { min-height: 42px; }
+.mp-pw__btn, .mp-pw > .btn { min-height: 42px; padding-inline: 12px; justify-content: center; }
+
+.mp-share__head { margin-bottom: -4px; padding-top: 4px; font-size: 13.5px; }
+.mp-share__list { max-height: none; overflow: visible; padding: 0; gap: 12px; }
+.mp-share__empty { padding: 26px 16px; border-radius: 16px; }
+.mp-share__row, .mp-sl__card { padding: 16px; gap: 12px; border-radius: 16px; }
+.mp-share__top { gap: 6px; }
+.mp-badge { padding: 4px 10px; }
+.mp-share__off { margin-inline-start: auto; min-height: 32px; padding: 4px 10px; }
+.mp-share__url { padding: 4px; border-radius: 14px; }
+.mp-share__url input { min-height: 38px; font-size: 12.5px; }
+.mp-share__copy { min-height: 38px; padding: 8px 14px; border-radius: 10px; }
+.mp-share__meta { gap: 6px 16px; }
+.mp-share__ctl { gap: 10px; }
+.mp-share__ctl .mp-seg { width: auto; flex: 1 1 260px; max-width: 360px; }
+.mp-share__sel { flex: 1 1 180px; min-width: 0; }
+.mp-share__edit { padding-top: 12px; gap: 10px; }
+
+/* ---------- 4. "My shared links" ---------- */
+.mp-sl { gap: 16px; }
+.mp-sl__tools { gap: 12px; }
+.st-modal-overlay .st-modal .mp-sl__tools .mp-seg { width: auto; flex: 0 1 auto; }
+.st-modal-overlay .st-modal .mp-sl__tools .mp-seg button { flex: 0 1 auto; padding-inline: 14px; }
+.mp-sl__count { margin-inline-start: 2px; min-width: 20px; padding: 0 6px; line-height: 20px; font-weight: 700; }
+.mp-sl__search {
+  flex: 1 1 220px;
+  max-width: 320px;
+  min-height: 42px;
+  padding-inline: 38px 12px;
+  border-radius: 12px;
+  background-color: var(--bg-canvas);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a90a2' stroke-width='2.2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: 13px center;
+}
+[dir="rtl"] .mp-sl__search { background-position: calc(100% - 13px) center; }
+.mp-sl__search:focus { outline: 2px solid rgba(var(--color-primary-rgb), .45); outline-offset: 0; border-color: var(--color-primary); }
+.mp-sl__list { max-height: none; overflow: visible; padding: 0; gap: 12px; }
+.mp-sl__head { gap: 14px; }
+.mp-sl__head .mp-share__file-ico { width: 44px; height: 44px; background: rgba(var(--color-primary-rgb), .08); box-shadow: none; }
+.mp-sl__title { gap: 8px; flex: 1; }
+.mp-sl__title strong { font-size: 14.5px; }
+.mp-sl__actions { gap: 8px; }
+.mp-sl__actions .btn { min-height: 38px; padding: 8px 14px; justify-content: center; border-radius: 10px; }
+.mp-sl__confirm {
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(240, 68, 56, .07);
+  border: 1px solid rgba(240, 68, 56, .2);
+}
+.mp-sl__settings { gap: 16px; padding-top: 14px; }
+.mp-sl__row { gap: 10px; }
+.mp-sl__row select { flex: 1 1 200px; min-width: 0; }
+
+/* "Who opened it" detail */
+.mp-sl__bar { gap: 12px; }
+.mp-sl__bar strong { flex: 1; min-width: 0; font-size: 15px; }
+.mp-sl__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.mp-sl__stats > div { padding: 12px 14px; border-radius: 14px; }
+.mp-sl__stats b { font-size: 22px; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.mp-sl__people { max-height: none; overflow: visible; gap: 10px; }
+.mp-sl__person { padding: 14px; gap: 10px; border-radius: 16px; }
+.mp-sl__pinfo { gap: 6px 16px; overflow-wrap: anywhere; }
+.mp-sl__events { max-height: none; overflow: visible; }
+.mp-sl__events li { padding: 10px 14px; }
+.mp-sl__foot { padding-top: 4px; }
+
+/* keep long names / emails inside the card */
+.mp-share__file > div, .mp-sl__title, .mp-sl__pname > div { min-width: 0; }
+.mp-share__url input { text-overflow: ellipsis; }
+
+/* ==========================================================================
+   PHONE — bottom sheet, up to 640px
+   ========================================================================== */
+@media (max-width: 640px) {
+  .st-modal-overlay:has(.mp-share),
+  .st-modal-overlay:has(.mp-sl) { align-items: flex-end; padding: 0; }
+
+  .st-modal:has(.mp-share),
+  .st-modal:has(.mp-sl),
+  .st-modal.st-modal--wide:has(.mp-share),
+  .st-modal.st-modal--wide:has(.mp-sl) {
+    width: 100%;
+    max-height: min(94dvh, 100% - 8px);
+    border-radius: 22px 22px 0 0;
+    border-bottom: 0;
+    animation: shd-sheet .28s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  .st-modal:has(.mp-share)::before,
+  .st-modal:has(.mp-sl)::before { /* grab handle */
+    content: "";
+    flex: 0 0 auto;
+    width: 38px;
+    height: 4px;
+    margin: 8px auto 0;
+    border-radius: 4px;
+    background: var(--border-strong);
+  }
+  .st-modal:has(.mp-share) > h2,
+  .st-modal:has(.mp-sl) > h2 { padding: 10px 18px 12px; font-size: 16.5px; }
+  .st-modal:has(.mp-share) > .st-modal__body,
+  .st-modal:has(.mp-sl) > .st-modal__body { padding: 16px 16px 20px; }
+  .st-modal:has(.mp-share) > .st-modal__actions,
+  .st-modal:has(.mp-sl) > .st-modal__actions { padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+  .st-modal:has(.mp-share) > .st-modal__actions .btn { min-height: 46px; }
+  .st-modal:has(.mp-sl) > .st-modal__actions .btn { flex: 1; min-height: 46px; }
+
+  /* 16px fields stop iOS from zooming the page when they are focused */
+  .mp-share input, .mp-share select, .mp-sl input, .mp-sl select, .mp-pw input { font-size: 16px; }
+  .mp-share select, .mp-sl select, .mp-pw input, .mp-sl__search { min-height: 46px; }
+
+  .mp-share__new { padding: 14px; gap: 16px; }
+  .mp-share__row, .mp-sl__card { padding: 14px; }
+  .mp-pw input { flex: 1 1 100%; }
+  .mp-pw__btn { flex: 1 1 0; }
+  .mp-pw > .btn { flex: 1 1 calc(50% - 4px); }
+  .st-modal-overlay .st-modal .mp-seg button { min-height: 42px; }
+  .st-modal-overlay .st-modal .mp-seg--sm button { min-height: 40px; }
+
+  /* link card: stacked controls */
+  .mp-share__ctl { flex-direction: column; align-items: stretch; }
+  .mp-share__ctl .mp-seg { width: 100%; max-width: none; flex: none; }
+  .mp-share__sel { width: 100%; flex: none; }
+  .mp-share__off { min-height: 36px; }
+  .mp-share__copy { min-height: 42px; }
+
+  /* My shared links */
+  .mp-sl__tools { flex-direction: column; align-items: stretch; }
+  .st-modal-overlay .st-modal .mp-sl__tools .mp-seg { width: 100%; }
+  .st-modal-overlay .st-modal .mp-sl__tools .mp-seg button { flex: 1 1 0; padding-inline: 4px; font-size: 12.5px; }
+  .mp-sl__search { flex: none; max-width: none; width: 100%; }
+  .mp-sl__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mp-sl__actions .btn { min-height: 42px; width: 100%; }
+  .mp-sl__confirm { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; margin-inline-start: 0; }
+  .mp-sl__confirm > :first-child { grid-column: 1 / -1; }
+  .mp-sl__confirm .btn { width: 100%; }
+  .mp-sl__row { flex-direction: column; align-items: stretch; }
+  .mp-sl__row select { flex: none; width: 100%; }
+  .mp-sl__row > span { width: 100%; }
+  .mp-sl__row > span > select { flex: 1; }
+  .mp-sl__foot { justify-content: stretch; }
+  .mp-sl__foot .btn, .mp-sl__foot .mp-sl__confirm { width: 100%; }
+  .mp-sl__bar .btn span { display: none; }
+  .mp-sl__bar .btn { min-width: 42px; min-height: 42px; padding: 0; justify-content: center; }
+}
+
+/* tiny phones */
+@media (max-width: 359.98px) {
+  .st-modal-overlay .st-modal .mp-seg--wrap:not([role="tablist"]) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .st-modal-overlay .st-modal .mp-sl__tools .mp-seg button { font-size: 11.5px; gap: 3px; }
+  .mp-sl__count { min-width: 18px; padding: 0 4px; font-size: 10.5px; }
+}
+
+/* ==========================================================================
+   TABLET and up — centred dialog, 641px+
+   ========================================================================== */
+@media (min-width: 641px) {
+  .st-modal-overlay .st-modal .mp-seg--wrap:not([role="tablist"]) { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .st-modal-overlay .st-modal .mp-seg:not(.mp-seg--wrap):not(.mp-seg--sm):not([role="tablist"]) { width: min(100%, 360px); }
+  .mp-sl__actions { display: flex; flex-wrap: wrap; }
+  .mp-sl__actions > .mp-sl__danger:last-child { margin-inline-start: auto; }
+  .mp-sl__stats { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+  .mp-sl__people { max-height: 340px; overflow-y: auto; padding-inline-end: 2px; }
+  .mp-sl__events { max-height: 320px; overflow-y: auto; }
+  .mp-sl__settings { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 18px 24px; align-items: start; }
+  .mp-sl__settings > :nth-child(n + 3) { grid-column: 1 / -1; }
+}
+
+/* ==========================================================================
+   LAPTOP — 1024px and up: roomier, two-column link cards
+   ========================================================================== */
+@media (min-width: 1024px) {
+  .st-modal:has(.mp-share) > h2,
+  .st-modal:has(.mp-sl) > h2 { padding: 20px 26px 16px; font-size: 18px; }
+  .st-modal:has(.mp-share) > .st-modal__body,
+  .st-modal:has(.mp-sl) > .st-modal__body { padding: 20px 26px; }
+  .st-modal:has(.mp-share) > .st-modal__actions,
+  .st-modal:has(.mp-sl) > .st-modal__actions { padding: 14px 26px; }
+  .st-modal.st-modal--wide:has(.mp-sl) { width: min(920px, 100%); }
+  .mp-sl__list { gap: 14px; }
+  .mp-sl__card { padding: 18px 20px; }
+  .mp-sl__card .mp-share__url { max-width: 640px; }
+}
+
+/* ---------- landscape phones: let the body use the height ---------- */
+@media (orientation: landscape) and (max-height: 520px) {
+  .st-modal-overlay:has(.mp-share), .st-modal-overlay:has(.mp-sl) { align-items: center; padding: 8px 12px; }
+  .st-modal:has(.mp-share), .st-modal:has(.mp-sl) { max-height: calc(100dvh - 16px); border-radius: 16px; width: min(640px, 100%); }
+  .st-modal.st-modal--wide:has(.mp-sl) { width: min(760px, 100%); }
+  .st-modal:has(.mp-share)::before, .st-modal:has(.mp-sl)::before { display: none; }
+  .st-modal:has(.mp-share) > h2, .st-modal:has(.mp-sl) > h2 { padding: 12px 18px; }
+  .st-modal:has(.mp-share) > .st-modal__actions, .st-modal:has(.mp-sl) > .st-modal__actions { padding: 8px 18px; }
+}
+
+@keyframes shd-sheet { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .st-modal:has(.mp-share), .st-modal:has(.mp-sl) { animation: none !important; } }
+
+/* ---- one link for several items (ShareDialog with 2+ nodes) ---- */
+.mp-share__bundle { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.mp-share__bundle-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.mp-share__bundle-list li { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 5px 10px; border-radius: 999px; font-size: 12.5px; background: rgba(var(--color-primary-rgb), .07); border: 1px solid rgba(var(--color-primary-rgb), .14); color: var(--text-primary); }
+.mp-share__bundle-list li span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.mp-share__bundle-list li.is-more { background: transparent; border-style: dashed; color: var(--text-secondary); }
+.mp-share__bundle input[type="text"] { width: 100%; }
+.mp-share__hint { font-size: 12px; line-height: 1.5; color: var(--text-secondary); }

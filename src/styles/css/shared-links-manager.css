@@ -1,0 +1,56 @@
+/* Shared-links manager: bulk bar, row checkboxes, Settings card. Works inside the dialog and embedded in Settings. */
+.slm-card { position: relative; display: flex; flex-direction: column; gap: 18px; padding: clamp(16px, 3vw, 26px); }
+.slm-card__head { display: flex; gap: 14px; align-items: flex-start; }
+.slm-card__head h2 { margin: 0 0 4px; }
+.slm-card__head p { margin: 0; line-height: 1.6; max-width: 62ch; }
+.slm-card__ico { flex: none; width: 44px; height: 44px; border-radius: 14px; display: inline-flex; align-items: center; justify-content: center;
+  color: var(--color-primary); background: linear-gradient(145deg, rgba(var(--color-primary-rgb), .16), rgba(var(--color-primary-rgb), .05));
+  box-shadow: inset 0 0 0 1px rgba(var(--color-primary-rgb), .18); }
+.slm-toast { position: sticky; bottom: 16px; align-self: center; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px;
+  font-size: 13px; font-weight: 700; color: #fff; background: #12805c; box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .45); animation: slm-in .2s ease both; }
+.slm-toast.is-error { background: #d92d20; }
+@keyframes slm-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* embedded in Settings: the dialog-only layout rules don't apply, so give the panel its own spacing */
+.mp-sl--embedded { display: flex; flex-direction: column; gap: 14px; }
+.mp-sl--embedded .mp-sl__tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.mp-sl--embedded .mp-sl__search { flex: 1 1 220px; min-width: 0; max-width: 340px; min-height: 40px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--border-strong, var(--border-subtle)); background: var(--bg-surface); color: var(--text-primary); font: inherit; }
+.mp-sl--embedded .mp-sl__list { display: flex; flex-direction: column; gap: 12px; }
+.mp-sl--embedded .mp-sl__card { padding: 16px; gap: 12px; border-radius: 16px; }
+.mp-sl--embedded .mp-sl__head { display: flex; gap: 12px; align-items: center; }
+.mp-sl--embedded .mp-sl__title { min-width: 0; flex: 1; }
+.mp-sl--embedded .mp-sl__title strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mp-sl--embedded .mp-sl__actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.mp-sl--embedded .mp-sl__actions .btn { display: inline-flex; align-items: center; gap: 6px; }
+.mp-sl--embedded .mp-sl__danger { color: var(--color-danger, #d92d20); }
+
+/* row checkbox */
+.mp-sl__pick { flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px; cursor: pointer; }
+.mp-sl__pick input, .mp-bulk__all input { width: 18px; height: 18px; accent-color: rgb(var(--color-primary-rgb)); cursor: pointer; margin: 0; }
+.mp-sl__card { transition: border-color .15s, box-shadow .15s, background .15s; }
+.mp-sl__card.is-picked { border-color: rgba(var(--color-primary-rgb), .55); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .12); background: rgba(var(--color-primary-rgb), .035); }
+.mp-sl__card.is-paused { border-style: dashed; }
+
+/* bulk bar */
+.mp-bulk { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px 8px 14px; border-radius: 14px;
+  background: var(--bg-canvas); border: 1px solid var(--border-subtle); transition: background .15s, border-color .15s; }
+.mp-bulk.is-on { background: rgba(var(--color-primary-rgb), .08); border-color: rgba(var(--color-primary-rgb), .35); }
+.mp-bulk__all { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.mp-bulk__acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.mp-bulk__acts .btn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; }
+.mp-bulk__acts .mp-sl__danger, .mp-sl__danger { color: var(--color-danger, #d92d20); }
+.mp-bulk__confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 14px; border-radius: 14px; font-size: 13.5px; font-weight: 600; line-height: 1.5;
+  background: rgba(var(--color-primary-rgb), .07); border: 1px solid rgba(var(--color-primary-rgb), .3); animation: slm-in .18s ease both; }
+.mp-bulk__confirm > span { flex: 1 1 240px; min-width: 0; }
+.mp-bulk__confirm > div { display: flex; gap: 8px; }
+.mp-bulk__confirm.is-danger { background: rgba(217, 45, 32, .07); border-color: rgba(217, 45, 32, .35); color: var(--text-primary); }
+.mp-bulk__confirm.is-danger > svg { color: #d92d20; }
+.mp-sl__dangerfill { background: #d92d20 !important; border-color: #d92d20 !important; box-shadow: none !important; }
+@media (max-width: 599.98px) {
+  .mp-bulk { padding: 10px; }
+  .mp-bulk__acts { width: 100%; }
+  .mp-bulk__acts .btn { flex: 1 1 auto; justify-content: center; min-height: 42px; }
+  .mp-bulk__confirm > div { width: 100%; }
+  .mp-bulk__confirm > div .btn { flex: 1; min-height: 44px; justify-content: center; }
+  .slm-card__head p { font-size: 12.5px; }
+}

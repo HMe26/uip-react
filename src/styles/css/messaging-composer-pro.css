@@ -1,0 +1,65 @@
+/* messaging-composer-pro.css — one clean message box + correct text direction. Loaded last.
+   - The toolbar and the input now live inside ONE solid card (they used to float over the wallpaper, unreadable).
+   - The box grows with the text, has no drag handle, and a send button that stays inside the card.
+   - Direction: Arabic -> right-to-left, English -> left-to-right, and each LINE of a mixed message picks its own
+     (unicode-bidi: plaintext + text-align: start). Same rule for the sent bubbles. */
+
+/* ---------- the card ---------- */
+html body .msg-app form.msg-composer.msg-composer.msg-composer {
+  margin: 4px 14px 14px; padding: 4px 6px 6px;
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 22px;
+  box-shadow: 0 10px 28px -16px rgba(20, 28, 70, .4);
+  transition: border-color .15s, box-shadow .15s;
+}
+html body .msg-app form.msg-composer.msg-composer.msg-composer:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 10px 28px -16px rgba(20, 28, 70, .4), 0 0 0 3px rgba(var(--color-primary-rgb), .12);
+}
+/* while recording the red bar has its own card */
+html body .msg-app form.msg-composer.msg-composer.msg-composer.is-recording {
+  background: transparent; border-color: transparent; box-shadow: none; padding: 0;
+}
+
+html body .msg-app .msg-composer .msg-composer__toolbar.msg-composer__toolbar { padding: 0 2px 2px; margin: 0; gap: 2px; }
+html body .msg-app .msg-composer .msg-composer__toolbar .msg-icon-btn { width: 34px; height: 34px; color: var(--text-secondary); }
+html body .msg-app .msg-composer .msg-composer__toolbar .msg-icon-btn:hover { color: var(--color-primary); }
+
+/* the row no longer draws its own pill: the card does */
+html body .msg-app .msg-composer .msg-composer__input-row.msg-composer__input-row {
+  padding: 0; gap: 6px; align-items: flex-end; background: transparent; border: 0; box-shadow: none; border-radius: 0;
+}
+
+/* ---------- the text box ---------- */
+html body .msg-app textarea.msg-composer__input.msg-composer__input.msg-composer__input {
+  flex: 1; min-width: 0; min-height: 40px; max-height: 168px; padding: 8px 10px; margin: 0;
+  border: 0; border-radius: 12px; background: transparent; box-shadow: none; outline: 0;
+  font: inherit; font-size: 15.5px; line-height: 1.55; color: var(--text-primary);
+  resize: none; overflow-y: hidden; scrollbar-width: thin;
+  unicode-bidi: plaintext; text-align: start;
+}
+html body .msg-app textarea.msg-composer__input::placeholder { color: var(--text-secondary); opacity: .8; unicode-bidi: plaintext; }
+
+html body .msg-app .msg-composer .msg-send-btn { width: 40px; height: 40px; border-radius: 50%; margin: 0; flex: none; }
+
+/* ---------- phones ---------- */
+@media (max-width: 760px) {
+  html body .msg-app form.msg-composer.msg-composer.msg-composer {
+    margin: 2px 8px calc(8px + env(safe-area-inset-bottom, 0px)); padding: 3px 4px 4px; border-radius: 20px;
+  }
+  html body.msg-page-active.msg-thread-open .msg-app form.msg-composer.msg-composer.msg-composer {
+    padding: 3px 4px 4px; margin-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+  html body .msg-app textarea.msg-composer__input.msg-composer__input.msg-composer__input { font-size: 16px; padding: 9px 10px; max-height: 132px; }
+}
+
+/* ---------- text direction in sent messages ---------- */
+html body .msg-app .msg-text,
+html body .msg-app .msg-caption,
+html body .msg-app .msg-edit-textarea { unicode-bidi: plaintext; text-align: start; }
+/* code stays left-to-right whatever the language around it */
+html body .msg-app .msg-bubble pre { direction: ltr; text-align: left; unicode-bidi: isolate; }
+
+/* ---------- same direction rule everywhere else text is typed or shown ---------- */
+html body textarea:not([dir="ltr"]):not([dir="rtl"]) { unicode-bidi: plaintext; text-align: start; }
+html body .meeting-chat-msg__body { unicode-bidi: plaintext; text-align: start; }
+html body .meeting-chat-msg__body pre { direction: ltr; text-align: left; unicode-bidi: isolate; }

@@ -1,0 +1,132 @@
+/* ==========================================================================
+   light-mode.css — the "Light" look (فاتح) as a full platform design.
+   Active only when <html data-palette="white"> (Light mode in the appearance picker).
+   Classic and Dark are untouched.
+
+   · white sidebar with indigo accents (instead of navy + gold)
+   · same indigo accent everywhere, modern sans headings (Inter / Cairo)
+   · softer, rounder cards, calmer shadows, no gold rules / serif headings
+   Loaded LAST so it wins over the per-portal rules (staff-academic, sidebar-unified…).
+   ========================================================================== */
+
+/* ---- tokens ------------------------------------------------------------- */
+html[data-palette="white"],
+html[data-palette="white"] .app-shell {
+  --font-display: 'Inter', 'Cairo', 'Segoe UI', system-ui, sans-serif;
+  --bg-canvas: #F6F7FC;
+  --bg-surface: #FFFFFF;
+  --bg-muted: #F1F3FA;
+  --text-primary: #0F1424;
+  --text-secondary: #6B7089;
+  --border-subtle: #E8EAF3;
+  --border-strong: #D6DBEE;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --st-radius: 20px;
+  --st-radius-sm: 14px;
+  --st-shadow: 0 1px 2px rgba(16, 24, 64, .04), 0 10px 28px -14px rgba(16, 24, 64, .14);
+}
+html[data-palette="white"] .app-shell--staff {
+  --ac-gold: var(--color-primary);
+  --ac-gold-soft: rgba(var(--color-primary-rgb), .14);
+  --ac-ink: var(--text-primary);
+}
+
+/* ---- headings: modern sans instead of the serif “university” look -------- */
+html[data-palette="white"] .app-shell :is(h1, h2, h3, h4, .stf-head h1, .page-header__title h1, .st-panel__head h2, .topbar__title h1, .stf-kpi__value, .ac-stat__value, .ac-panel__head h2, .sidebar__brand-name) {
+  font-family: var(--font-display);
+  letter-spacing: 0;
+}
+
+/* ---- sidebar: white ------------------------------------------------------ */
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar {
+  --sb-top: #FFFFFF;
+  --sb-bottom: #FFFFFF;
+  --sb-text: #5B6275;
+  --sb-text-strong: #0F1424;
+  --sb-border: #E8EAF3;
+  --sb-rule: #EDEFF6;
+  --sb-hover: rgba(81, 95, 255, .06);
+  --sb-card: #F6F7FC;
+  --sb-tint: rgba(81, 95, 255, .11);
+  --sb-gold: #515FFF;
+  --sb-gold-rgb: 81, 95, 255;
+  --sb-gold-soft: #3E4BE6;
+  --sb-on-gold: #FFFFFF;
+  --border-strong: #D6DBEE;
+  background: #fff;
+  border-inline-end: 1px solid var(--sb-border);
+  box-shadow: none;
+}
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__brand { border-bottom-color: var(--sb-rule); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__logo { box-shadow: 0 6px 16px -6px rgba(81, 95, 255, .45); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__brand-name { color: var(--sb-text-strong); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__brand-light { color: var(--sb-text); font-weight: 500; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__brand-sub { color: var(--sb-text); letter-spacing: .08em; font-weight: 600; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__nav { }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-thumb { background: #D6DBEE; }
+
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__section-title { color: #8A90A6; opacity: 1; font-weight: 700; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__section-title::after { display: none; }
+
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__link { border-radius: 12px; padding: 10px 12px; font-weight: 500; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__link:hover { background: var(--sb-hover); color: var(--sb-text-strong); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active { background: var(--sb-tint); color: #3E4BE6; font-weight: 700; border-radius: 12px; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active svg { color: #515FFF; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active::before { display: none; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-disabled:hover { background: none; color: var(--sb-text); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__count { background: #515FFF; color: #fff; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__link.is-active .sidebar__count { box-shadow: none; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .badge-coming-soon { background: #F1F3FA; color: var(--sb-text); border-color: var(--sb-border); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__promo { border-color: rgba(81, 95, 255, .2); color: #515FFF; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__promo a { color: #3E4BE6; }
+
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__footer { border-top-color: var(--sb-border); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .theme-switch { background: #F1F3FA; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .theme-switch button { color: var(--sb-text); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .theme-switch button.is-active { background: #fff; color: var(--sb-text-strong); box-shadow: 0 1px 3px rgba(16, 24, 64, .12); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .theme-switch button.is-active svg { color: #515FFF; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__ai-btn { background: linear-gradient(135deg, #6C78FF, #515FFF); color: #fff; box-shadow: 0 8px 18px -8px rgba(81, 95, 255, .7); border-radius: 12px; }
+
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__user { background: transparent; border-color: transparent; padding-inline: 6px; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar a.sidebar__user:hover { background: var(--sb-card); border-color: var(--sb-border); }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar .sidebar__user-avatar { background: linear-gradient(135deg, #6C78FF, #515FFF); color: #fff; box-shadow: none; }
+html[data-palette="white"] .app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__user { background: none; border-color: transparent; }
+
+/* ---- topbar: clean white, no gold rule ------------------------------------ */
+html[data-palette="white"] .app-shell--staff .topbar { box-shadow: none; background: var(--bg-surface); }
+html[data-palette="white"] .app-shell .topbar__search { border-radius: 14px; }
+
+/* ---- buttons, cards ------------------------------------------------------ */
+html[data-palette="white"] .app-shell .btn { border-radius: 12px; letter-spacing: 0; }
+html[data-palette="white"] .app-shell--staff .btn-outline { color: var(--text-primary); }
+html[data-palette="white"] .app-shell--staff .stf-kpi { border-top: 1px solid var(--border-subtle); box-shadow: var(--st-shadow); }
+html[data-palette="white"] .app-shell--staff .stf-kpi__icon { border-radius: 14px; }
+html[data-palette="white"] .app-shell--staff .st-panel,
+html[data-palette="white"] .app-shell--staff .ac-panel,
+html[data-palette="white"] .app-shell--staff .stf-table-card { box-shadow: var(--st-shadow); }
+html[data-palette="white"] .app-shell--staff .ac-panel__head { background: var(--bg-surface); }
+html[data-palette="white"] .app-shell--staff .ac-panel__head h2::before { display: none; }
+html[data-palette="white"] .app-shell--staff .ac-tile__icon { border-radius: 14px; }
+
+/* ---- staff dashboard hero: white card instead of the navy banner ----------- */
+html[data-palette="white"] .app-shell--staff .ac-hero { background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-subtle); box-shadow: var(--st-shadow); border-radius: var(--st-radius); }
+html[data-palette="white"] .app-shell--staff .ac-hero::before,
+html[data-palette="white"] .app-shell--staff .ac-hero::after,
+html[data-palette="white"] .app-shell--staff .ac-hero__crest { display: none; }
+html[data-palette="white"] .app-shell--staff .ac-hero h1,
+html[data-palette="white"] .app-shell--staff .ac-stat__value { color: var(--text-primary); }
+html[data-palette="white"] .app-shell--staff .ac-stat__value--gold,
+html[data-palette="white"] .app-shell--staff .ac-hero__term { color: var(--color-primary); }
+html[data-palette="white"] .app-shell--staff .ac-hero__term::before { background: var(--color-primary); }
+html[data-palette="white"] .app-shell--staff .ac-hero p,
+html[data-palette="white"] .app-shell--staff .ac-hero__date,
+html[data-palette="white"] .app-shell--staff .ac-stat__label { color: var(--text-secondary); }
+html[data-palette="white"] .app-shell--staff .ac-stats { border-top-color: var(--border-subtle); }
+html[data-palette="white"] .app-shell--staff .ac-stat + .ac-stat { border-inline-start-color: var(--border-subtle); }
+html[data-palette="white"] .app-shell--staff .ac-stat:nth-child(n+3) { border-top-color: var(--border-subtle); }
+html[data-palette="white"] .app-shell--staff .ac-hero__actions .btn { border-radius: 12px; }
+html[data-palette="white"] .app-shell--staff .ac-hero__actions .btn-light { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+html[data-palette="white"] .app-shell--staff .ac-hero__actions .btn-light:hover { background: var(--color-primary-hover); }
+html[data-palette="white"] .app-shell--staff .ac-hero__actions .btn-ghost { border-color: var(--border-strong); color: var(--text-primary); }
+html[data-palette="white"] .app-shell--staff .ac-hero__actions .btn-ghost:hover { background: var(--bg-muted); }

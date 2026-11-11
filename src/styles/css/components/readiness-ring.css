@@ -1,0 +1,18 @@
+/* components/readiness-ring.css — SIGNATURE ELEMENT
+   A radial glass gauge visualizing the AI Readiness Score (0-100).
+   Reused in: dashboard hero stat, project cards, portfolio, AI Analysis page.
+   Color of the progress arc communicates the score band:
+     0–49  -> danger (needs work)
+     50–74 -> accent/gold (developing)
+     75–100-> success/teal (ready) */
+.readiness-ring { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.readiness-ring__track { stroke: var(--border-subtle); fill: none; stroke-width: 8; }
+.readiness-ring__progress { fill: none; stroke-width: 8; stroke-linecap: round; }
+.readiness-ring[data-band="low"]  .readiness-ring__progress { stroke: var(--color-danger); }
+.readiness-ring[data-band="mid"]  .readiness-ring__progress { stroke: var(--color-accent); }
+.readiness-ring[data-band="high"] .readiness-ring__progress { stroke: var(--color-success); }
+.readiness-ring__label {
+  position: absolute; display: flex; flex-direction: column; align-items: center;
+}
+.readiness-ring__score { font-family: var(--font-display); font-weight: 800; font-size: var(--text-h2); }
+.readiness-ring__caption { font-size: var(--text-caption); color: var(--text-secondary); text-transform: uppercase; }

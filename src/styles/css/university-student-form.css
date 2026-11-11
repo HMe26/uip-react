@@ -1,0 +1,75 @@
+/* university-student-form.css — Add / Edit student dialogs (prefix sf-).
+   Token driven (--bg-*, --text-*, --border-*, --color-*), light / dark / RTL safe, logical properties only. */
+
+.sf-overlay { padding: 16px; }
+.sf-modal { display: flex; flex-direction: column; width: min(760px, 100%); max-height: min(92vh, 920px); background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: 20px; box-shadow: 0 28px 80px rgba(10, 12, 20, .32); overflow: hidden; animation: uip-rise-in .22s var(--ease-standard) both; }
+[dir="rtl"] .sf-modal * { letter-spacing: 0 !important; }
+
+/* header */
+.sf-head { display: flex; align-items: center; gap: 14px; padding: 18px 22px; border-bottom: 1px solid var(--border-subtle); background: linear-gradient(to bottom, var(--st-tint, rgba(var(--color-primary-rgb), .09)), transparent); }
+.sf-avatar { flex: 0 0 auto; width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 22px; font-weight: 800; line-height: 1; color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 13%, var(--bg-surface)); border: 1px solid color-mix(in srgb, var(--color-primary) 30%, var(--border-subtle)); }
+.sf-head__text { flex: 1 1 auto; min-width: 0; }
+.sf-head h2 { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.3; }
+.sf-head p { margin: 3px 0 0; font-size: 13px; line-height: 1.5; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sf-close { flex: 0 0 auto; width: 36px; height: 36px; display: grid; place-items: center; border: 0; border-radius: 10px; background: transparent; color: var(--text-secondary); cursor: var(--cur-pointer, pointer); }
+.sf-close:hover { background: var(--bg-canvas); color: var(--text-primary); }
+.sf-close:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* body */
+.sf-body { flex: 1 1 auto; overflow-y: auto; padding: 6px 22px 22px; }
+.sf-section { padding: 20px 0; }
+.sf-section + .sf-section { border-top: 1px solid var(--border-subtle); }
+.sf-section__head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.sf-section__ico { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: var(--color-primary); background: var(--st-tint, rgba(var(--color-primary-rgb), .09)); }
+.sf-section__head h3 { margin: 0; font-size: 14.5px; font-weight: 800; }
+.sf-section__head p { margin: 2px 0 0; font-size: 12.5px; color: var(--text-secondary); }
+
+.sf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
+.sf-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.sf-field.is-wide { grid-column: 1 / -1; }
+.sf-label { margin: 0; font-size: 13px; font-weight: 700; color: var(--text-primary); text-transform: none; letter-spacing: 0; }
+.sf-label i { color: var(--color-danger); font-style: normal; margin-inline-start: 4px; }
+.sf-hint { font-size: 12px; line-height: 1.5; color: var(--text-secondary); }
+
+/* inputs */
+.sf-modal .form-input { width: 100%; box-sizing: border-box; height: 46px; min-height: 46px; margin: 0; padding: 0 14px; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--bg-surface); color: var(--text-primary); font: inherit; font-size: 14px; transition: border-color .15s, box-shadow .15s; }
+.sf-modal .form-input::placeholder { color: var(--text-secondary); opacity: .7; }
+.sf-modal .form-input:hover:not(:disabled) { border-color: color-mix(in srgb, var(--color-primary) 40%, var(--border-strong)); }
+.sf-modal .form-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .15); }
+.sf-modal .form-input:disabled { opacity: .55; cursor: not-allowed; background: var(--bg-canvas); }
+.sf-modal select.form-input { appearance: none; -webkit-appearance: none; padding-inline-end: 38px; cursor: var(--cur-pointer, pointer); text-overflow: ellipsis; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a8fa3' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; background-size: 16px; }
+[dir="rtl"] .sf-modal select.form-input { background-position: left 13px center; }
+.sf-modal .form-group { margin: 0; display: flex; flex-direction: column; gap: 7px; }
+.sf-modal .form-label { text-transform: none; letter-spacing: 0; font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0; }
+
+/* choice chips */
+.sf-choice { display: flex; flex-wrap: wrap; gap: 8px; }
+.sf-chip { min-width: 44px; height: 42px; padding: 0 14px; border: 1px solid var(--border-strong); border-radius: 12px; background: var(--bg-surface); color: var(--text-secondary); font: inherit; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; cursor: var(--cur-pointer, pointer); transition: border-color .15s, background .15s, color .15s; }
+.sf-chip:hover { color: var(--text-primary); border-color: color-mix(in srgb, var(--color-primary) 45%, var(--border-strong)); }
+.sf-chip.is-on { border-color: var(--color-primary); background: var(--st-tint, rgba(var(--color-primary-rgb), .09)); color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .12); }
+.sf-chip:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* read-only */
+.sf-readonly { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 14px; border: 1px dashed var(--border-strong); border-radius: 12px; background: var(--bg-canvas); color: var(--text-secondary); font-size: 14px; }
+.sf-readonly span { color: var(--text-primary); font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.sf-readonly em { margin-inline-start: auto; font-style: normal; font-size: 12px; white-space: nowrap; }
+
+/* error + footer */
+.sf-error { display: flex; align-items: flex-start; gap: 9px; margin-top: 8px; padding: 12px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.55; color: var(--color-danger); background: rgba(var(--color-danger-rgb), .09); border: 1px solid rgba(var(--color-danger-rgb), .28); }
+.sf-error svg { margin-top: 2px; flex-shrink: 0; }
+.sf-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 22px; border-top: 1px solid var(--border-subtle); background: var(--bg-surface); }
+.sf-foot .btn { min-height: 42px; min-width: 110px; gap: 6px; justify-content: center; }
+
+/* login-access block (shared component) sits nicely inside this dialog */
+.sf-modal .pf-login { gap: 14px; }
+.sf-modal .pf-opt { border-radius: 14px; }
+
+@media (max-width: 640px) {
+  .sf-overlay { padding: 0; align-items: flex-end; }
+  .sf-modal { width: 100%; max-height: 94vh; border-radius: 20px 20px 0 0; }
+  .sf-head, .sf-foot { padding-inline: 16px; }
+  .sf-body { padding-inline: 16px; }
+  .sf-grid { grid-template-columns: 1fr; }
+  .sf-foot .btn { flex: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .sf-modal { animation: none; } }

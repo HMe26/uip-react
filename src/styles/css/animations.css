@@ -1,0 +1,45 @@
+/* animations.css — shared keyframes, used sparingly per the "one signature
+   moment" principle: page-load fade/rise for content, and the Readiness
+   Ring's draw-on animation. Hover states are transitions, not keyframes. */
+
+@keyframes uip-rise-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-rise-in { animation: uip-rise-in var(--duration-slow) var(--ease-standard) both; }
+
+@keyframes uip-ring-draw {
+  from { stroke-dashoffset: var(--ring-circumference); }
+  to   { stroke-dashoffset: var(--ring-offset); }
+}
+.readiness-ring__progress { animation: uip-ring-draw 1.1s var(--ease-standard) both; }
+
+@keyframes uip-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes uip-slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes uip-pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.status-dot--live { animation: uip-pulse-dot 1.6s ease-in-out infinite; }
+
+/* Global reduced-motion safety net (Rule: every animation/transform-based
+   hover must have a reduced-motion fallback). Component files may still
+   define a more specific override (e.g. notifications.css, app-shell.css
+   .dropdown__menu) — this just guarantees nothing site-wide is missed. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .status-dot--live { animation: none; opacity: 1; }
+}

@@ -1,0 +1,64 @@
+/* Public-page 3D scroll effect (hooks/useScroll3D.js tags the elements; nothing runs per frame).
+   Only the individual transform properties (translate / rotate / scale) + opacity are animated, so they stay on the compositor and
+   never fight a card's own hover `transform`. No blur, no filters, no will-change (so no pile of permanent GPU layers). */
+:root { --s3d-k: 1; }
+@media (max-width: 760px) { :root { --s3d-k: .55; } } /* phones: shallower tilt, shorter travel */
+
+[data-s3d-stage] { perspective: 1300px; perspective-origin: 50% 40%; }
+
+@media (prefers-reduced-motion: no-preference) {
+    /* ---------- 1) Modern browsers: scroll-driven, zero JS while scrolling ---------- */
+    @supports (animation-timeline: view()) {
+      [data-s3d] {
+        animation-timing-function: cubic-bezier(.22, .7, .2, 1);
+        animation-fill-mode: both;
+        animation-timeline: view();
+        /* staggered by column (--s3d-c = 0 / 1 / 2): neighbours finish a little later, which reads as a wave */
+        animation-range: entry calc(var(--s3d-c, 0) * 6%) entry calc(78% + var(--s3d-c, 0) * 4%);
+      }
+      [data-s3d="card"] { animation-name: s3d-card; }
+      [data-s3d="head"] { animation-name: s3d-head; }
+      [data-s3d="pop"]  { animation-name: s3d-pop; }
+      /* hero: recedes into the page while the next section rises */
+      [data-s3d="hero"] { animation-name: s3d-hero; animation-timing-function: linear; animation-range: exit 0% exit 100%; transform-origin: 50% 100%; }
+      /* floating hero chips drift up at different speeds = parallax depth */
+      [data-s3d="float"] { animation-name: s3d-float; animation-timing-function: linear; animation-range: exit 0% exit 100%; }
+
+      @keyframes s3d-card {
+        from {
+          opacity: 0;
+          translate: 0 calc(90px * var(--s3d-k)) calc(-170px * var(--s3d-k));
+          rotate: 1 var(--ry, 0) 0 calc(28deg * var(--s3d-k));
+          scale: .93;
+        }
+        to { opacity: 1; translate: 0 0 0; rotate: 1 0 0 0deg; scale: 1; }
+      }
+      @keyframes s3d-head {
+        from { opacity: 0; translate: 0 calc(46px * var(--s3d-k)) calc(-90px * var(--s3d-k)); rotate: 1 0 0 calc(16deg * var(--s3d-k)); }
+        to { opacity: 1; translate: 0 0 0; rotate: 1 0 0 0deg; }
+      }
+      @keyframes s3d-pop {
+        from { opacity: 0; translate: 0 calc(70px * var(--s3d-k)) calc(-260px * var(--s3d-k)); rotate: 1 0 0 calc(22deg * var(--s3d-k)); scale: .88; }
+        to { opacity: 1; translate: 0 0 0; rotate: 1 0 0 0deg; scale: 1; }
+      }
+      @keyframes s3d-hero {
+        from { opacity: 1; translate: 0 0 0; rotate: 1 0 0 0deg; scale: 1; }
+        to { opacity: .2; translate: 0 calc(-30px * var(--s3d-k)) calc(-220px * var(--s3d-k)); rotate: 1 0 0 calc(-14deg * var(--s3d-k)); scale: .94; }
+      }
+      @keyframes s3d-float {
+        from { translate: 0 0; }
+        to { translate: 0 calc(var(--pz, -70) * 1px * var(--s3d-k)); }
+      }
+    }
+
+    /* ---------- 2) Fallback: one IntersectionObserver adds .is-in once, a CSS transition plays ---------- */
+    @supports not (animation-timeline: view()) {
+      [data-s3d="card"], [data-s3d="head"], [data-s3d="pop"] {
+        transition: opacity .7s ease, translate .9s cubic-bezier(.2, .8, .2, 1), rotate .9s cubic-bezier(.2, .8, .2, 1), scale .9s cubic-bezier(.2, .8, .2, 1);
+        transition-delay: calc(var(--s3d-c, 0) * 90ms);
+      }
+      [data-s3d="card"]:not(.is-in) { opacity: 0; translate: 0 calc(70px * var(--s3d-k)) calc(-140px * var(--s3d-k)); rotate: 1 var(--ry, 0) 0 calc(24deg * var(--s3d-k)); scale: .94; }
+      [data-s3d="head"]:not(.is-in) { opacity: 0; translate: 0 calc(36px * var(--s3d-k)) calc(-70px * var(--s3d-k)); rotate: 1 0 0 calc(14deg * var(--s3d-k)); }
+      [data-s3d="pop"]:not(.is-in) { opacity: 0; translate: 0 calc(60px * var(--s3d-k)) calc(-200px * var(--s3d-k)); rotate: 1 0 0 calc(20deg * var(--s3d-k)); scale: .9; }
+    }
+}

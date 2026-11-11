@@ -1,0 +1,446 @@
+/* ==========================================================================
+   admin-portal.css — Admin Portal design (Light + Dark).
+   Scoped to .app-shell--admin (set by DashboardLayout for role "admin",
+   together with .app-shell--student, whose chrome/selectors it reuses).
+   This file carries the Admin palette and the pieces specific to this design.
+
+   Palette sampled from the design files (Admin_light.png / AdminDark.png):
+     light  canvas #F9FAFC · surface #FFFFFF · primary #4830F0 · success #00B870
+     dark   canvas #141821 · surface #1B212F · sidebar #11151E · primary #6058F8
+   ========================================================================== */
+
+.app-shell--admin {
+  --bg-canvas: #F9FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-sidebar: #FFFFFF;
+  --bg-muted: #F2F4F8;
+  --text-primary: #12141C;
+  --text-secondary: #6A7082;
+  --border-subtle: #E8EAF0;
+  --border-strong: #D5D9E4;
+
+  --color-primary: #4830F0;
+  --color-primary-hover: #3A25D4;
+  --color-primary-rgb: 72, 48, 240;
+  --color-success: #0A9F6B;  --color-success-rgb: 10, 159, 107;
+  --color-warning: #C77700;  --color-warning-rgb: 224, 138, 0;
+  --color-danger:  #DC3A4B;  --color-danger-rgb: 220, 58, 75;
+  --st-info: #4830F0;
+  --st-radius: 14px;
+  --st-radius-sm: 10px;
+  --sidebar-width: 232px;
+}
+[data-theme="dark"] .app-shell--admin {
+  --bg-canvas: #141821;
+  --bg-surface: #1B212F;
+  --bg-sidebar: #11151E;
+  --bg-muted: #1A2030;
+  --text-primary: #F1F3F8;
+  --text-secondary: #99A0B4;
+  --border-subtle: #262D3F;
+  --border-strong: #343C52;
+
+  --color-primary: #6058F8;
+  --color-primary-hover: #7771FA;
+  --color-primary-rgb: 96, 88, 248;
+  --color-success: #20C060;  --color-success-rgb: 32, 192, 96;
+  --color-warning: #F0A93A;  --color-warning-rgb: 240, 169, 58;
+  --color-danger:  #FF6B7A;  --color-danger-rgb: 255, 107, 122;
+  --st-info: #8A84FA;
+}
+
+/* ---- Sidebar -------------------------------------------------------------- */
+.app-shell--admin .sidebar__brand { border-bottom: 1px solid var(--border-subtle); margin-bottom: 4px; padding-bottom: 14px; }
+.app-shell--admin .sidebar__logo--tile { width: 32px; height: 32px; border-radius: 10px; }
+.app-shell--admin .sidebar__brand-name { font-size: 14px; }
+.app-shell--admin .sidebar__section-title { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; }
+.app-shell--admin .sidebar__link { border-radius: 9px; }
+.app-shell--admin .sidebar__link.is-active { background: var(--color-primary); color: #fff; box-shadow: none; }
+.app-shell--admin .sidebar__link.is-active .sidebar__count { background: rgba(255,255,255,.22); color: #fff; }
+.app-shell--admin .sidebar__user--bottom { border-top: 1px solid var(--border-subtle); }
+
+/* ---- Topbar: breadcrumb, search, Ask AI, role ------------------------------ */
+[data-theme="dark"] .app-shell--admin .topbar { background: var(--bg-sidebar); }
+.app-shell--admin .topbar__crumbs { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); min-width: 0; }
+.app-shell--admin .topbar__crumbs strong { color: var(--text-primary); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-shell--admin .topbar__search { width: min(280px, 28vw); }
+.app-shell--admin .topbar__search:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .16); }
+.app-shell--admin .topbar__user-text { display: flex; flex-direction: column; line-height: 1.15; }
+.app-shell--admin .topbar__user-text span { font-size: 11px; color: var(--text-secondary); }
+.topbar__ask-ai {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 0; border-radius: 8px;
+  background: var(--color-primary); color: #fff; font-size: 12.5px; font-weight: 600; cursor: var(--cur-pointer, pointer); white-space: nowrap;
+}
+.topbar__ask-ai:hover { background: var(--color-primary-hover); }
+@media (max-width: 760px) { .topbar__ask-ai span { display: none; } .app-shell--admin .topbar__crumbs span, .app-shell--admin .topbar__crumbs svg { display: none; } }
+.app-shell--admin .app-shell__main { max-width: 1360px; }
+
+/* ---- Page header: title lives in the page again (design shows a big h1) ---- */
+.app-shell--admin .page-header { display: flex !important; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 18px; }
+.app-shell--admin .page-header__title { display: block !important; }
+.app-shell--admin .page-header__title h1 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+.app-shell--admin .page-header__title p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+.app-shell--admin .page-header:not(:has(.page-header__title > *)):not(:has(.page-header__actions > *)) { display: none !important; }
+
+/* ---- Surfaces, KPI cards, tables, badges ----------------------------------- */
+.app-shell--admin .card, .app-shell--admin .glass-panel { border-radius: var(--st-radius); border: 1px solid var(--border-subtle); background: var(--bg-surface); box-shadow: none; }
+.app-shell--admin .stat-card, .app-shell--admin .kpi-card { border-radius: var(--st-radius); }
+.app-shell--admin table th { font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; }
+[data-theme="dark"] .app-shell--admin table th { background: var(--bg-muted); }
+.app-shell--admin table tbody tr:hover { background: rgba(var(--color-primary-rgb), .04); }
+.app-shell--admin .btn-primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.app-shell--admin .btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+.app-shell--admin .modal, .app-shell--admin .modal__content { border-radius: 14px; }
+.app-shell--admin :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* ==========================================================================
+   Batch 2 — shared Admin page pieces (Dashboard, Users & Roles, User Details)
+   ========================================================================== */
+
+/* Badges follow the Admin palette instead of the global teal/coral/gold tokens */
+.app-shell--admin .badge { border-radius: 999px; font-size: 11px; font-weight: 600; padding: 3px 10px; }
+.app-shell--admin .badge-success { background: rgba(var(--color-success-rgb), .14); color: var(--color-success); }
+.app-shell--admin .badge-danger  { background: rgba(var(--color-danger-rgb), .14);  color: var(--color-danger); }
+.app-shell--admin .badge-warning { background: rgba(var(--color-warning-rgb), .16); color: var(--color-warning); }
+.app-shell--admin .badge-primary,
+.app-shell--admin .badge-info    { background: rgba(var(--color-primary-rgb), .12);  color: var(--color-primary); }
+.app-shell--admin .badge-neutral { background: var(--bg-muted); color: var(--text-secondary); border: 0; }
+
+.adm-link-back { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--color-primary); margin-bottom: 10px; text-decoration: none; }
+.adm-link-back:hover { text-decoration: underline; }
+
+/* KPI cards */
+.adm-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.adm-kpi { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: inherit; }
+a.adm-kpi:hover { border-color: var(--color-primary); }
+.adm-kpi__top { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--text-secondary); }
+.adm-kpi__top svg { color: var(--color-primary); }
+.adm-kpi__value { font-size: 26px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; color: var(--text-primary); }
+.adm-kpi__note { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.adm-kpi__note--warn { color: var(--color-warning); }
+.adm-kpi__note--bad { color: var(--color-danger); }
+.adm-kpi__note--good { color: var(--color-success); }
+
+/* Panels */
+.adm-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); padding: 18px 20px; min-width: 0; }
+.adm-panel__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+.adm-panel__head h2, .adm-panel__head h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-primary); }
+.adm-panel__head p { font-size: 12.5px; color: var(--text-secondary); margin: 2px 0 0; }
+.adm-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 16px; margin-bottom: 16px; align-items: start; }
+@media (max-width: 1080px) { .adm-grid { grid-template-columns: 1fr; } }
+
+/* Users by role bars */
+.adm-bars { display: flex; flex-direction: column; gap: 11px; }
+.adm-bar { display: grid; grid-template-columns: 110px 1fr 56px; gap: 12px; align-items: center; font-size: 13px; }
+.adm-bar__track { height: 8px; border-radius: 99px; background: var(--bg-muted); overflow: hidden; }
+.adm-bar__fill { display: block; height: 100%; border-radius: 99px; background: var(--color-primary); }
+.adm-bar__num { text-align: end; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Attention + activity lists */
+.adm-list { list-style: none; margin: 0; padding: 0; }
+.adm-list__item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13.5px; color: var(--text-primary); text-decoration: none; }
+.adm-list__item:last-child { border-bottom: 0; }
+a.adm-list__item:hover { color: var(--color-primary); }
+.adm-list__item svg { color: var(--text-secondary); flex-shrink: 0; }
+.adm-dot-item { display: flex; align-items: center; gap: 12px; padding: 9px 0; font-size: 13.5px; }
+.adm-dot-item::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--color-primary); flex-shrink: 0; }
+.adm-dot-item span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.adm-muted { color: var(--text-secondary); font-size: 12.5px; flex-shrink: 0; }
+.adm-empty { color: var(--text-secondary); font-size: 13px; padding: 10px 0; }
+
+/* Tables */
+.adm-table-wrap { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); overflow-x: auto; }
+.adm-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.adm-table th { text-align: start; padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); white-space: nowrap; }
+.adm-table td { padding: 13px 16px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
+.adm-table tr:last-child td { border-bottom: 0; }
+.adm-table td.adm-actions { white-space: nowrap; text-align: end; }
+.adm-person { display: flex; align-items: center; gap: 12px; min-width: 0; text-decoration: none; color: inherit; }
+.adm-person strong { display: block; font-size: 13.5px; color: var(--text-primary); }
+.adm-person small { display: block; font-size: 12px; color: var(--text-secondary); }
+a.adm-person:hover strong { color: var(--color-primary); }
+
+.adm-avatar { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(var(--color-primary-rgb), .14); color: var(--color-primary); font-size: 12px; font-weight: 700; }
+.adm-avatar--lg { width: 56px; height: 56px; font-size: 18px; }
+
+/* Filter bar */
+.adm-filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); padding: 12px; margin-bottom: 14px; }
+.adm-filters .form-input { height: 38px; }
+.adm-filters__search { position: relative; flex: 1 1 260px; max-width: 360px; }
+.adm-filters__search svg { position: absolute; inset-inline-start: 11px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; }
+.adm-filters__search input,
+.app-shell .adm-filters__search .form-input { width: 100%; padding-inline-start: 38px; }
+.adm-filters__search svg { z-index: 1; }
+
+/* Pagination */
+.adm-pager { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 4px; font-size: 13px; color: var(--text-secondary); }
+.adm-pager div { display: flex; gap: 8px; align-items: center; }
+
+/* Profile header + tabs (User Details) */
+.adm-profile { display: flex; align-items: center; gap: 16px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); padding: 20px 22px; margin-bottom: 16px; }
+.adm-profile h2 { margin: 0 0 2px; font-size: 18px; font-weight: 700; }
+.adm-profile p { margin: 0 0 8px; font-size: 13px; color: var(--text-secondary); }
+.adm-profile__badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.adm-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 16px; overflow-x: auto; overflow-y: hidden; }
+.adm-tab { background: none; border: 0; border-bottom: 2px solid transparent; padding: 11px 14px; margin-bottom: -1px; font-size: 13.5px; font-weight: 600; color: var(--text-secondary); cursor: var(--cur-pointer, pointer); white-space: nowrap; }
+.adm-tab:hover { color: var(--text-primary); }
+.adm-tab.is-active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+.adm-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.adm-fact { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius-sm); padding: 14px 16px; }
+.adm-fact small { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.adm-fact strong { font-size: 14px; font-weight: 600; word-break: break-word; }
+
+/* Permission matrix */
+.adm-matrix { width: 100%; border-collapse: collapse; font-size: 13px; }
+.adm-matrix th, .adm-matrix td { padding: 12px 8px; text-align: center; border-top: 1px solid var(--border-subtle); }
+.adm-matrix thead th { border-top: 0; font-size: 11.5px; text-transform: capitalize; letter-spacing: 0; font-weight: 600; color: var(--text-secondary); }
+.adm-matrix th:first-child, .adm-matrix td:first-child { text-align: start; font-weight: 700; text-transform: capitalize; color: var(--text-primary); padding-inline-start: 0; }
+.adm-check { width: 17px; height: 17px; border-radius: 5px; border: 1.5px solid var(--border-strong); display: inline-flex; align-items: center; justify-content: center; color: #fff; }
+.adm-check.is-on { background: var(--color-primary); border-color: var(--color-primary); }
+.adm-matrix__none { color: var(--border-strong); }
+
+/* Danger zone */
+.adm-danger { border-color: rgba(var(--color-danger-rgb), .35); }
+.adm-btn-danger { color: var(--color-danger) !important; border-color: rgba(var(--color-danger-rgb), .45) !important; }
+.adm-modal-text { font-size: 13.5px; color: var(--text-secondary); margin: 0 0 16px; }
+
+/* ==========================================================================
+   Batch 4 — charts, moderation, system activity
+   ========================================================================== */
+.adm-chart { width: 100%; height: 220px; display: block; }
+.adm-chart__grid { stroke: var(--border-subtle); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.adm-chart__label { fill: var(--text-secondary); font-size: 11px; }
+.adm-seg { display: inline-flex; background: var(--bg-muted); border-radius: 9px; padding: 3px; gap: 2px; }
+.adm-seg button { border: 0; background: none; padding: 6px 12px; border-radius: 7px; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); cursor: var(--cur-pointer, pointer); }
+.adm-seg button.is-active { background: var(--bg-surface); color: var(--text-primary); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.adm-choice { display: grid; gap: 8px; margin-bottom: 14px; }
+.adm-choice label { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--border-subtle); border-radius: 10px; cursor: var(--cur-pointer, pointer); font-size: 13.5px; }
+.adm-choice label.is-on { border-color: var(--color-primary); background: rgba(var(--color-primary-rgb), .06); }
+.adm-choice small { display: block; color: var(--text-secondary); font-size: 12px; }
+.adm-rank { display: grid; grid-template-columns: 1fr 44px; gap: 6px 12px; align-items: center; font-size: 13px; margin-bottom: 12px; }
+.adm-rank .adm-bar__track { grid-column: 1 / -1; }
+.adm-trend { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13.5px; }
+.adm-trend:last-child { border-bottom: 0; }
+.adm-trend small { display: block; color: var(--text-secondary); font-size: 12px; }
+
+/* ==========================================================================
+   Batch 5 — Reports
+   ========================================================================== */
+.adm-report-types { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.adm-report-type { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: start; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); padding: 16px 18px; cursor: var(--cur-pointer, pointer); color: var(--text-primary); transition: border-color .15s, box-shadow .15s; }
+.adm-report-type:hover { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .1); }
+.adm-report-type__icon { width: 36px; height: 36px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); margin-bottom: 4px; }
+.adm-report-type strong { font-size: 14px; }
+.adm-report-type small { font-size: 12px; color: var(--text-secondary); }
+
+/* ==========================================================================
+   Batch 5 — Settings (tabs on top), Notifications, Messages
+   CSS-only on purpose: SettingsShell / Notifications / Messages are shared
+   with other portals, so the Admin look is scoped to .app-shell--admin.
+   ========================================================================== */
+
+/* Settings: section nav becomes the design's horizontal underline tabs */
+.app-shell--admin .settings-layout { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.app-shell--admin .settings-nav { flex-direction: row; gap: 4px; position: static; overflow-x: auto; overflow-y: hidden; border-bottom: 1px solid var(--border-subtle); }
+.app-shell--admin .settings-nav button { border-radius: 0; background: none; padding: 11px 14px; margin-bottom: -1px; font-size: 13.5px; border-bottom: 2px solid transparent; white-space: nowrap; gap: 8px; }
+.app-shell--admin .settings-nav button:hover { background: none; color: var(--text-primary); }
+.app-shell--admin .settings-nav button.is-active { background: none; color: var(--color-primary); border-bottom-color: var(--color-primary); }
+.app-shell--admin .settings-layout > div { max-width: 860px; }
+
+/* Notifications: panel + readable hover/tab states in the light theme
+   (the shared rules hover with a white tint, which is invisible on light) */
+.app-shell--admin .notif-center { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); padding: 18px 20px; }
+.app-shell--admin .notif-tab { border-radius: 8px; font-weight: 600; }
+.app-shell--admin .notif-tab:hover { background: var(--bg-muted); color: var(--text-primary); }
+.app-shell--admin .notif-tab.is-active { background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.app-shell--admin .notif-tab.is-active .notif-tab__count { background: rgba(var(--color-primary-rgb), .2); color: var(--color-primary); }
+.app-shell--admin .notif-row:hover { background: var(--bg-muted); }
+.app-shell--admin .notif-row.is-unread { background: rgba(var(--color-primary-rgb), .06); }
+
+/* Messages: bordered panel like the other Admin pages */
+.app-shell--admin .msg-app, .app-shell--admin .msg-shell { border-radius: var(--st-radius); overflow: hidden; border: 1px solid var(--border-subtle); box-shadow: none; }
+
+/* ==========================================================================
+   Batch 7 — Roles & Permissions cards
+   ========================================================================== */
+.adm-role-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.adm-role { display: flex; flex-direction: column; gap: 12px; }
+.adm-role__head { display: flex; align-items: center; gap: 12px; }
+.adm-role__head h3 { margin: 0; font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.adm-role__head small { display: block; font-size: 12px; color: var(--text-secondary); }
+.adm-role__desc { margin: 0; min-height: 40px; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+.adm-role__foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border-subtle); }
+img.adm-avatar { display: inline-block; }
+
+/* ==========================================================================
+   Batch 9 — AI Code Review / AI Assistant Settings
+   ========================================================================== */
+.adm-filter-form { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.adm-filter-form .form-group { margin: 0; min-width: 0; }
+.adm-export-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle); }
+.adm-actions-stack { display: flex; flex-direction: column; gap: 14px; min-height: 150px; max-height: 50vh; overflow-y: auto; padding-bottom: 4px; }
+.adm-actions-stack > .btn { align-self: flex-start; }
+
+
+/* ==========================================================================
+   Batch 11 — Settings cards (Admin's own cards use .adm-panel; the shared
+   cards from pages/settings/shared.jsx are restyled here, scoped to Admin)
+   ========================================================================== */
+.app-shell--admin .settings-layout > div { display: flex; flex-direction: column; gap: 16px; }
+.app-shell--admin .settings-layout .card.glass-panel,
+.app-shell--admin .settings-layout .adm-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius); box-shadow: none; backdrop-filter: none; padding: 20px; }
+.app-shell--admin .settings-layout .adm-panel .form-group:last-child { margin-bottom: 0; }
+.adm-set-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border-subtle); }
+.adm-set-row:last-child { border-bottom: 0; }
+.app-shell--admin .pref-item { padding: 14px 0; border-bottom: 1px solid var(--border-subtle); }
+.app-shell--admin .pref-item:last-child { border-bottom: 0; }
+.app-shell--admin .theme-option { border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-surface); }
+.app-shell--admin .theme-option:hover { background: var(--bg-muted); }
+.app-shell--admin .theme-option.is-selected { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .15); }
+.app-shell--admin .settings-layout .badge-danger { white-space: nowrap; }
+
+
+/* ==========================================================================
+   Batch 13 — Role permissions dialog (grouped switches, search, bulk actions)
+   ========================================================================== */
+.adm-perm { width: min(760px, calc(100vw - 32px)); max-height: min(88vh, 860px); display: flex; flex-direction: column; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 14px; box-shadow: 0 24px 60px rgba(14, 18, 36, .28); overflow: hidden; }
+.adm-perm__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px 24px 14px; }
+.adm-perm__head h2 { margin: 0; }
+.adm-perm__head p { margin: 4px 0 0; font-size: 13px; }
+.adm-perm__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 0 24px 14px; border-bottom: 1px solid var(--border-subtle); }
+.adm-perm__toolbar .adm-filters__search { flex: 1 1 220px; max-width: none; }
+.adm-perm__toolbar .form-input { height: 38px; }
+.adm-perm__bulk { display: flex; gap: 2px; margin-inline-start: auto; }
+.adm-perm__body { flex: 1; overflow-y: auto; padding: 16px 24px; display: flex; flex-direction: column; gap: 14px; background: var(--bg-muted); }
+.adm-perm-group { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; }
+.adm-perm-group__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-subtle); }
+.adm-perm-group__head h3 { margin: 0; font-size: 14.5px; font-weight: 700; color: var(--text-primary); }
+.adm-perm-group__count { display: inline-block; margin-top: 3px; padding: 1px 8px; border-radius: 99px; font-size: 11.5px; font-weight: 600; background: var(--bg-muted); color: var(--text-secondary); }
+.adm-perm-group__count.is-some { background: rgba(245, 158, 11, .14); color: #b45309; }
+.adm-perm-group__count.is-all { background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.adm-perm-group__list { list-style: none; margin: 0; padding: 0; }
+.adm-perm-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 11px 16px; border-bottom: 1px solid var(--border-subtle); }
+.adm-perm-row:last-child { border-bottom: 0; }
+.adm-perm-row:hover { background: var(--bg-muted); }
+.adm-perm-row__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.adm-perm-row__text strong { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+.adm-perm-row__text code { font-size: 11.5px; color: var(--text-secondary); word-break: break-all; background: none; padding: 0; }
+.adm-perm-row__text .adm-muted { font-size: 12px; }
+.adm-perm__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 24px; border-top: 1px solid var(--border-subtle); background: var(--bg-surface); font-size: 13px; }
+.adm-perm__foot > div { display: flex; gap: 8px; }
+@media (max-width: 560px) { .adm-perm__head, .adm-perm__toolbar, .adm-perm__body, .adm-perm__foot { padding-inline: 14px; } .adm-perm__bulk { margin-inline-start: 0; } }
+
+/* Batch 13 fix — permission cards were being squeezed by the flex column */
+.adm-perm__body { min-height: 0; }
+.adm-perm-group { flex: 0 0 auto; }
+.adm-perm__head, .adm-perm__toolbar, .adm-perm__foot { flex: 0 0 auto; }
+.adm-perm__toolbar .adm-filters__search { position: relative; }
+.app-shell .adm-perm__toolbar .adm-filters__search .form-input { width: 100%; padding-inline-start: 38px; }
+.adm-perm__toolbar .adm-filters__search svg { top: 50%; transform: translateY(-50%); }
+
+/* ==========================================================================
+   Batch 12 — Pages that were still on the old look:
+   Security Policies (shared with the Security portal, so every rule is scoped
+   to .app-shell--admin), Notification Settings, Messaging Analytics.
+   ========================================================================== */
+
+/* -- Security Policies inside the Admin shell ------------------------------ */
+.app-shell--admin .sec-page { gap: 16px; }
+.app-shell--admin .sec-head__eyebrow { display: none; }
+.app-shell--admin .sec-head h1 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; }
+.app-shell--admin .sec-head p { font-size: 13px; margin: 2px 0 0; }
+.app-shell--admin .sec-card { border-radius: var(--st-radius); box-shadow: none; }
+.app-shell--admin .sec-card__head { padding: 18px 20px 0; }
+.app-shell--admin .sec-card__head h2 { font-size: 15px; font-weight: 700; }
+.app-shell--admin .sec-card__head h2 > svg { color: var(--color-primary); }
+.app-shell--admin .sec-card__head p { font-size: 12.5px; line-height: 1.55; }
+.app-shell--admin .sec-card__body { padding: 16px 20px 20px; }
+.app-shell--admin .sec-savebar { padding: 12px 20px; background: var(--bg-muted); border-radius: 0 0 var(--st-radius) var(--st-radius); }
+.app-shell--admin .sec-savebar .btn { height: 36px; }
+.app-shell--admin .sec-split { grid-template-columns: 220px minmax(0, 1fr); gap: 16px; }
+.app-shell--admin .sec-subnav { padding: 8px; top: 88px; gap: 2px; }
+.app-shell--admin .sec-subnav button { padding: 9px 12px; border-radius: 9px; font-size: 13.5px; }
+.app-shell--admin .sec-subnav button.is-active { background: rgba(var(--color-primary-rgb), .12); }
+.app-shell--admin .sec-field { margin-bottom: 12px; }
+.app-shell--admin .sec-field > label, .app-shell--admin .sec-label { font-size: 12.5px; font-weight: 600; color: var(--text-secondary); }
+.app-shell--admin .sec-input { min-height: 38px; padding: 8px 12px; border-radius: 10px; font-size: 13.5px; }
+.app-shell--admin textarea.sec-input { min-height: 78px; line-height: 1.5; }
+.app-shell--admin .sec-grid-2 { gap: 0 16px; align-items: start; }
+.app-shell--admin .sec-switch-row { border-radius: 10px; padding: 10px 14px; background: var(--bg-canvas); margin-bottom: 12px; }
+.app-shell--admin .sec-switch-row label { font-size: 13px; }
+.app-shell--admin .sec-check { padding: 8px 12px; border: 1px solid var(--border-subtle); border-radius: 10px; margin-bottom: 6px; background: var(--bg-canvas); }
+.app-shell--admin .sec-check label { flex: 1; cursor: var(--cur-pointer, pointer); }
+.app-shell--admin .sec-setting { padding: 12px 0; }
+.app-shell--admin .sec-setting strong { font-size: 13.5px; }
+.app-shell--admin .sec-setting .mono { font-size: 11.5px; }
+.app-shell--admin .sec-toast { border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .14); }
+.app-shell--admin .sec-modal { border-radius: 14px; }
+.app-shell--admin .pill { font-size: 11px; font-weight: 600; padding: 3px 10px; }
+
+/* -- Platform Policy -------------------------------------------------------- */
+.pp-add { display: grid; gap: 8px; margin-bottom: 16px; }
+.pp-textarea { min-height: 84px; resize: vertical; line-height: 1.6; font-family: var(--font-mono, ui-monospace, monospace); font-size: 13px; }
+.pp-add__foot { display: flex; align-items: center; gap: 12px; }
+.pp-add__foot .grow { margin-inline-end: auto; min-width: 0; }
+.pp-search { margin-bottom: 10px; }
+.pp-rules { list-style: none; margin: 0; padding: 0; max-height: 360px; overflow-y: auto; border: 1px solid var(--border-subtle); border-radius: var(--st-radius-sm, 10px); }
+.pp-rule { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); min-width: 0; }
+.pp-rule:last-child { border-bottom: 0; }
+.pp-rule__main { min-width: 0; flex: 1; }
+.pp-rule__value { display: block; overflow-wrap: anywhere; font-size: 13px; text-align: start; }
+.pp-rule__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; font-size: 12px; color: var(--text-secondary); }
+.pp-rule__note { overflow-wrap: anywhere; }
+.pp-rules .pp-empty { padding: 12px; }
+.pp-add, .adm-panel > .pp-add { min-width: 0; }
+.pp-empty { padding: 8px 0; color: var(--text-secondary); }
+.pp-test { display: flex; gap: 10px; }
+.ppol-code { display: flex; gap: 8px; align-items: center; }
+.ppol-code .form-input { flex: 1; min-width: 0; }
+.pp-test .form-input { flex: 1; min-width: 0; }
+.pp-verdict { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; padding: 12px 14px; border-radius: var(--st-radius-sm, 10px); font-size: 13.5px; }
+.pp-verdict--ok { background: rgba(var(--color-success-rgb), .12); color: var(--color-success); }
+.pp-verdict--no { background: rgba(var(--color-danger-rgb), .12); color: var(--color-danger); }
+.pp-verdict strong { display: block; }
+.pp-verdict .adm-field__hint { color: inherit; opacity: .85; }
+
+/* -- Notification Settings -------------------------------------------------- */
+.adm-field { display: flex; flex-direction: column; gap: 6px; }
+.adm-field__label { font-size: 12.5px; font-weight: 600; color: var(--text-secondary); }
+.adm-field__hint { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.adm-unit { position: relative; display: flex; align-items: center; }
+.adm-unit .form-input { height: 40px; padding-inline-end: 56px; font-variant-numeric: tabular-nums; }
+.adm-unit > span { position: absolute; inset-inline-end: 14px; font-size: 12.5px; color: var(--text-secondary); pointer-events: none; }
+.adm-policy { display: grid; gap: 10px; padding: 16px 0; border-bottom: 1px solid var(--border-subtle); }
+.adm-policy:first-of-type { padding-top: 0; }
+.adm-policy:last-of-type { border-bottom: 0; }
+.adm-policy__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.adm-policy__title { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.adm-policy__icon { width: 32px; height: 32px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); flex-shrink: 0; }
+.adm-form-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border-subtle); }
+.adm-form-foot .grow { margin-inline-end: auto; font-size: 13px; }
+.adm-note { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+.adm-note--ok { color: var(--color-success); }
+.adm-note--err { color: var(--color-danger); }
+
+.adm-flow { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.adm-flow li { position: relative; display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding-bottom: 18px; }
+.adm-flow li:last-child { padding-bottom: 0; }
+.adm-flow li::before { content: ""; position: absolute; inset-inline-start: 13px; top: 28px; bottom: 0; width: 2px; background: var(--border-subtle); }
+.adm-flow li:last-child::before { display: none; }
+.adm-flow__dot { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); position: relative; z-index: 1; }
+.adm-flow__dot--off { background: var(--bg-muted); color: var(--text-secondary); }
+.adm-flow strong { display: block; font-size: 13.5px; color: var(--text-primary); }
+.adm-flow div > span { display: block; font-size: 12.5px; color: var(--text-secondary); margin-top: 2px; line-height: 1.5; }
+
+/* -- Messaging Analytics ---------------------------------------------------- */
+.adm-table th.is-num { text-align: end; }
+.adm-table td.is-num { text-align: end; width: 1%; white-space: nowrap; }
+.adm-table td.is-rank { width: 44px; color: var(--text-secondary); font-weight: 700; font-variant-numeric: tabular-nums; }
+.adm-share { display: flex; align-items: center; gap: 12px; justify-content: flex-end; min-width: 150px; }
+.adm-share .adm-bar__track { flex: 1; max-width: 120px; }
+.adm-share b { font-variant-numeric: tabular-nums; min-width: 36px; text-align: end; }
+@media (max-width: 760px) { .app-shell--admin .sec-split { grid-template-columns: 1fr; } }
+
+/* Profile photo inside the admin avatar circle */
+.adm-avatar { overflow: hidden; }
+.adm-avatar > img { width: 100%; height: 100%; object-fit: cover; display: block; }

@@ -1,0 +1,69 @@
+/* components/empty-state.css
+   Item 19 — the single "nothing here yet" block (app/Views/components/empty-state.php).
+   Three sizes: sm (inline / table cell), md (default, section), lg (whole page). */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-4);
+  color: var(--text-secondary);
+}
+
+.empty-state__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.empty-state__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-h3);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.empty-state__desc {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  max-width: 38ch;
+  margin: 0;
+}
+
+.empty-state__cta { margin-top: var(--space-3); }
+
+/* sm — inline use, e.g. inside a <td colspan> in data-table.php.
+   Tighter padding, smaller icon badge, no wasted vertical rhythm. */
+.empty-state--sm {
+  padding: var(--space-4) var(--space-3);
+  gap: var(--space-1);
+}
+.empty-state--sm .empty-state__icon { width: 36px; height: 36px; margin-bottom: var(--space-1); }
+.empty-state--sm .empty-state__title { font-size: var(--text-small); font-weight: 600; }
+.empty-state--sm .empty-state__desc { font-size: var(--text-caption); }
+
+/* md — default, a dashboard/section card slot */
+.empty-state--md { padding: var(--space-7) var(--space-4); }
+
+/* lg — whole-page state (e.g. a portal with zero records anywhere) */
+.empty-state--lg {
+  padding: var(--space-8) var(--space-4);
+  gap: var(--space-3);
+}
+.empty-state--lg .empty-state__icon { width: 76px; height: 76px; margin-bottom: var(--space-3); }
+.empty-state--lg .empty-state__title { font-size: var(--text-h2); }
+.empty-state--lg .empty-state__desc { max-width: 44ch; font-size: var(--text-body); }
+
+[dir="rtl"] .empty-state__title,
+[dir="rtl"] .empty-state__desc { text-align: center; }

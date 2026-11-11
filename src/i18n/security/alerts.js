@@ -1,0 +1,25 @@
+// Auto-extracted from api/app/Views/security/alerts.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Account': 'الحساب',
+  'Acknowledge': 'إقرار',
+  'Alert Management': 'إدارة التنبيهات',
+  'All': 'الكل',
+  'Apply': 'تطبيق',
+  'Assigned to': 'مُسند إلى',
+  'Clear': 'مسح',
+  'Escalate': 'تصعيد',
+  'Escalation reason (optional)': 'سبب التصعيد (اختياري)',
+  'Export': 'تصدير',
+  'No matching alerts.': 'لا توجد تنبيهات مطابقة.',
+  'No open alerts right now.': 'لا توجد تنبيهات مفتوحة حاليًا.',
+  'Resolution note (optional)': 'ملاحظة الحل (اختياري)',
+  'Resolve': 'حل',
+  'Search': 'بحث',
+  'Severity': 'الخطورة',
+  'Status': 'الحالة',
+  'Title, message, or IP': 'العنوان، الرسالة، أو IP',
+  'Type': 'النوع',
+  'Unassigned': 'غير مُسند',
+  'Security Alerts': 'تنبيهات الأمان',
+};

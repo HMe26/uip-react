@@ -1,0 +1,31 @@
+// Auto-extracted from api/app/Views/admin/messaging-analytics.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Direct': 'مباشرة',
+  'Group': 'مجموعة',
+  'Messaging Analytics': 'تحليلات الرسائل',
+  'No data yet.': 'لا توجد بيانات بعد.',
+  'Platform-wide messaging usage, across every portal.': 'نظرة عامة على استخدام نظام الرسائل عبر كل بوابات المنصة.',
+  'Top 5 Most Active Conversations': 'أكثر 5 محادثات نشاطًا',
+  // Previously untranslated admin strings (now wrapped in t() in the page)
+  'Active Users (7 days)': 'المستخدمون النشطون (7 أيام)',
+  'Attachment Storage': 'تخزين المرفقات',
+  'Conversation': 'المحادثة',
+  'Group / Direct': 'مجموعة / مباشر',
+  'Messages': 'الرسائل',
+  'Messages (7 days)': 'الرسائل (7 أيام)',
+  'Messages Today': 'الرسائل اليوم',
+  'Messaging Oversight': 'الإشراف على المراسلة',
+  'Total Attachments': 'إجمالي المرفقات',
+  'Total Conversations': 'إجمالي المحادثات',
+  'Total Messages': 'إجمالي الرسائل',
+  'Type': 'النوع',
+  'all portals': 'جميع البوابات',
+  'disk space used': 'المساحة المستخدمة',
+  'files shared in chats': 'الملفات المشتركة في المحادثات',
+  'groups and direct chats': 'المجموعات والمحادثات المباشرة',
+  'last 7 days': 'آخر 7 أيام',
+  'sent at least one message': 'أرسلوا رسالة واحدة على الأقل',
+  'sent since midnight': 'أرسلوا منذ منتصف الليل',
+  'since the platform started': 'منذ بدء المنصة',
+};

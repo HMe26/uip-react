@@ -1,0 +1,1 @@
+import{s as e}from"./client-DIKyLPas.js";import{t}from"./AcademicStaffExamPicker-Jkea6lZ0.js";var n=e();function r(){return(0,n.jsx)(t,{suffix:`analytics`,icon:`bar-chart`,titleKey:`Analytics`,descriptionKey:`Pick an exam to view its results and analytics.`})}export{r as default};

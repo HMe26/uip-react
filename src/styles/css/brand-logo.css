@@ -1,0 +1,34 @@
+/* UIPE wordmark (components/BrandWordmark.jsx): colour logo on light surfaces, silver/gold variant on dark ones. */
+.bw { display: inline-block; position: relative; flex: none; line-height: 0; max-width: 100%; }
+.bw img { display: block; width: 100%; height: auto; object-fit: contain; }
+.bw__on-dark { display: none !important; }
+html[data-theme="dark"] .bw:not(.bw--dark) .bw__on-light { display: none; }
+html[data-theme="dark"] .bw:not(.bw--dark) .bw__on-dark { display: block !important; }
+.bw--dark .bw__on-dark { display: block !important; }
+.bw img { filter: drop-shadow(0 2px 6px rgba(20, 40, 110, .12)); }
+.bw--dark img, html[data-theme="dark"] .bw img { filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .35)); }
+
+.unav__brand .bw { width: auto; height: 38px; aspect-ratio: auto; }
+.unav__brand .bw img { width: auto; height: 100%; }
+@media (max-width: 380px) { .unav__brand .bw { height: 32px; } }
+
+.uip-footer__logo { display: inline-flex; align-items: center; }
+.public-brand .bw { height: auto; }
+
+/* Sidebar: wordmark on top, portal name underneath - no sticker chip */
+.sidebar__brand-id { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; flex: 1; }
+.sidebar__brand-id .bw { width: 116px !important; }
+.sidebar .sidebar__logo--mark { display: none; }
+.sidebar.is-collapsed .sidebar__brand-id .bw { display: none; }
+.sidebar.is-collapsed .sidebar__logo--mark { display: block; }
+.sidebar__brand-id .sidebar__brand-text { padding-inline-start: 2px; }
+
+.lk-brand .bw, .sl-side__top .bw { width: 112px !important; height: auto !important; border-radius: 0; background: none; padding: 0; box-shadow: none; }
+
+/* "Get the app" buttons + app card: full wordmark instead of the cropped square mark */
+.app-dl__logo { padding: 3px 8px !important; border-radius: 10px !important; }
+.app-dl__logo .bw { width: auto !important; height: calc(1em + 12px); aspect-ratio: auto; }
+.app-dl__logo .bw img { width: auto; height: 100%; filter: none; }
+.lp4-app__logo { width: auto !important; height: 56px !important; padding: 0 16px; background: #fff !important; border: 1px solid var(--border-subtle); box-shadow: 0 10px 24px -16px rgba(20, 40, 110, .4); }
+.lp4-app__logo .bw { width: 104px !important; height: auto; }
+.lp4-app__logo img { width: 100% !important; height: auto !important; filter: none; }

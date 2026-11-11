@@ -1,0 +1,35 @@
+/* components/forms.css */
+.form-group { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-4); }
+.form-label { font-size: var(--text-small); font-weight: 600; color: var(--text-primary); }
+.form-label.is-required::after {
+  content: " *";
+  color: var(--color-danger);
+}
+.form-input, .form-select, .form-textarea {
+  padding: 0.75em 1em; border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-primary);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--color-primary); outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb),0.15);
+}
+.form-hint { font-size: var(--text-caption); color: var(--text-secondary); }
+.form-error { font-size: var(--text-caption); color: var(--color-danger); }
+.form-checkbox, .form-radio { accent-color: var(--color-primary); width: 18px; height: 18px; }
+
+.tag-input {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2);
+  padding: 0.5em 0.75em; border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle); background: var(--bg-surface);
+  transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+}
+.tag-input:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb),0.15);
+}
+.tag-input .badge { display: inline-flex; align-items: center; gap: 4px; }
+.tag-input input[data-tag-input-field] {
+  flex: 1; min-width: 160px; border: none; outline: none; background: transparent;
+  color: var(--text-primary); font: inherit; padding: 0.25em 0;
+}

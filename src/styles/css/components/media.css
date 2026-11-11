@@ -1,0 +1,103 @@
+/* ==========================================================================
+   media.css — Images / Video / Embedded Media (UI/UX audit item 16)
+
+   Global safety net so no image, video, or embedded frame can ever overflow
+   its container, distort, or shift layout while loading — plus the shared
+   pieces (feed media grid, avatar fallback, aspect-ratio helpers) used by
+   the Portfolio (item 17) and Posts/Feed (item 18) screens.
+   ========================================================================== */
+
+/* ---- Universal media safety net -----------------------------------------
+   reset.css already sets max-width:100% on img/picture/svg; this adds the
+   height:auto companion (so an explicit width= doesn't stretch/squash the
+   image) and extends the same guarantee to video/canvas/iframe embeds,
+   which previously had no global rule at all. */
+img, video, canvas {
+  height: auto;
+}
+video, iframe {
+  max-width: 100%;
+  border: 0;
+}
+
+/* Images/frames given an explicit box (avatars, logos, covers) should crop
+   rather than distort — object-fit is opt-in per element via inline sizing
+   across the app, but default to 'cover' so a stray element without one
+   still behaves. */
+img[width][height] {
+  object-fit: cover;
+}
+
+/* ---- Aspect-ratio utilities ----------------------------------------------
+   Consistent, reusable ratios for portfolio/project media and embeds, so
+   every cover image/preview in the app shares the same crop behaviour
+   instead of each screen hand-rolling its own fixed height. */
+.media-16x9 { aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius-md); background: var(--glass-bg); }
+.media-4x3  { aspect-ratio: 4 / 3;  overflow: hidden; border-radius: var(--radius-md); background: var(--glass-bg); }
+.media-1x1  { aspect-ratio: 1 / 1;  overflow: hidden; border-radius: var(--radius-md); background: var(--glass-bg); }
+.media-16x9 img, .media-4x3 img, .media-1x1 img,
+.media-16x9 video, .media-4x3 video, .media-1x1 video {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+/* ---- Feed / post media grid (item 18) ------------------------------------
+   Replaces ad-hoc fixed-px image sizing in feed posts. Auto-fits 1-4
+   attachments responsively so a single image still reads large, and a
+   multi-image post never overflows a narrow (360px) viewport. */
+.feed-media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.feed-media-grid a {
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.feed-media-grid img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform var(--duration-slow, .3s) var(--ease-standard, ease);
+}
+.feed-media-grid a:hover img { transform: scale(1.04); }
+
+/* Single-attachment posts get a taller, more presentational frame instead
+   of the multi-image grid sizing. */
+.feed-media-grid--single {
+  grid-template-columns: 1fr;
+}
+.feed-media-grid--single a { aspect-ratio: 16 / 9; max-width: 480px; }
+
+@media (max-width: 480px) {
+  .feed-media-grid { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+  .feed-media-grid--single a { max-width: 100%; }
+}
+
+/* ---- Embedded content wrapper (GitHub previews, prototype iframes) ------ */
+.media-embed {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--glass-bg);
+}
+.media-embed iframe, .media-embed video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+
+/* ---- Avatar fallback (item 18 — author identity) -------------------------
+   Pairs with the uip_avatar() component: an initials badge shown when no
+   photo is available, and swapped in automatically on a broken image URL. */
+.avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-family: var(--font-display, inherit);
+  color: var(--color-primary);
+  background: linear-gradient(135deg, var(--uip-indigo-100, #e6e9ff), var(--uip-cloud-100, #eef1f7));
+}

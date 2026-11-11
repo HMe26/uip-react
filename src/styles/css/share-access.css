@@ -1,0 +1,24 @@
+/* "Who can open it" (one person / one time) + the visitor-side notice. */
+.mp-access { display: flex; flex-direction: column; gap: 8px; }
+.mp-access__hint { color: var(--color-text-muted, #6b7280); font-size: 12.5px; line-height: 1.5; }
+.mp-access__hint.is-bad { color: #d93a3a; }
+.mp-access__when { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; }
+.mp-access__state { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 12.5px; padding: 8px 10px; border-radius: 10px; background: rgba(var(--color-primary-rgb, 81, 95, 255), .07); }
+.mp-access__state > span { display: inline-flex; align-items: center; gap: 6px; }
+.shp__claim { display: flex; gap: 10px; align-items: flex-start; text-align: start; padding: 12px 14px; margin: 4px 0 10px; border-radius: 12px; line-height: 1.55;
+  background: rgba(245, 158, 11, .12); border: 1px solid rgba(245, 158, 11, .35); }
+.shp__claim > svg { flex: 0 0 auto; margin-top: 2px; color: #d97706; }
+.shp__claim b { display: block; margin-bottom: 2px; }
+.shp__claim span { font-size: 13px; opacity: .9; }
+
+/* "Who can open it": 3 choices (and the 6 duration presets) must share the row evenly.
+   The generic dialog rule forced 5 columns on tablets/desktop, so three long labels were squeezed into 1/5 of the width and printed on top of each other. */
+.mp-access .mp-seg.mp-seg--wrap,
+.st-modal-overlay .st-modal .mp-access .mp-seg.mp-seg--wrap:not([role="tablist"]) {
+  display: grid; width: 100%; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 4px;
+}
+.mp-access .mp-seg.mp-seg--wrap button,
+.st-modal-overlay .st-modal .mp-access .mp-seg.mp-seg--wrap button {
+  width: auto; min-width: 0; height: auto; min-height: 40px; white-space: normal; text-align: center; line-height: 1.25; padding: 8px 10px; overflow-wrap: anywhere;
+}
+.mp-access .mp-seg.mp-seg--wrap button svg { flex: none; }

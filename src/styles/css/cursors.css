@@ -1,0 +1,29 @@
+/* ==========================================================================
+   cursors.css — themed mouse cursors (arrow / hand / I-beam), see utils/cursorTheme.js.
+   The three images live in --cur-default / --cur-pointer / --cur-text on <html>
+   (regenerated for Light, Classic and Dark, and for the active accent colour).
+   Until the script has run, every var() falls back to the native cursor.
+   Other cursors (resize, not-allowed, grab, wait, zoom…) stay native on purpose.
+   Loaded last.
+   ========================================================================== */
+
+html { cursor: var(--cur-default, auto); }
+
+/* clickable things that do not set a cursor of their own */
+a[href], button:not(:disabled), [role="button"]:not([aria-disabled="true"]), summary, select:not(:disabled),
+label[for], input:is([type="checkbox"], [type="radio"], [type="submit"], [type="button"], [type="reset"], [type="file"], [type="range"], [type="color"]):not(:disabled),
+[style*="cursor: pointer"], [style*="cursor:pointer"] {
+  cursor: var(--cur-pointer, pointer);
+}
+/* inline styles win over stylesheets, so these need !important */
+[style*="cursor: pointer"], [style*="cursor:pointer"] { cursor: var(--cur-pointer, pointer) !important; }
+
+/* text entry */
+input:not([type="checkbox"], [type="radio"], [type="submit"], [type="button"], [type="reset"], [type="file"], [type="range"], [type="color"], [type="image"]):not(:disabled),
+textarea:not(:disabled), [contenteditable=""], [contenteditable="true"] {
+  cursor: var(--cur-text, text);
+}
+
+/* inline styles written in JSX */
+[style*="cursor: default"] { cursor: var(--cur-default, default) !important; }
+[style*="cursor: text"] { cursor: var(--cur-text, text) !important; }

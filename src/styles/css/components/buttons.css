@@ -1,0 +1,73 @@
+/* components/buttons.css */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  padding: 0.65em 1.25em; font-size: var(--text-small); font-weight: 600;
+  border-radius: var(--radius-md); border: 1px solid transparent; cursor: var(--cur-pointer, pointer);
+  transition: transform var(--duration-fast) var(--ease-standard),
+              background var(--duration-fast) var(--ease-standard),
+              box-shadow var(--duration-fast) var(--ease-standard);
+}
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+/* Shared loading state — add .is-loading to any .btn to swap its content
+   for a centered spinner while keeping the button's own size/label for
+   width, and to block repeat clicks while a request is in flight. */
+.btn.is-loading {
+  color: transparent !important;
+  pointer-events: none;
+  position: relative;
+}
+.btn.is-loading::after {
+  content: "";
+  position: absolute; inset: 0; margin: auto;
+  width: 1em; height: 1em;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: uip-btn-spin 0.6s linear infinite;
+}
+.btn-outline.is-loading::after,
+.btn-ghost.is-loading::after {
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--color-primary);
+}
+@keyframes uip-btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover { background: var(--color-primary-hover); box-shadow: 0 6px 18px rgba(var(--color-primary-rgb),0.35); }
+
+.btn-accent { background: var(--color-accent); color: var(--uip-navy-950); }
+.btn-accent:hover { background: var(--uip-gold-600); }
+
+.btn-outline { background: transparent; border-color: var(--border-subtle); color: var(--text-primary); }
+.btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+.btn-ghost { background: transparent; color: var(--text-secondary); }
+.btn-ghost:hover { background: var(--glass-bg); color: var(--text-primary); }
+
+.btn-danger { background: var(--color-danger); color: #fff; }
+.btn-sm { padding: 0.45em 0.9em; font-size: var(--text-caption); }
+.btn-lg { padding: 0.85em 1.6em; font-size: var(--text-body); }
+
+/* Disabled state — covers real <button disabled> as well as <a>/<span>
+   styled as .btn that can't take the native disabled attribute (use
+   aria-disabled="true" on those so they stay focusable-but-inert and
+   screen readers announce the state). Neutralizes hover/active so a
+   button disabled mid-hover (e.g. after a click handler runs) doesn't
+   keep showing its interactive lift/shadow/color. */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5; cursor: not-allowed;
+  /* pointer-events: none also stops :hover/:active from ever matching,
+     so the hover/lift/shadow rules above can't leak through. */
+  pointer-events: none;
+  transform: none; box-shadow: none;
+}
+.btn:disabled.is-loading, .btn[aria-disabled="true"].is-loading { opacity: 1; }

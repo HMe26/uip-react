@@ -1,0 +1,181 @@
+/* =====================================================================
+   meeting-chat-pro.css — in-meeting Chat + Files panels, restyled to match the platform messaging look
+   (same bubble shape / tokens as .msg-bubble in messaging-app.css). Loaded after meeting-room.css + meetings-ui.css.
+   Fixes: native scrollbar arrows, sideways scrollbar, reaction bar stuck open after a click, cramped composer.
+   ===================================================================== */
+
+/* ---- panel shell ---- */
+.meeting-chat-panel, .meeting-files-panel {
+  min-width: 0; overflow-x: hidden;
+}
+.meeting-chat-panel__header {
+  padding: 12px 14px; gap: 10px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--mr-primary) 7%, var(--mr-surface)), var(--mr-surface));
+}
+.meeting-chat-panel__header-ico {
+  width: 30px; height: 30px; border-radius: 10px;
+  background: color-mix(in srgb, var(--mr-primary) 16%, transparent); color: var(--mr-accent-text, var(--mr-primary));
+}
+.meeting-chat-panel__header .badge { min-width: 20px; text-align: center; border-radius: 999px; }
+
+/* ---- message list: slim themed scrollbar (no arrow buttons), never scrolls sideways ---- */
+.meeting-chat-panel__list, .meeting-files-panel__list {
+  overflow-x: hidden !important; overflow-y: auto; overscroll-behavior: contain;
+  padding: 14px 12px 10px; gap: 10px; min-width: 0;
+  scrollbar-width: thin; scrollbar-color: var(--scroll-thumb, rgba(128,128,128,.35)) transparent;
+}
+.meeting-chat-panel__list::-webkit-scrollbar, .meeting-files-panel__list::-webkit-scrollbar { width: 6px; height: 0; }
+.meeting-chat-panel__list::-webkit-scrollbar-button, .meeting-files-panel__list::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.meeting-chat-panel__list::-webkit-scrollbar-track { background: transparent; }
+.meeting-chat-panel__list::-webkit-scrollbar-thumb { background: var(--scroll-thumb, rgba(128,128,128,.35)); border-radius: 999px; }
+.meeting-chat-panel__list::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover, rgba(128,128,128,.55)); }
+
+/* ---- day separator + system lines ---- */
+.meeting-chat-day { display: flex; justify-content: center; margin-block: 4px; }
+.meeting-chat-day span {
+  font-size: 11px; font-weight: 700; color: var(--mr-muted); padding: 3px 12px; border-radius: 999px;
+  background: var(--mr-fill-1); border: 1px solid var(--mr-line);
+}
+.meeting-chat-sys span { max-width: 92%; text-align: center; overflow-wrap: anywhere; }
+.meeting-chat-react-line span { max-width: 92%; overflow-wrap: anywhere; }
+
+/* ---- bubbles (same language as the platform chat) ---- */
+.meeting-chat-msg { gap: 8px; min-width: 0; }
+.meeting-chat-msg:not(.is-first) { margin-block-start: -7px; }
+.meeting-chat-msg__avatar { width: 30px; height: 30px; font-size: 12.5px; box-shadow: 0 2px 6px rgba(0,0,0,.18); }
+.meeting-chat-msg__col { max-width: calc(100% - 40px); }
+.meeting-chat-msg.is-mine .meeting-chat-msg__col { max-width: 86%; }
+.meeting-chat-msg__meta { font-size: 12px; }
+.meeting-chat-msg:not(.is-mine) .meeting-chat-msg__name { color: var(--mr-accent-text, var(--mr-primary)); }
+.meeting-chat-msg__body {
+  padding: 8px 13px; border-radius: 18px; overflow-wrap: anywhere;
+  border: 1px solid var(--mr-line); background: var(--mr-surface-3); box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+}
+.meeting-chat-msg.is-first:not(.is-mine) .meeting-chat-msg__body { border-start-start-radius: 5px; }
+.meeting-chat-msg.is-mine.is-first .meeting-chat-msg__body { border-start-end-radius: 5px; }
+.meeting-chat-msg.is-last:not(.is-mine) .meeting-chat-msg__body { border-end-start-radius: 18px; }
+.meeting-chat-msg.is-mine .meeting-chat-msg__body { border-color: transparent; box-shadow: 0 1px 3px rgba(0, 0, 0, .18); }
+.meeting-chat-msg.is-mine.is-last .meeting-chat-msg__body { border-end-start-radius: 18px; border-end-end-radius: 18px; }
+.meeting-chat-msg__time { padding-inline: 6px; opacity: .85; }
+
+/* ---- reaction bar: appears on hover only (a click used to leave it stuck open at the panel edge) ---- */
+.meeting-chat-msg__bubble-wrap:focus-within .meeting-chat-msg__quick-react { opacity: 0; pointer-events: none; transform: translateY(4px); }
+.meeting-chat-msg__bubble-wrap:hover .meeting-chat-msg__quick-react,
+.meeting-chat-msg__bubble-wrap:has(:focus-visible) .meeting-chat-msg__quick-react { opacity: 1; pointer-events: auto; transform: none; }
+.meeting-chat-msg__quick-react { bottom: calc(100% + 2px); max-width: 240px; flex-wrap: nowrap; }
+.meeting-chat-msg.is-mine .meeting-chat-msg__quick-react { inset-inline-start: auto; inset-inline-end: 0; }
+.meeting-chat-msg:not(.is-mine) .meeting-chat-msg__quick-react { inset-inline-end: auto; inset-inline-start: 0; }
+.meeting-chat-msg__bubble-wrap { max-width: 100%; }
+
+/* ---- attachments: inside the bubble column, never wider than it, no stray focus frame ---- */
+.meeting-chat-att { max-width: 100%; min-width: 0; }
+.meeting-chat-att.is-image { max-width: 100%; border: 1px solid var(--mr-line); }
+.meeting-chat-att.is-image img, .meeting-chat-att.is-image video { max-width: 100%; width: 100%; max-height: 240px; object-fit: cover; }
+.meeting-chat-att.is-image:focus { outline: none; }
+.meeting-chat-att.is-image:focus-visible { outline: 2px solid var(--mr-primary); outline-offset: 2px; }
+.meeting-chat-att__name { max-width: 100%; }
+
+/* ---- composer ---- */
+.meeting-chat-panel__compose { padding: 10px 12px 12px; gap: 8px !important; }
+.meeting-chat-panel__to {
+  display: flex; align-items: center; gap: 6px; align-self: flex-start; max-width: 100%; min-width: 0;
+  padding: 3px 10px; border-radius: 999px; font-size: 12px;
+}
+.meeting-chat-panel__to select { appearance: none; -webkit-appearance: none; background: transparent; border: 0; font-weight: 700; padding-inline: 2px; cursor: var(--cur-pointer, pointer); text-overflow: ellipsis; }
+.meeting-chat-panel__to em { display: none; }
+.meeting-chat-panel__to.is-private em { display: inline; }
+.meeting-chat-panel__field {
+  display: flex; align-items: flex-end; gap: 6px; padding: 5px 6px; border-radius: 22px !important;
+  border: 1px solid var(--mr-line-strong); min-width: 0;
+}
+.meeting-chat-panel__field textarea { flex: 1; min-width: 0; resize: none; border: 0; outline: 0; background: transparent; padding: 8px 4px; line-height: 1.45; max-height: 120px; overflow-y: auto; scrollbar-width: none; }
+.meeting-chat-panel__field textarea::-webkit-scrollbar { display: none; }
+.meeting-chat-panel__send {
+  width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; border: 0; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--mr-primary); color: #fff; box-shadow: 0 4px 12px color-mix(in srgb, var(--mr-primary) 40%, transparent);
+}
+
+/* ---- files panel rows ---- */
+.meeting-files-panel__row { padding: 10px 12px; border-radius: 14px; min-width: 0; }
+.meeting-files-panel__name { min-width: 0; }
+
+@media (max-width: 820px) {
+  .meeting-chat-panel { max-width: none; }
+  .meeting-chat-msg.is-mine .meeting-chat-msg__col { max-width: 90%; }
+}
+
+/* ---- remote control (Zoom-style) ---- */
+.meeting-room__spotlight { position: relative; }
+.meeting-rc__overlay { position: absolute; inset: 0; z-index: 8; cursor: crosshair; outline: 3px solid var(--mr-primary); outline-offset: -3px; border-radius: inherit; background: transparent; }
+.meeting-rc__overlay:focus { outline-color: #12B27A; }
+.meeting-rc__bar { position: absolute; z-index: 9; inset-block-end: 12px; inset-inline: 12px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; pointer-events: none; }
+.meeting-rc__bar > * { pointer-events: auto; }
+.meeting-rc__btn, .meeting-rc__chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 700; border: 1px solid var(--mr-line-strong); background: var(--mr-surface-2); color: var(--mr-text); box-shadow: 0 6px 18px var(--mr-shadow); }
+.meeting-rc__btn { cursor: var(--cur-pointer, pointer); background: var(--mr-primary); color: #fff; border-color: transparent; }
+.meeting-rc__chip.is-live { background: #12B27A; color: #fff; border-color: transparent; }
+.meeting-rc__chip.is-warn { background: #E5484D; }
+.meeting-rc__chip button { border: 0; border-radius: 999px; padding: 3px 10px; font-weight: 800; font-size: 12px; background: #fff; color: #111; cursor: var(--cur-pointer, pointer); }
+.meeting-rc__modal { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, .55); }
+.meeting-rc__card { width: min(420px, 100%); padding: 22px; border-radius: 18px; background: var(--mr-surface); color: var(--mr-text); border: 1px solid var(--mr-line-strong); box-shadow: 0 24px 60px rgba(0, 0, 0, .45); text-align: center; }
+.meeting-rc__card h3 { margin: 10px 0 6px; font-size: 17px; }
+.meeting-rc__card p { margin: 0 0 18px; font-size: 13px; line-height: 1.6; color: var(--mr-muted); }
+.meeting-rc__ico { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: color-mix(in srgb, var(--mr-primary) 16%, transparent); color: var(--mr-primary); }
+.meeting-rc__actions { display: flex; gap: 10px; justify-content: center; }
+
+.meeting-room__menu-badge { margin-inline-start: auto; color: #22c55e; font-size: 10px; line-height: 1; }
+
+/* ---- moderation: delete a message, host chat controls ---- */
+.mc-del { color: #f87171 !important; }
+.mc-del:hover { background: color-mix(in srgb, #ef4444 18%, transparent) !important; }
+.mc-del--sys {
+  display: inline-grid; place-items: center; width: 18px; height: 18px; margin-inline-start: 6px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; color: var(--mr-muted) !important; cursor: pointer; opacity: 0; transition: opacity 120ms ease;
+}
+.meeting-chat-sys:hover .mc-del--sys, .mc-del--sys:focus-visible { opacity: 1; }
+@media (hover: none) { .mc-del--sys { opacity: .7; } }
+
+.mc-confirm {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 4px; padding: 6px 8px; border-radius: 12px;
+  background: color-mix(in srgb, #ef4444 10%, var(--mr-surface)); border: 1px solid color-mix(in srgb, #ef4444 35%, transparent); font-size: 12.5px;
+}
+.mc-confirm span { flex: 1 1 auto; font-weight: 600; }
+.mc-confirm button, .mc-ctl__btns button, .mc-pill {
+  border: 1px solid var(--mr-line); background: var(--mr-fill-1); color: inherit; border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.mc-confirm button.is-danger, .mc-ctl__btns button.is-danger { background: #dc2626; border-color: #dc2626; color: #fff; }
+.mc-confirm button:disabled, .mc-ctl button:disabled, .mc-pill:disabled { opacity: .55; cursor: default; }
+.mc-pill { background: var(--mr-primary); border-color: var(--mr-primary); color: #fff; }
+
+.mc-ctl-btn.is-on { background: color-mix(in srgb, var(--mr-primary) 22%, transparent); color: var(--mr-accent-text, var(--mr-primary)); }
+.mc-ctl {
+  display: flex; flex-direction: column; gap: 2px; padding: 6px 12px 10px; border-bottom: 1px solid var(--mr-line); background: var(--mr-fill-1); flex-shrink: 0;
+}
+.mc-ctl__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 2px; font-size: 13px; }
+.mc-ctl__row--col { flex-direction: column; align-items: stretch; gap: 8px; }
+.mc-ctl__row span { display: flex; flex-direction: column; min-width: 0; }
+.mc-ctl__row em { font-style: normal; font-size: 11.5px; color: var(--mr-muted); }
+.mc-ctl__row input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none; width: 38px; height: 22px; border-radius: 999px; position: relative; flex-shrink: 0;
+  background: var(--mr-fill-3); transition: background 140ms ease; margin: 0; cursor: pointer;
+}
+.mc-ctl__row input[type="checkbox"]::after {
+  content: ''; position: absolute; top: 3px; inset-inline-start: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: inset-inline-start 140ms ease;
+}
+.mc-ctl__row input[type="checkbox"]:checked { background: var(--mr-primary); }
+.mc-ctl__row input[type="checkbox"]:checked::after { inset-inline-start: 19px; }
+.mc-ctl__seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 3px; border-radius: 12px; background: var(--mr-fill-2, var(--mr-fill-1)); }
+.mc-ctl__seg button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 8px; border: 0; border-radius: 9px;
+  background: transparent; color: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;
+}
+.mc-ctl__seg button.is-on { background: var(--mr-primary); color: #fff; }
+.mc-ctl__clear {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 10px; border: 1px solid color-mix(in srgb, #ef4444 40%, transparent);
+  background: transparent; color: #f87171; font-size: 12.5px; font-weight: 700; cursor: pointer;
+}
+.mc-ctl__btns { flex-direction: row !important; gap: 6px; }
+.mc-note {
+  display: flex; align-items: center; gap: 6px; margin: 0; padding: 6px 14px; font-size: 11.5px; color: var(--mr-muted);
+  background: var(--mr-fill-1); border-bottom: 1px solid var(--mr-line); flex-shrink: 0;
+}
+.meeting-participants-panel__actions button.is-on { background: color-mix(in srgb, #ef4444 20%, transparent); color: #f87171; }

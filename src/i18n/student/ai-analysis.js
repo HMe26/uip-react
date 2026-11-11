@@ -1,0 +1,35 @@
+// Auto-extracted from api/app/Views/student/ai-analysis.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'AI Analysis': 'تحليل الذكاء الاصطناعي',
+  'AI Project Summary': 'ملخص المشروع الذكي',
+  'Analyzing…': 'جارِ التحليل…',
+  'Click "Run analysis" above to get started.': 'اضغط "شغّل التحليل" فوق عشان تبدأ.',
+  'Consent on file since ': 'تمت الموافقة على المشاركة بتاريخ ',
+  'Create your first project to run AI analysis on it.': 'أنشئ مشروعك الأول لتفعيل تحليل الذكاء الاصطناعي عليه.',
+  'Error details (for diagnosis)': 'تفاصيل الخطأ (لغرض التشخيص)',
+  'Find published projects similar by meaning, not just keywords.': 'ابحث عن مشاريع منشورة مشابهة عبر المعنى وليس الكلمات فقط.',
+  'Find similar projects': 'إبحث عن مشاريع مشابهة',
+  'Improvement Suggestions': 'اقتراحات التحسين',
+  'New Project': 'مشروع جديد',
+  'No similar published projects yet.': 'مفيش مشاريع منشورة مشابهة لسه.',
+  'Export analysis': 'تصدير التحليل',
+  'Re-run analysis': 'إعادة التحليل',
+  'Readiness score failed on the last run.': 'تعذر حساب درجة الجاهزية في آخر محاولة.',
+  'Run analysis': 'شغّل التحليل',
+  'Score Breakdown': 'تفصيل الدرجات',
+  'Semantic Search': 'البحث الدلالي',
+  'Practical Value': 'القيمة العملية والتطبيقية',
+  'Startup Potential': 'القيمة العملية والتطبيقية',
+  'The AI Readiness Score blends technical feasibility, market potential, documentation quality, and innovation level.': 'مقياس جاهزية الذكاء الاصطناعي يجمع بين الجدوى التقنية وإمكانات السوق وجودة التوثيق ومستوى الابتكار.',
+  'This can take a few minutes for a full report — feel free to leave this tab open and check back.': 'ممكن ياخد كذا دقيقة عشان يجهّز تقرير كامل — ممكن تسيب التاب مفتوح وترجع تشيك بعدين.',
+  'This is the last saved analysis for this project.': 'دي آخر نتيجة تحليل محفوظة لهذا المشروع.',
+  "You haven't run an analysis for this project yet.": 'لسه ماتعملش تحليل لهذا المشروع.',
+  "You don't have any projects yet.": 'لا يوجد لديك مشاريع بعد.',
+  'Create a project': 'أنشئ مشروعًا',
+  "The AI engine isn't configured yet — an admin needs to add a provider API key under Settings → AI. Until then, nothing fake is shown here.":
+    'محرك الذكاء الاصطناعي غير مُفعّل حاليًا — لسه محتاج مسؤول النظام يضيف مفتاح API من الإعدادات (Settings → AI). لحد ما يتفعّل، مفيش أرقام أو نتائج وهمية هتتعرض هنا.',
+  "I agree to send this project's data (description and files) to the external AI provider for analysis.":
+    'موافق على إرسال بيانات هذا المشروع (الوصف والملفات) لمزوّد الذكاء الاصطناعي الخارجي لتحليلها.',
+  'Selected project:': 'المشروع المحدد:',
+};

@@ -1,0 +1,25 @@
+// Auto-extracted from api/app/Views/faculty/project-approval.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'of pending projects have been auto-tagged by field. The suggested field appears under each project title in the table.': 'من المشاريع قيد الانتظار مصنَّفة تلقائياً حسب المجال بالذكاء الاصطناعي. المجال المقترح يظهر تحت اسم كل مشروع.',
+  'Student submission': 'تقديم الطالب',
+  'Published on platform': 'النشر في المنصة',
+  'No pending projects right now.': 'لا توجد مشاريع قيد الانتظار حالياً.',
+  'Automatic Classification': 'التصنيف التلقائي',
+  'Approve publishes the project immediately. Request Changes sends it back to the student as a draft.': 'الاعتماد ينشر المشروع فوراً. طلب التعديلات يعيده مسودة للطالب.',
+  'Approval Workflow': 'مسار اعتماد المشروع',
+  'AI review': 'مراجعة الذكاء الاصطناعي',
+  'All': 'الكل',
+  'Approve': 'اعتماد',
+  'Approved': 'معتمد',
+  'Auto-classified by AI': 'مصنَّف تلقائياً بالذكاء الاصطناعي',
+  'Changes Requested': 'تعديلات مطلوبة',
+  'No permission': 'لا تملك صلاحية',
+  'Not analyzed': 'لم يُحلَّل بعد',
+  'Pending': 'قيد الانتظار',
+  'Project Approvals': 'اعتماد المشاريع',
+  'Reject': 'رفض',
+  'Rejected': 'مرفوض',
+  'Request Changes': 'طلب تعديلات',
+  'View': 'عرض',
+};

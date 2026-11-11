@@ -1,0 +1,78 @@
+/* ==========================================================================
+   sidebar-groups.css — collapsible sidebar groups (all portals).
+   Title row = a real <button> (keyboard + screen-reader friendly), the body
+   animates open/closed with grid-template-rows (no fixed heights), and the
+   state is remembered by useSidebarGroups. Loaded after sidebar-unified.css.
+   ========================================================================== */
+
+/* ---- Expand all / Collapse all bar ------------------------------------- */
+.app-shell .sidebar .sidebar__groups-bar {
+  display: flex; gap: 6px; margin: 0 2px 4px; padding: 0 2px; flex-shrink: 0;
+}
+.app-shell .sidebar .sidebar__groups-bar button {
+  flex: 1 1 0; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 5px 8px; border-radius: 8px; border: 1px solid var(--sb-border, var(--border-subtle));
+  background: transparent; color: var(--sb-text, var(--text-secondary));
+  font: inherit; font-size: 11px; font-weight: 600; line-height: 1.2; cursor: pointer; white-space: nowrap;
+  transition: background .15s ease, color .15s ease, border-color .15s ease, opacity .15s ease;
+}
+.app-shell .sidebar .sidebar__groups-bar button:hover:not(:disabled) {
+  background: var(--sb-hover, var(--glass-bg)); color: var(--sb-text-strong, var(--text-primary));
+  border-color: rgba(var(--sb-gold-rgb, 227, 192, 107), .45);
+}
+.app-shell .sidebar .sidebar__groups-bar button:disabled { opacity: .4; cursor: default; }
+.app-shell .sidebar .sidebar__groups-bar button:focus-visible,
+.app-shell .sidebar .sidebar__section-toggle:focus-visible {
+  outline: 2px solid rgba(var(--sb-gold-rgb, 227, 192, 107), .8); outline-offset: 1px;
+}
+.sidebar.is-collapsed .sidebar__groups-bar { display: none; }
+
+/* ---- Group title (the toggle) ------------------------------------------ */
+.app-shell .sidebar .sidebar__section-toggle {
+  width: 100%; border: 0; background: transparent; font-family: inherit; text-align: start;
+  cursor: pointer; border-radius: 8px; user-select: none;
+  transition: background .15s ease, opacity .15s ease;
+}
+.app-shell .sidebar .sidebar__section-toggle:hover { background: var(--sb-hover, var(--glass-bg)); opacity: 1; }
+.app-shell .sidebar .sidebar__section-label { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* the existing ::after rule line (sidebar-unified.css) sits between label and chevron */
+
+.app-shell .sidebar .sidebar__section-chevron { flex-shrink: 0; transition: transform .25s ease; }
+.sidebar__group.is-closed .sidebar__section-chevron { transform: rotate(-90deg); }
+[dir="rtl"] .sidebar__group.is-closed .sidebar__section-chevron { transform: rotate(90deg); }
+
+/* number of hidden entries + dot when the closed group holds the open page / unread items */
+.app-shell .sidebar .sidebar__section-count {
+  flex-shrink: 0; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 0; text-transform: none;
+  background: rgba(255, 255, 255, .1); color: inherit;
+}
+.app-shell .sidebar .sidebar__section-dot {
+  flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--sb-gold, var(--color-primary)); box-shadow: 0 0 0 3px rgba(var(--sb-gold-rgb, 227, 192, 107), .2);
+}
+.app-shell .sidebar .sidebar__section-dot.is-alert { background: #ff6b6b; box-shadow: 0 0 0 3px rgba(255, 107, 107, .22); }
+
+/* ---- Animated body ------------------------------------------------------ */
+.sidebar__group-body {
+  display: grid; grid-template-rows: 1fr;
+  transition: grid-template-rows .28s cubic-bezier(.4, 0, .2, 1), opacity .2s ease, visibility 0s linear 0s;
+}
+.sidebar__group-inner { min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: inherit; }
+.sidebar__group.is-closed .sidebar__group-body {
+  grid-template-rows: 0fr; opacity: 0;
+  /* visibility:hidden (after the animation) also removes the hidden links from the tab order */
+  visibility: hidden; transition: grid-template-rows .28s cubic-bezier(.4, 0, .2, 1), opacity .2s ease, visibility 0s linear .28s;
+}
+
+/* ---- Icon rail: groups are always open, the toggle is just a spacer ----- */
+.sidebar.is-collapsed .sidebar__section-toggle { pointer-events: none; }
+.sidebar.is-collapsed .sidebar__section-count,
+.sidebar.is-collapsed .sidebar__section-dot,
+.sidebar.is-collapsed .sidebar__section-chevron { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar__group-body, .sidebar__group.is-closed .sidebar__group-body,
+  .app-shell .sidebar .sidebar__section-chevron { transition: none; }
+}

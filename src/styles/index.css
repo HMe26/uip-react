@@ -1,0 +1,167 @@
+/* Re-exports the existing UIPE design system (copied as-is from
+   public/assets/css) so React components can use the exact same classes
+   and CSS variables as the current PHP views — no visual rewrite needed. */
+@import './css/reset.css';
+@import './css/variables.css';
+@import './css/tokens-extra.css';
+@import './css/typography.css';
+@import './css/base.css';
+@import './css/ui-kit.css';
+@import './css/layout.css';
+@import './css/animations.css';
+@import './css/paper-reveal.css';
+@import './css/ltr.css';
+@import './css/rtl.css';
+@import './css/themes/light.css';
+@import './css/themes/dark.css';
+@import './css/themes/glassmorphism.css';
+
+@import './css/components/buttons.css';
+@import './css/components/forms.css';
+@import './css/components/cards.css';
+@import './css/components/badges.css';
+@import './css/components/modals.css';
+@import './css/components/navbar.css';
+@import './css/components/sidebar.css';
+@import './css/components/bottom-nav.css';
+@import './css/components/tables.css';
+@import './css/components/charts.css';
+@import './css/components/skeleton.css';
+@import './css/calls.css';
+@import './css/components/empty-state.css';
+@import './css/components/error-state.css';
+@import './css/components/notifications.css';
+@import './css/components/readiness-ring.css';
+@import './css/components/error-ring.css';
+@import './css/components/site-footer.css';
+@import './css/components/ai-assistant.css';
+@import './css/components/ai-media.css';
+@import './css/components/ai-assistant-v2.css';
+@import './css/components/file-upload.css';
+@import './css/components/media.css';
+
+@import './css/pages/auth.css';
+@import './css/pages/public.css';
+@import './css/pages/public-portfolio.css';
+@import './css/pages/error-page.css';
+@import './css/pages/meeting-room.css';
+@import './css/pages/meetings-ui.css';
+@import './css/pages/meeting-chat-pro.css';
+@import './css/pages/meetings-list.css';
+@import './css/pages/meeting-mobile.css';
+@import './css/responsive.css';
+@import './css/app-shell.css';
+@import './css/messaging-app.css';
+@import './css/messaging-trash.css';
+@import './css/messaging-settings.css';
+@import './css/messaging-stories.css';
+@import './css/insight-portal.css';
+@import './css/security-portal.css';
+@import './css/student-portal.css';
+@import './css/student-github.css';
+@import './css/student-groups.css';
+@import './css/staff-portal.css';
+@import './css/staff-dashboard.css';
+@import './css/exam-portal.css';
+@import './css/question-bank.css';
+@import './css/people-forms.css';
+@import './css/courses.css';
+@import './css/academic-ui.css';
+@import './css/timetable.css';
+@import './css/attendance.css';
+@import './css/faculty-portal.css';
+@import './css/university-announcements.css';
+@import './css/feed.css';
+@import './css/university-manage.css';
+@import './css/university-student-form.css';
+@import './css/admin-portal.css';
+@import './css/admin-faq.css';
+@import './css/system-activity.css';
+@import './css/landing.css';
+@import './css/landing-motion.css';
+@import './css/landing-v4.css';
+@import './css/paper-unfold.css';
+@import './css/panel-stack.css';
+@import './css/messaging-mobile.css';
+@import './css/messaging-laptop.css';
+@import './css/messaging-editor.css';
+@import './css/messaging-redesign.css';
+@import './css/messaging-groups.css';
+@import './css/messaging-group-info.css';
+@import './css/messaging-pins.css';
+@import './css/messaging-futuristic.css';
+@import './css/messaging-chat-chrome.css';
+@import './css/messaging-composer-pro.css';
+@import './css/data-analysis-queries.css';
+@import './css/export-menu.css';
+@import './css/notification-center.css';
+@import './css/topbar-fit.css';
+@import './css/sidebar-fit.css';
+@import './css/dashboard-fit.css';
+@import './css/palette-insight.css';
+
+/* [ANDROID] app-only + exam-attempt mobile fixes (see ANDROID-INTEGRATION.md) */
+@import './css/native.css';
+@import './css/exam-mobile.css';
+
+/* Platform-wide table + pager look (must stay last) */
+@import './css/tables-modern.css';
+@import './css/admin-pages.css';
+@import './css/user-filters.css';
+@import './css/admin-user-modal.css';
+@import './css/admin-ai-conversation.css';
+@import './css/admin-legacy-pages.css';
+@import './css/admin-hero-icons.css';
+
+/* Wide tables -> cards on phones and tablets */
+@import './css/responsive-tables.css';
+
+/* Tablet + phone fixes: must stay last so they win over the portal files above */
+@import './css/tablet-fit.css';
+@import './css/responsive-forms.css';
+@import './css/admin-layout-fit.css';
+@import './css/user-activity.css';
+
+/* One sidebar design for every portal (Academic Staff look) — last so it wins over the per-shell sidebar rules */
+@import './css/sidebar-unified.css';
+
+/* Settings page redesign (all portals) */
+@import './css/settings-page.css';
+
+/* One dropdown design for every <select> — last so it wins over per-page select rules */
+@import './css/select-modern.css';
+
+/* Permission matrix cards (admin user details) */
+@import './css/permission-matrix.css';
+
+/* Light mode = a full white design (sidebar included) — last */
+@import './css/light-mode.css';
+
+/* Dark entered from Light = the dark twin of the Light design — after light-mode.css */
+@import './css/light-dark.css';
+
+/* One themed scrollbar for every look (Light / Classic / Dark) — last */
+@import './css/scrollbars.css';
+
+/* Themed mouse cursors */
+@import './css/cursors.css';
+
+/* Light platform-wide motion system (page enter, stagger, modals, hover) — zero-specificity, so everything above can override it. Keep last. */
+@import './css/motion.css';
+@import './css/motion-plus.css';
+
+/* Platform-wide ambient layer (soft backdrop shapes, pill/chip motion) — after motion.css */
+@import './css/ambient.css';
+
+/* Code review report panel (all portals) */
+@import './css/code-review-report.css';
+@import './css/meetings-control.css';
+@import './css/drive-control.css';
+@import './css/grading-scale.css';
+@import './css/brand-logo.css';
+@import './css/sidebar-brand.css';
+@import './css/sidebar-groups.css';
+@import './css/landing-faq.css';
+
+/* Entrance motion for the landing pages + the app shell (also a gentle fade for reduced-motion visitors) — keep last */
+@import './css/motion-boost.css';

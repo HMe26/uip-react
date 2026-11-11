@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "214866379282",
+    "project_id": "uip-nub",
+    "storage_bucket": "uip-nub.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:214866379282:android:18b0b8a674f85e54a18ecb",
+        "android_client_info": {
+          "package_name": "com.uipe.platform"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeOgyuLH07pER62BAzywfkRw6A9VyjX1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

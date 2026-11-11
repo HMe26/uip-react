@@ -1,0 +1,78 @@
+/* admin-layout-fit.css — loaded last. Admin dashboard panels line up: equal-height rows, no orphan cards, no holes. */
+.app-shell--admin .adm-grid { align-items: stretch; }
+.app-shell--admin .adm-grid--even { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 900px) { .app-shell--admin .adm-grid--even { grid-template-columns: minmax(0, 1fr) !important; } }
+
+/* A panel in a row stretches to the row's height; its action button sits at the bottom edge so rows look aligned. */
+.adm-panel--fill { display: flex; flex-direction: column; }
+.adm-panel--fill > .btn:last-child { margin-top: auto !important; }
+.adm-panel--fill > .adm-empty, .adm-panel--fill > .adm-list { margin-bottom: 14px; }
+/* "Users by Role" next to the growth chart: spread the bars over the card height instead of leaving a gap under them. */
+.app-shell--admin .adm-grid > .adm-panel > .adm-bars { flex: 1; display: flex; flex-direction: column; justify-content: space-around; }
+.app-shell--admin .adm-grid > .adm-panel:has(> .adm-bars) { display: flex; flex-direction: column; }
+
+/* ---- KPI rows: the count decides the grid, so a row never ends with one lonely tile ---- */
+@media (min-width: 769px) {
+  .app-shell--admin .adm-kpis:has(> :nth-child(6):last-child) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .app-shell--admin .adm-kpis:has(> :nth-child(4):last-child) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .app-shell--admin .adm-kpis:has(> :nth-child(5):last-child) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .app-shell--admin .adm-kpis:has(> :nth-child(5):last-child) > :nth-child(4),
+  .app-shell--admin .adm-kpis:has(> :nth-child(5):last-child) > :nth-child(5) { grid-column: span 1; }
+}
+@media (min-width: 1101px) {
+  .app-shell--admin .adm-kpis:has(> :nth-child(4):last-child) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .app-shell--admin .adm-kpis:has(> :nth-child(5):last-child) { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+
+/* ---- Consistent vertical rhythm between stacked panels on admin pages ---- */
+.app-shell--admin .app-shell__main > .adm-panel { margin-bottom: 16px; }
+.app-shell--admin .app-shell__main > .adm-panel:last-child { margin-bottom: 0; }
+
+
+/* ==== Admin dashboard: lower panels (attention / activity / AI / security / pending table) ==== */
+/* Headings use the clean sans (Inter → Cairo for Arabic), not the serif "university" display face. */
+.app-shell--admin { --font-display: 'Inter', 'Cairo', 'Segoe UI', system-ui, sans-serif; }
+.app-shell--admin h1, .app-shell--admin h2, .app-shell--admin h3, .app-shell--admin h4 { letter-spacing: 0; }
+
+.adm-attn-list { display: flex; flex-direction: column; gap: 8px; }
+.adm-attn { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 14px; border: 1px solid var(--border-subtle); background: var(--bg-muted); color: var(--text-primary); text-decoration: none; font-size: 13.5px; transition: border-color .15s, background .15s; }
+.adm-attn:hover { border-color: var(--color-primary); }
+.adm-attn__n { min-width: 40px; padding: 3px 10px; border-radius: 999px; text-align: center; font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; }
+.adm-attn--warn .adm-attn__n { background: rgba(var(--color-warning-rgb), .16); color: var(--color-warning); }
+.adm-attn--bad .adm-attn__n { background: rgba(var(--color-danger-rgb), .14); color: var(--color-danger); }
+.adm-attn__t { flex: 1; min-width: 0; font-weight: 600; }
+.adm-attn svg { color: var(--text-secondary); flex-shrink: 0; }
+[dir="rtl"] .adm-attn svg { transform: scaleX(-1); }
+.adm-allclear { display: flex; align-items: center; gap: 8px; padding: 14px; border-radius: 14px; background: rgba(var(--color-success-rgb), .1); color: var(--color-success); font-size: 13.5px; font-weight: 600; }
+
+.adm-act-list { display: flex; flex-direction: column; }
+.adm-act { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border-subtle); }
+.adm-act:last-child { border-bottom: 0; }
+.adm-act__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary); box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), .14); flex-shrink: 0; }
+.adm-act__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.adm-act__body strong { font-size: 13.5px; font-weight: 700; color: var(--text-primary); }
+.adm-act__body small { font-size: 12px; color: var(--text-secondary); }
+.adm-act .adm-muted { white-space: nowrap; }
+
+.adm-ai-stat { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; font-size: 13.5px; }
+.adm-ai-stat strong { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.adm-ai-stat em { font-style: normal; font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+.adm-panel .adm-bar__track { display: block; width: 100%; }
+.adm-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.adm-chip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 6px 5px 12px; border-radius: 999px; background: var(--bg-muted); border: 1px solid var(--border-subtle); font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+[dir="rtl"] .adm-chip { padding: 5px 12px 5px 6px; }
+.adm-chip b { min-width: 22px; padding: 1px 7px; border-radius: 999px; text-align: center; background: rgba(var(--color-primary-rgb), .14); color: var(--color-primary); font-weight: 800; }
+.adm-wide-btn { width: 100%; justify-content: center; margin-top: auto; }
+.adm-panel--fill > .adm-bar__track + .adm-wide-btn { margin-top: 18px; }
+
+.adm-cta { align-items: flex-start; text-align: start; }
+.adm-cta__icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; margin-bottom: 14px; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.adm-cta h2 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
+.adm-cta p { margin: 0 0 18px; font-size: 12.5px; line-height: 1.6; }
+
+.adm-table--dash th { background: var(--bg-muted); font-size: 12px; font-weight: 700; color: var(--text-secondary); }
+.adm-table--dash th:first-child { border-start-start-radius: 12px; }
+.adm-table--dash th:last-child { border-start-end-radius: 12px; }
+.adm-table--dash tbody tr:hover td { background: rgba(var(--color-primary-rgb), .04); }
+.adm-table--dash td:first-child, .adm-table--dash th:first-child { width: 38%; }
+.adm-table--dash .adm-person { gap: 10px; }

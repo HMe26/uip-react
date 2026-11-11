@@ -1,0 +1,186 @@
+/* ZIP workbench — unified typography + AI chat / console / terminal polish.
+   Loaded LAST (after zip-workbench.css, zip-ai-fix.css, zip-ai-uip.css). Every selector is prefixed with `.zb` to win on specificity.
+   One text scale drives everything: --zb-fs (px, set from the A− / A+ buttons in ZipWorkbench). */
+
+.zb {
+  --zb-fs: 13.5;
+  --zb-font-ui: 'Cairo', 'Inter', 'Segoe UI', system-ui, -apple-system, 'Noto Sans Arabic', Tahoma, sans-serif;
+  /* Latin glyphs come from the mono fonts, Arabic glyphs fall through to Cairo (Consolas has no Arabic → ugly fallback) */
+  --zb-font-mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', Consolas, 'SF Mono', Menlo, 'Cairo', 'Noto Sans Arabic', monospace;
+  --zb-fs-chat: calc(var(--zb-fs) * 1.04px);   /* AI answers + bubbles */
+  --zb-fs-code: calc(var(--zb-fs) * .93px);    /* code blocks, diff, inline code */
+  --zb-fs-con: calc(var(--zb-fs) * 1px);       /* console / terminal output */
+  --zb-fs-sm: calc(var(--zb-fs) * .86px);      /* hints, notes, chips */
+  --zb-lh-ar: 1.85;
+  font-family: var(--zb-font-ui);
+}
+.zb button, .zb select { font-family: inherit; }
+.zb .zb-run__log, .zb .zb-run__prompt input, .zb .zb-run__stdin textarea { font-family: var(--zb-font-mono); }
+
+/* ---------- AI panel header ---------- */
+.zb .zb-ai__head { padding: 10px 12px; gap: 10px; }
+.zb .zb-ai__title { display: flex; flex-direction: column; gap: 1px; min-width: 0; line-height: 1.25; }
+.zb .zb-ai__title strong { font-size: 14.5px; letter-spacing: .01em; }
+.zb .zb-ai__title .zb-ai__file { font: 600 11.5px/1.3 var(--zb-font-mono); opacity: .9; }
+.zb .zb-ai__mode { font-size: 13px; height: 32px; }
+.zb .zb-ai__hint { font-size: var(--zb-fs-sm); line-height: 1.7; color: var(--zb-muted); unicode-bidi: plaintext; text-align: start; }
+
+/* ---------- conversation ---------- */
+.zb .zb-chat__user, .zb .zb-ai__answer, .zb .zb-chat__empty, .zb .zb-hist__empty { unicode-bidi: plaintext; text-align: start; }
+.zb .zb-chat__user { font-size: var(--zb-fs-chat); line-height: var(--zb-lh-ar); padding: 10px 14px; border-radius: 16px 16px 4px 16px; }
+.zb .zb-chat__user:dir(rtl) { border-radius: 16px 16px 16px 4px; }
+.zb .zb-ai__answer { font-size: var(--zb-fs-chat); line-height: var(--zb-lh-ar); letter-spacing: 0; }
+.zb .zb-ai__answer p, .zb .zb-aimd p { margin: 0 0 .85em; }
+.zb .zb-aimd h3.zb-aimd__h { font-size: calc(var(--zb-fs-chat) * 1.15); }
+.zb .zb-aimd h4.zb-aimd__h { font-size: calc(var(--zb-fs-chat) * 1.07); }
+.zb .zb-aimd h5.zb-aimd__h, .zb .zb-aimd h6.zb-aimd__h { font-size: var(--zb-fs-chat); }
+.zb .zb-aimd__table { font-size: var(--zb-fs-sm); }
+.zb .zb-chat__who { font-size: calc(var(--zb-fs-sm) * 1.02); font-weight: 800; color: var(--zb-strong); opacity: .85; margin-bottom: 4px; }
+.zb .zb-chat__avatar { width: 28px; height: 28px; border-radius: 10px; margin-top: 0; }
+.zb .zb-chat .zb-ai__body { gap: 20px; }
+.zb .zb-ai__wait { font-size: var(--zb-fs-sm); }
+
+/* inline code / code blocks / diff all share one mono stack + size */
+.zb .zb-ai__answer code, .zb .zb-aimd code { font-family: var(--zb-font-mono); font-size: var(--zb-fs-code); }
+.zb .zb-ai__code { font: var(--zb-fs-code)/1.65 var(--zb-font-mono); padding: 10px 12px; border-radius: 0 0 10px 10px; tab-size: 4; }
+.zb .zb-ai__blockbar { padding: 4px 8px; border-radius: 10px 10px 0 0; }
+.zb .zb-ai__lang { font: 700 11px var(--zb-font-mono); text-transform: lowercase; letter-spacing: .02em; }
+.zb .zb-ai__mini { height: 24px; font-size: 11.5px; border-radius: 6px; }
+.zb .zb-ai__diff { font: var(--zb-fs-code)/1.65 var(--zb-font-mono); padding: 6px 0; }
+.zb .zb-ai__row { min-height: 1.65em; }
+.zb .zb-ai__ln { width: 40px; opacity: .55; font-variant-numeric: tabular-nums; }
+.zb .zb-ai__sign { width: 18px; text-align: center; font-weight: 800; }
+.zb .zb-ai__edit { border-radius: 12px; box-shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 4px 14px -8px var(--zb-shadow); }
+.zb .zb-ai__efile .zb-ai__file { font: 600 12px var(--zb-font-mono); }
+.zb .zb-ai__edit-acts { padding: 8px 10px; gap: 8px; }
+.zb .zb-ai__edit-acts .zb-btn { height: 28px; }
+.zb .zb-ai__edits-head { font-size: calc(var(--zb-fs-sm) * 1.05); }
+.zb .zb-ai__tag { font-size: var(--zb-fs-sm); }
+
+/* ---------- composer ---------- */
+.zb .zb-chat__composer { padding: 10px 12px 8px; gap: 8px; }
+.zb .zb-chat__input { font-size: var(--zb-fs-chat); line-height: 1.7; padding: 9px 12px; border-radius: 12px; unicode-bidi: plaintext; text-align: start; min-height: 40px; }
+.zb .zb-chat__input::placeholder { color: var(--zb-muted); opacity: .75; font-size: calc(var(--zb-fs-chat) * .93); }
+.zb .zb-chat__send { width: 40px; height: 40px; border-radius: 12px; }
+.zb .zb-chat__chip { height: 24px; font-size: var(--zb-fs-sm); }
+.zb .zb-chat__note { font-size: calc(var(--zb-fs-sm) * .92); }
+.zb .zb-hist__open strong { font-size: calc(var(--zb-fs-sm) * 1.05); unicode-bidi: plaintext; }
+
+/* ---------- console (browser runner / Python) ---------- */
+.zb .zb-run__log { font-size: var(--zb-fs-con); line-height: 1.7; padding: 12px 18px 16px; tab-size: 4; font-variant-ligatures: none; }
+.zb .zb-run .zb-log { unicode-bidi: plaintext; text-align: start; padding-block: 1px; }      /* per-line direction: Arabic lines read right-to-left, code/English left-to-right */
+.zb .zb-run .zb-log--stdout { color: var(--zb-strong); }
+.zb .zb-run .zb-log--system { font-family: var(--zb-font-ui); font-size: var(--zb-fs-sm); color: var(--zb-muted); margin: 4px 0; }
+.zb .zb-run .zb-log--tb-head { color: var(--zb-danger); font-weight: 700; margin-top: 6px; }
+.zb .zb-run .zb-log--tb-file { color: var(--zb-muted); padding-inline-start: 14px; }
+.zb .zb-run .zb-log--tb-file b { color: var(--zb-warn); font-weight: 600; }
+.zb .zb-run .zb-log--tb-code { color: var(--zb-text); padding-inline-start: 28px; opacity: .95; }
+.zb .zb-run .zb-log--tb-err { color: var(--zb-danger); font-weight: 800; padding-bottom: 6px; }
+.zb .zb-run .zb-log--tb-err i { font-style: normal; color: color-mix(in srgb, var(--zb-danger) 70%, var(--zb-strong)); }
+.zb .zb-run__empty { font-family: var(--zb-font-ui); }
+.zb .zb-run__empty strong { font-size: calc(var(--zb-fs-con) * 1.08); }
+.zb .zb-run__empty span { font-size: var(--zb-fs-sm); }
+.zb .zb-run__prompt { padding: 10px 18px; }
+.zb .zb-run__prompt input { font-size: var(--zb-fs-con); unicode-bidi: plaintext; }
+.zb .zb-run__chev { font-size: calc(var(--zb-fs-con) * 1.05); }
+.zb .zb-run__stdin textarea { font-size: var(--zb-fs-sm); }
+.zb .zb-run__stdin summary { font-family: var(--zb-font-ui); font-size: var(--zb-fs-sm); }
+.zb .zb-run__state { font-size: var(--zb-fs-sm); }
+
+/* ---------- real terminal (xterm) ---------- */
+.zb .zb-sbx__xterm { padding: 8px 12px 6px; background: var(--zb-term, #0d1117); }
+.zb .zb-sbx__xterm .xterm { padding: 0; }
+.zb .zb-sbx__xterm .xterm-viewport { scrollbar-width: thin; scrollbar-color: var(--zb-line) transparent; }
+
+/* ---------- smooth + subtle ---------- */
+.zb .zb-ai__body, .zb .zb-run__log { scrollbar-width: thin; scrollbar-color: var(--zb-line) transparent; }
+@media (max-width: 760px) {
+  .zb { --zb-fs-chat: calc(var(--zb-fs) * 1.08px); }
+  .zb .zb-run__log { padding: 10px 12px 14px; }
+}
+
+/* what the user typed in answer to input() / prompt(): accent colour, bold, a soft pill so it reads as "yours" next to the program's output */
+.zb .zb-run .zb-log__echo { unicode-bidi: isolate; color: var(--zb-accent); font-weight: 700; padding: 0 .4em; margin-inline-start: .25em; border-radius: 5px; background: color-mix(in srgb, var(--zb-accent) 14%, transparent); }
+
+/* =====================================================================================================================
+   Console clarity pass: the terminal surface used to be "theme background + 22% black" = a muddy mid-grey on light themes,
+   with thin 13px text and a low-contrast accent. Now: a clean surface per theme, heavier + larger crisp mono text, strong contrast.
+   ===================================================================================================================== */
+.zb {
+  --zb-term: color-mix(in srgb, var(--zb-bg) 82%, #000);                                              /* fallback */
+  --zb-term: light-dark(color-mix(in srgb, var(--zb-bg) 97%, #000), color-mix(in srgb, var(--zb-bg) 84%, #000));
+  --zb-ink: light-dark(color-mix(in srgb, var(--zb-strong) 92%, #000), color-mix(in srgb, var(--zb-strong) 96%, #fff));
+  --zb-echo: light-dark(color-mix(in srgb, var(--zb-accent) 70%, #000), color-mix(in srgb, var(--zb-accent) 55%, #fff));
+  --zb-con-w: light-dark(500, 400);                                                                   /* heavier strokes on light backgrounds */
+  --zb-fs-con: calc(var(--zb-fs) * 1.1px);
+}
+.zb .zb-run__log {
+  font-family: var(--zb-font-mono); font-size: var(--zb-fs-con); font-weight: var(--zb-con-w); line-height: 1.75; letter-spacing: 0;
+  color: var(--zb-ink); text-rendering: optimizeLegibility; -webkit-font-smoothing: auto; padding: 14px 20px 18px;
+}
+.zb .zb-run .zb-log--stdout, .zb .zb-run .zb-log--log { color: var(--zb-ink); }
+.zb .zb-run .zb-log--stderr, .zb .zb-run .zb-log--error { font-weight: 600; color: light-dark(#b42318, #ff8b82); background: light-dark(rgba(180,35,24,.07), rgba(255,139,130,.10)); }
+.zb .zb-run .zb-log--warn { color: light-dark(#8a5a00, #e3b341); font-weight: 600; }
+.zb .zb-run .zb-log--system { font-weight: 500; font-size: calc(var(--zb-fs-con) * .88); color: color-mix(in srgb, var(--zb-ink) 65%, transparent); }
+.zb .zb-run .zb-log--system::before { color: var(--zb-echo); }
+
+/* the user's own answer: high-contrast accent, bold, outlined pill */
+.zb .zb-run .zb-log__echo {
+  color: var(--zb-echo); font-weight: 800; padding: 1px .55em; margin-inline-start: .3em; border-radius: 6px;
+  background: color-mix(in srgb, var(--zb-accent) 13%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--zb-accent) 38%, transparent) inset;
+}
+
+/* answer line (input box under the console) */
+.zb .zb-run__prompt { background: color-mix(in srgb, var(--zb-accent) 8%, var(--zb-term)); border-top: 2px solid var(--zb-accent); padding: 12px 20px; gap: 12px; }
+.zb .zb-run__chev { color: var(--zb-echo); font-size: calc(var(--zb-fs-con) * 1.25); font-weight: 800; }
+.zb .zb-run__prompt input {
+  font-family: var(--zb-font-mono); font-size: var(--zb-fs-con); font-weight: 600; color: var(--zb-ink); padding: 8px 12px; border-radius: 9px;
+  background: var(--zb-bg); border: 1px solid color-mix(in srgb, var(--zb-accent) 45%, var(--zb-line)); caret-color: var(--zb-accent);
+}
+.zb .zb-run__prompt input:focus { border-color: var(--zb-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--zb-accent) 22%, transparent); }
+.zb .zb-run__prompt input::placeholder { font-family: var(--zb-font-ui); font-weight: 500; font-size: calc(var(--zb-fs-con) * .92); color: color-mix(in srgb, var(--zb-ink) 62%, transparent); opacity: 1; }
+.zb .zb-run__prompt kbd { color: var(--zb-ink); border-color: var(--zb-line); }
+.zb .zb-run__stdin textarea { font-family: var(--zb-font-mono); font-weight: 500; color: var(--zb-ink); }
+.zb .zb-run__stdin textarea::placeholder { font-family: var(--zb-font-ui); color: color-mix(in srgb, var(--zb-ink) 60%, transparent); opacity: 1; }
+.zb .zb-run__stdin summary { color: color-mix(in srgb, var(--zb-ink) 75%, transparent); font-weight: 700; }
+.zb .zb-run__empty { color: color-mix(in srgb, var(--zb-ink) 70%, transparent); }
+
+
+/* ---------- run bar: Run / Stop / status stay clearly readable in EVERY theme ----------
+   (contrast checked on all 11 palettes: buttons ≥ 5:1, status pill ≥ 5:1; the pill takes its own state colour) */
+.zb .zb-run__bar .zb-btn { height: 30px; padding: 0 14px; border-radius: 8px; font-size: 13px; font-weight: 700; letter-spacing: .01em; color: var(--zb-strong); }
+.zb .zb-run__bar .zb-btn svg { flex: none; }
+.zb .zb-run__bar .zb-btn--primary {
+  background: color-mix(in srgb, var(--zb-primary) 80%, #000); border-color: color-mix(in srgb, var(--zb-primary) 55%, #000); color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .14) inset, 0 1px 3px rgba(0, 0, 0, .3);
+}
+.zb .zb-run__bar .zb-btn--primary:hover:not(:disabled) { background: color-mix(in srgb, var(--zb-primary) 92%, #000); border-color: var(--zb-primary); }
+.zb .zb-run__bar .zb-btn--danger {
+  background: color-mix(in srgb, var(--zb-danger) 50%, #000); border-color: var(--zb-danger); color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .12) inset, 0 1px 3px rgba(0, 0, 0, .3);
+}
+.zb .zb-run__bar .zb-btn--danger:hover:not(:disabled) { background: color-mix(in srgb, var(--zb-danger) 62%, #000); }
+/* disabled = clearly "off", but the label is still readable (no more 60 % opacity fade) */
+.zb .zb-run__bar .zb-btn:disabled, .zb .zb-run__bar .zb-btn--primary:disabled {
+  opacity: 1; cursor: not-allowed; box-shadow: none; background: var(--zb-btn); border: 1px dashed var(--zb-line);
+  color: color-mix(in srgb, var(--zb-muted) 65%, var(--zb-strong));
+}
+
+.zb .zb-run__bar .zb-run__state {
+  --st: var(--zb-muted);
+  height: 26px; padding: 0 12px 0 10px; gap: 8px; border-radius: 999px; font-weight: 700; letter-spacing: .01em;
+  border: 1px solid color-mix(in srgb, var(--st) 55%, transparent);
+  background: color-mix(in srgb, var(--st) 20%, var(--zb-bar));
+  color: color-mix(in srgb, var(--st) 60%, var(--zb-strong));
+}
+.zb .zb-run__bar .zb-run__state.is-running, .zb .zb-run__bar .zb-run__state.is-done { --st: var(--zb-added); }
+.zb .zb-run__bar .zb-run__state.is-error { --st: var(--zb-danger); }
+.zb .zb-run__bar .zb-run__state.is-building, .zb .zb-run__bar .zb-run__state.is-stopped { --st: var(--zb-warn); }
+.zb .zb-run__bar .zb-run__state.is-input { --st: var(--zb-accent); }
+.zb .zb-run__bar .zb-run__state .zb-run__dot { width: 8px; height: 8px; background: var(--st); box-shadow: 0 0 0 3px color-mix(in srgb, var(--st) 28%, transparent); }
+
+/* the whole bar shows what the program is doing: a coloured edge while it runs / waits / has failed */
+.zb .zb-run[data-state="building"] .zb-run__bar { box-shadow: inset 0 2px 0 var(--zb-warn); }
+.zb .zb-run[data-state="running"] .zb-run__bar { box-shadow: inset 0 2px 0 var(--zb-added); }
+.zb .zb-run[data-state="input"] .zb-run__bar { box-shadow: inset 0 2px 0 var(--zb-accent); }
+.zb .zb-run[data-state="error"] .zb-run__bar { box-shadow: inset 0 2px 0 var(--zb-danger); }

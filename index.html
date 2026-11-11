@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="description" content="UIPE — Unified Integrated Platform Ecosystem. One Platform. Endless Connections." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@500;800&family=Lalezar&family=Reem+Kufi:wght@700&family=Bebas+Neue&family=Pacifico&display=swap" rel="stylesheet" media="print" data-uip-font />
+    <script src="/font-boot.js"></script>
+    <script src="/theme-boot.js"></script>
+    <style>
+      #uip-boot{position:fixed;inset:0;z-index:2147483000;display:grid;place-content:center;justify-items:center;gap:18px;background:#f3efe6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E")}
+      [data-theme="dark"] #uip-boot{background-color:#1a1c26}
+      #uip-boot img{width:200px;height:auto;max-width:60vw;background:#fff;border-radius:18px;padding:14px 18px;box-sizing:content-box;box-shadow:0 10px 30px rgba(60,45,20,.15)}
+      #uip-boot i{display:block;width:120px;height:3px;border-radius:3px;overflow:hidden;background:rgba(90,70,40,.18)}
+      #uip-boot i:after{content:"";display:block;width:40%;height:100%;border-radius:3px;background:#515FFF;animation:uipb 1s ease-in-out infinite}
+      @keyframes uipb{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
+      @media (prefers-reduced-motion:reduce){#uip-boot{display:none}}
+      html[data-motion="off"] #uip-boot{display:none}
+    </style>
+    <title>UIPE — Unified Integrated Platform Ecosystem</title>
+  </head>
+  <body>
+    <div id="uip-boot" aria-hidden="true"><img src="/images/logo/uipe-logo-sm.png" srcset="/images/logo/uipe-logo-sm.png 1x, /images/logo/uipe-logo.png 2x" width="200" height="110" alt=""><i></i></div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

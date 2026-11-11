@@ -1,0 +1,22 @@
+// Mirrors src/i18n/university/portfolio.js — same public-portfolio page,
+// scoped to a faculty instead of a university.
+export default {
+  'Anyone with this link can view your published projects.': 'أي حد معاه الرابط ده يقدر يشوف مشاريع كليتك المنشورة.',
+  'Completing your faculty profile in Settings helps students and staff recognize your page.': 'استكمال بيانات الكلية من الإعدادات بيساعد الطلاب والهيئة يتعرفوا على صفحتك.',
+  'Copied!': 'تم!',
+  'Copy': 'نسخ',
+  'Departments': 'الأقسام',
+  'Location not set yet': 'لم يُحدد الموقع بعد',
+  'Make profile public': 'إظهار الملف للعامة',
+  'Open public page': 'فتح الصفحة العامة',
+  'Private': 'خاص',
+  'Profile Visibility': 'ظهور الملف',
+  'Public': 'عام',
+  'Public Portfolio': 'الملف العام',
+  'Public Share Link': 'رابط المشاركة العامة',
+  'Students': 'الطلاب',
+  'Tip': 'نصيحة',
+  'Turn on "Make profile public" above to get a shareable link.': 'فعّل "ظهور الملف للعامة" فوق عشان تحصل على رابط قابل للمشاركة.',
+  'Published Projects': 'مشاريع منشورة',
+  'When on, anyone with the link can view your published student projects.': 'عند التفعيل، يقدر أي حد معاه الرابط يشوف مشاريعك المنشورة.',
+};

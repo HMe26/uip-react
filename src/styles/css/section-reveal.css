@@ -1,0 +1,9 @@
+/* Landing scroll reveal (hooks/useSectionReveal.js). Individual transform properties only, so card hover transforms keep working. */
+.lp4-section { perspective: 1500px; }
+[data-rv] { transform-origin: 50% 100%; will-change: opacity, translate, rotate, scale; }
+[data-rv="hide"] { opacity: 0; translate: 0 58px; rotate: 1 0 0 -16deg; scale: .96; }
+.lp4-head[data-rv="hide"] { translate: 0 28px; rotate: none; scale: 1; filter: blur(6px); }
+[data-rv="show"] { opacity: 1; translate: 0 0; rotate: 1 0 0 0deg; scale: 1; filter: blur(0);
+  transition: opacity .7s ease, translate .9s cubic-bezier(.2, .8, .2, 1), rotate .9s cubic-bezier(.2, .8, .2, 1), scale .9s cubic-bezier(.2, .8, .2, 1), filter .7s ease;
+  transition-delay: calc(var(--rv-i, 0) * 110ms); }
+@media (prefers-reduced-motion: reduce) { [data-rv] { opacity: 1; translate: none; rotate: none; scale: none; filter: none; transition: none; } }

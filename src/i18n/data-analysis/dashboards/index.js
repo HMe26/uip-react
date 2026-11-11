@@ -1,0 +1,28 @@
+// Auto-extracted from api/app/Views/data-analysis/dashboards/index.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Archive': 'أرشفة',
+  'Archived': 'مؤرشفة',
+  'Build custom dashboards by dragging widgets into place — every widget shows live platform data.': 'أنشئ لوحات مخصّصة بسحب وإفلات الودجت — كل ودجت يعرض بيانات حية من المنصة.',
+  'Delete': 'حذف',
+  'Delete this dashboard permanently?': 'حذف اللوحة نهائياً؟',
+  'Duplicate': 'نسخ',
+  'Edit': 'تعديل',
+  'Export': 'تصدير',
+  'Mine': 'لوحاتي',
+  'New Dashboard': 'لوحة جديدة',
+  'No archived dashboards.': 'لا توجد لوحات مؤرشفة.',
+  'No other analysts have shared a dashboard yet.': 'لا توجد لوحات مشتركة من محللين آخرين حتى الآن.',
+  'Restore': 'استعادة',
+  'Saved Dashboards': 'اللوحات المحفوظة',
+  'Share': 'مشاركة',
+  'Shared': 'مشتركة',
+  'Shared with me': 'مشتركة معي',
+  'Unshare': 'إلغاء المشاركة',
+  'View': 'عرض',
+  'widgets': 'ودجت',
+  'At least one valid widget is required.': 'مطلوب عنصر واحد صالح على الأقل.',
+  'Query Templates': 'قوالب الاستعلامات',
+  'Share with other data analysts': 'مشاركة مع محللي البيانات الآخرين',
+  'No templates yet.': 'لا توجد قوالب بعد.',
+};

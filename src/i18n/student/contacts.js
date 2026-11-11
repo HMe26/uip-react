@@ -1,0 +1,26 @@
+// Auto-extracted from api/app/Views/student/contacts.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Academic Year': 'السنة الدراسية',
+  'Department': 'القسم',
+  'Faculty': 'الكلية',
+  'Group': 'المجموعة',
+  'Head of Department': 'رئيس القسم',
+  'Institutional Chain': 'السلسلة المؤسسية',
+  'Message': 'مراسلة',
+  'My Contacts': 'جهات اتصالي',
+  'My Group Members': 'أعضاء مجموعتي',
+  'No Head of Department currently assigned.': 'لا يوجد رئيس قسم معيّن حاليًا.',
+  'No institutional data is linked to your account yet.': 'لا توجد بيانات هيكلية مرتبطة بحسابك بعد.',
+  'No linked faculty account.': 'لا يوجد حساب كلية مرتبط.',
+  'No linked university account.': 'لا يوجد حساب جامعة مرتبط.',
+  'No other members in your group yet.': 'لا يوجد زملاء آخرون في مجموعتك بعد.',
+  'No supervisor currently assigned to you.': 'لا يوجد مشرف معيّن لك حاليًا.',
+  'Permission Requests': 'طلبات الصلاحية',
+  'Request permission here.': 'اطلب صلاحية هنا.',
+  'Semester': 'الفصل الدراسي',
+  'Supervisors': 'المشرفون',
+  'University': 'الجامعة',
+  'Want to message a student outside your group?': 'تريد التواصل مع طالب خارج مجموعتك؟',
+  'Your university, faculty, department, supervisors, and group members — all in one place.': 'جامعتك، كليتك، قسمك، مشرفوك، وزملاء مجموعتك — كلهم في مكان واحد.',
+};

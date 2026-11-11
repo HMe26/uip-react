@@ -1,0 +1,80 @@
+/* palette-insight.css — the platform's three looks, applied to EVERY portal.
+   <html data-palette="insight"> + data-theme="light"  → Classic (default): indigo on a cool grey-blue canvas
+   <html data-palette="white">   + data-theme="light"  → Light: clean white, neutral greys
+   <html data-palette="insight"> + data-theme="dark"   → Dark
+   (set by ThemeContext / public/theme-boot.js; picker in the Topbar, sidebar and Settings → Appearance). */
+
+html[data-palette="insight"] .app-shell {
+  --bg-canvas: #F6F7FC;
+  --bg-surface: #FFFFFF;
+  --bg-sidebar: #FFFFFF;
+  --bg-muted: #F1F3FA;
+  --text-primary: #0F1424;
+  --text-secondary: #6B7089;
+  --border-subtle: #E8EAF3;
+  --border-strong: #D6DBEE;
+
+  --color-primary: #515FFF;
+  --color-primary-hover: #3E4BE6;
+  --color-primary-rgb: 81, 95, 255;
+  --color-on-primary: #FFFFFF;
+  --color-success: #1DB98A;  --color-success-rgb: 29, 185, 138;
+  --color-warning: #C98500;  --color-warning-rgb: 228, 163, 43;
+  --color-danger:  #FF6B6B;  --color-danger-rgb: 255, 107, 107;
+  --st-info: #515FFF;
+}
+html[data-palette="insight"][data-theme="dark"] .app-shell {
+  --bg-canvas: #101420;
+  --bg-surface: #171E2E;
+  --bg-sidebar: #121826;
+  --bg-muted: #1B2233;
+  --text-primary: #F3F5FA;
+  --text-secondary: #8F9AB5;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  --color-primary: #5A67FF;
+  --color-primary-hover: #7480FF;
+  --color-primary-rgb: 90, 103, 255;
+  --color-success: #22C997;  --color-success-rgb: 34, 201, 151;
+  --color-warning: #F0B33A;  --color-warning-rgb: 240, 179, 58;
+  --color-danger:  #FF6B6B;  --color-danger-rgb: 255, 107, 107;
+  --st-info: #7B8BFF;
+}
+html[data-palette="insight"] .app-shell { background: var(--bg-canvas); }
+
+
+/* ---- Light: clean white ---------------------------------------------------- */
+html[data-palette="white"],
+html[data-palette="white"] .app-shell {
+  --bg-canvas: #FBFBFC;
+  --bg-surface: #FFFFFF;
+  --bg-sidebar: #FFFFFF;
+  --bg-muted: #F3F4F6;
+  --text-primary: #111318;
+  --text-secondary: #666B78;
+  --border-subtle: #E7E8EC;
+  --border-strong: #D5D8DF;
+
+  --color-primary: #515FFF;
+  --color-primary-hover: #3E4BE6;
+  --color-primary-rgb: 81, 95, 255;
+  --color-on-primary: #FFFFFF;
+  --color-success: #17A97F;  --color-success-rgb: 23, 169, 127;
+  --color-warning: #C98500;  --color-warning-rgb: 228, 163, 43;
+  --color-danger:  #E5484D;  --color-danger-rgb: 229, 72, 77;
+  --st-info: #515FFF;
+}
+html[data-palette="white"] .app-shell { background: var(--bg-canvas); }
+html[data-palette="white"] body { background: var(--bg-canvas); }
+
+/* ---- palette picker (topbar) ---- */
+.pal-menu { min-width: 210px; padding: 6px; }
+.pal-menu__title { padding: 8px 10px 6px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-secondary); }
+[dir="rtl"] .pal-menu__title { letter-spacing: 0; }
+.pal-opt { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: 0; border-radius: 10px; background: none; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--text-primary); cursor: var(--cur-pointer, pointer); text-align: start; }
+.pal-opt:hover { background: var(--bg-canvas); }
+.pal-opt.is-active { background: rgba(var(--color-primary-rgb), .09); }
+.pal-opt__sw { display: inline-flex; flex-shrink: 0; width: 34px; height: 22px; border-radius: 7px; overflow: hidden; border: 1px solid var(--border-strong); }
+.pal-opt__sw i { flex: 1; }
+.pal-opt .pal-opt__check { margin-inline-start: auto; color: var(--color-primary); }

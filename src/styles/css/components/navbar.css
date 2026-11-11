@@ -1,0 +1,12 @@
+/* components/navbar.css — top bar */
+.topbar {
+  height: var(--topbar-height); display: flex; align-items: center; justify-content: space-between;
+  padding-inline: var(--space-5); position: sticky; top: 0; z-index: var(--z-sticky);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.topbar__search { display: flex; align-items: center; gap: var(--space-2); width: min(420px, 40vw);
+  padding: 0.5em 1em; border-radius: var(--radius-full); }
+.topbar__actions { display: flex; align-items: center; gap: var(--space-3); }
+.topbar__icon-btn { width: 40px; height: 40px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; }
+.topbar__icon-btn:hover { background: var(--glass-bg); }
+.topbar__mobile-search-btn { display: none; }

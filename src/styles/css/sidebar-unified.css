@@ -1,0 +1,232 @@
+/* ==========================================================================
+   sidebar-unified.css — ONE sidebar design for every portal.
+   Source of truth: the Academic Staff sidebar (deep navy + gold, serif brand),
+   refined and rolled out to all portals:
+     · navy gradient panel with a soft gold glow at the top, in light AND dark theme
+     · gold = the signature accent everywhere (active row, section titles, avatar, AI button)
+     · each portal gets its own navy hue (and gold warmth) through the [data-portal]
+       block at the bottom — same family, never a different look
+     · serif brand (Playfair Display, Amiri for Arabic); Arabic gets NO letter-spacing / uppercase
+     · user card, theme switch, AI button, collapsed rail and phone drawer all keep working
+   Loaded last on purpose: it replaces the per-shell sidebar rules.
+   To tune ONE portal, edit its entry in the [data-portal] block at the bottom.
+   ========================================================================== */
+
+.app-shell.app-shell--insight .sidebar {
+  /* palette — overridden per portal below */
+  --sb-navy: #0F2455;
+  --sb-gold: #E3C06B;
+  --sb-gold-rgb: 227, 192, 107;
+  --sb-gold-soft: #F3D88F;
+  --sb-on-gold: #0E2150;
+
+  --sb-top: color-mix(in srgb, var(--sb-navy) 90%, #fff);
+  --sb-bottom: color-mix(in srgb, var(--sb-navy) 86%, #000);
+  --sb-text: #B4BFDB;
+  --sb-text-strong: #F5F2E8;
+  --sb-border: rgba(255, 255, 255, .09);
+  --sb-rule: rgba(var(--sb-gold-rgb), .28);
+  --sb-hover: rgba(255, 255, 255, .075);
+  --sb-card: rgba(255, 255, 255, .06);
+  --sb-tint: rgba(var(--sb-gold-rgb), .14);
+  --sb-width: 252px;
+
+  /* aliases kept for any rule that still reads the older names */
+  --sb-accent: var(--sb-gold);
+  --sb-accent-rgb: var(--sb-gold-rgb);
+  --sb-bg: var(--sb-bottom);
+
+  /* children (theme switch, AI button, badges, focus rings…) read the global tokens,
+     so re-point them to the navy/gold palette inside the sidebar only */
+  --text-primary: var(--sb-text-strong);
+  --text-secondary: var(--sb-text);
+  --border-subtle: var(--sb-border);
+  --border-strong: rgba(255, 255, 255, .2);
+  --bg-surface: var(--sb-card);
+  --bg-canvas: rgba(255, 255, 255, .07);
+  --color-primary: var(--sb-gold);
+  --color-primary-rgb: var(--sb-gold-rgb);
+  --color-primary-hover: var(--sb-gold-soft);
+  --color-on-primary: var(--sb-on-gold);
+
+  width: var(--sb-width); flex-shrink: 0;
+  padding: 18px 12px 12px; gap: 0;
+  background:
+    radial-gradient(130% 170px at 50% 0, rgba(var(--sb-gold-rgb), .09), transparent 70%),
+    linear-gradient(180deg, var(--sb-top) 0%, var(--sb-bottom) 100%);
+  border: none; border-inline-end: 1px solid rgba(255, 255, 255, .06); border-radius: 0; box-shadow: none;
+  color: var(--sb-text);
+}
+/* dark theme: same navy, just deeper */
+[data-theme="dark"] .app-shell.app-shell--insight .sidebar {
+  --sb-top: color-mix(in srgb, var(--sb-navy) 55%, #000);
+  --sb-bottom: color-mix(in srgb, var(--sb-navy) 38%, #000);
+  --sb-border: rgba(255, 255, 255, .08);
+  --sb-card: rgba(255, 255, 255, .05);
+  --sb-tint: rgba(var(--sb-gold-rgb), .16);
+}
+
+/* ---- Brand --------------------------------------------------------------- */
+.app-shell.app-shell--insight .sidebar .sidebar__brand {
+  padding: 2px 8px 15px; margin-bottom: 4px; gap: 11px;
+  border-bottom: 1px solid var(--sb-rule);
+}
+.app-shell.app-shell--insight .sidebar .sidebar__logo {
+  width: 38px; height: 38px; border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(var(--sb-gold-rgb), .35), 0 6px 16px rgba(0, 0, 0, .28);
+}
+.app-shell.app-shell--insight .sidebar .sidebar__brand-name {
+  font-family: var(--font-display); font-size: 15.5px; font-weight: 700; line-height: 1.2; letter-spacing: .01em; color: #fff;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__brand-light { font-weight: 500; color: var(--sb-gold-soft); }
+.app-shell.app-shell--insight .sidebar .sidebar__brand-sub {
+  margin-top: 4px; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--sb-gold);
+}
+/* Arabic: letter-spacing and uppercase break the joined letters, so switch them off */
+[dir="rtl"] .app-shell.app-shell--insight .sidebar .sidebar__brand-name { font-size: 18px; letter-spacing: 0; }
+[dir="rtl"] .app-shell.app-shell--insight .sidebar .sidebar__brand-sub { font-size: 11.5px; letter-spacing: 0; text-transform: none; }
+
+/* ---- Nav ----------------------------------------------------------------- */
+.app-shell.app-shell--insight .sidebar .sidebar__nav {
+  flex: 1 1 auto; min-height: 0; margin: 0 -4px 8px; padding: 0 4px; gap: 2px;
+  overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
+
+}
+.app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar { width: 6px; }
+.app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .18); border-radius: 999px; }
+.app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-thumb:hover { background: rgba(var(--sb-gold-rgb), .5); }
+
+.app-shell.app-shell--insight .sidebar .sidebar__section-title {
+  display: flex; align-items: center; gap: 8px;
+  padding: 16px 10px 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--sb-gold); opacity: .85;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__section-title::after { content: ''; flex: 1; height: 1px; background: var(--sb-rule); opacity: .6; }
+.app-shell.app-shell--insight .sidebar .sidebar__nav > div:first-child .sidebar__section-title { padding-top: 10px; }
+[dir="rtl"] .app-shell.app-shell--insight .sidebar .sidebar__section-title { font-size: 12px; letter-spacing: 0; text-transform: none; }
+
+.app-shell.app-shell--insight .sidebar .sidebar__link {
+  position: relative; display: flex; align-items: center; gap: 11px;
+  padding: 9px 11px; border-radius: 9px;
+  font-size: 13.5px; font-weight: 500; line-height: 1.3; white-space: nowrap;
+  color: var(--sb-text); background: none; box-shadow: none;
+  transition: background .15s ease, color .15s ease;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__link svg { flex-shrink: 0; opacity: .85; transition: color .15s ease, opacity .15s ease, transform .15s ease; }
+.app-shell.app-shell--insight .sidebar .sidebar__link > span:not([class]) { overflow: hidden; text-overflow: ellipsis; }
+.app-shell.app-shell--insight .sidebar .sidebar__link:hover { background: var(--sb-hover); color: #fff; }
+.app-shell.app-shell--insight .sidebar .sidebar__link:hover svg { opacity: 1; transform: scale(1.06); }
+
+.app-shell.app-shell--insight .sidebar .sidebar__link.is-active {
+  background: var(--sb-tint); color: var(--sb-gold-soft); font-weight: 700; box-shadow: none; border-radius: 9px;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__link.is-active svg { color: var(--sb-gold); opacity: 1; }
+/* gold bar on the screen edge of the sidebar (flips automatically in RTL) */
+.app-shell.app-shell--insight .sidebar .sidebar__link.is-active::before {
+  content: ''; position: absolute; inset-inline-start: -12px; inset-block: 8px; width: 3.5px;
+  background: var(--sb-gold); border-start-end-radius: 4px; border-end-end-radius: 4px;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__link.is-disabled { opacity: .5; cursor: var(--cur-default, default); }
+.app-shell.app-shell--insight .sidebar .sidebar__link.is-disabled:hover { background: none; color: var(--sb-text); }
+.app-shell.app-shell--insight .sidebar .sidebar__link.is-disabled:hover svg { transform: none; }
+
+.app-shell.app-shell--insight .sidebar .sidebar__link:focus-visible,
+.app-shell.app-shell--insight .sidebar .sidebar__user:focus-visible,
+.app-shell.app-shell--insight .sidebar .sidebar__ai-btn:focus-visible,
+.app-shell.app-shell--insight .sidebar .theme-switch button:focus-visible { outline: 2px solid var(--sb-gold); outline-offset: 2px; }
+
+.app-shell.app-shell--insight .sidebar .sidebar__count {
+  margin-inline-start: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  background: var(--sb-gold); color: var(--sb-on-gold); font-size: 11px; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__link.is-active .sidebar__count { box-shadow: 0 0 0 2px var(--sb-bottom); }
+.app-shell.app-shell--insight .sidebar .badge-coming-soon {
+  border-radius: 999px; background: rgba(255, 255, 255, .1); color: var(--sb-text); border: 1px solid var(--sb-border);
+}
+
+/* ---- Promo (Data Analyst) — gold-tinted card ----------------------------------- */
+.app-shell.app-shell--insight .sidebar .sidebar__promo {
+  margin: 0 0 8px; padding: 12px 13px; border-radius: 12px; gap: 6px;
+  background: var(--sb-tint); color: var(--sb-gold); border: 1px solid rgba(var(--sb-gold-rgb), .25);
+}
+.app-shell.app-shell--insight .sidebar .sidebar__promo p { font-size: 12.5px; line-height: 1.45; color: var(--sb-text); }
+.app-shell.app-shell--insight .sidebar .sidebar__promo a { font-size: 13px; color: var(--sb-gold-soft); }
+
+/* ---- Footer: theme switch + AI ---------------------------------------------- */
+.app-shell.app-shell--insight .sidebar .sidebar__footer {
+  display: flex; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 1px solid var(--sb-rule); flex-shrink: 0;
+}
+.app-shell.app-shell--insight .sidebar .theme-switch { padding: 3px; border-radius: 10px; background: rgba(255, 255, 255, .07); }
+.app-shell.app-shell--insight .sidebar .theme-switch button { border-radius: 8px; color: var(--sb-text); }
+.app-shell.app-shell--insight .sidebar .theme-switch button.is-active { background: rgba(255, 255, 255, .15); color: #fff; box-shadow: none; }
+.app-shell.app-shell--insight .sidebar .theme-switch button.is-active svg { color: var(--sb-gold); }
+.app-shell.app-shell--insight .sidebar .sidebar__ai-btn {
+  border-radius: 10px; padding: 10px 12px; font-size: 13px; font-weight: 700;
+  background: linear-gradient(135deg, var(--sb-gold-soft), var(--sb-gold) 55%, color-mix(in srgb, var(--sb-gold) 78%, #7a5200));
+  color: var(--sb-on-gold); box-shadow: 0 6px 16px rgba(0, 0, 0, .28);
+}
+.app-shell.app-shell--insight .sidebar .sidebar__ai-btn:hover { filter: brightness(1.06); }
+
+/* three looks: Light / Classic / Dark */
+.app-shell.app-shell--insight .sidebar .theme-switch--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; }
+.app-shell.app-shell--insight .sidebar .theme-switch--3 button { gap: 4px; padding: 7px 2px; font-size: 11.5px; min-width: 0; }
+.app-shell.app-shell--insight .sidebar .theme-switch--3 button span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-shell.app-shell--insight .sidebar .theme-switch--3 button svg { width: 13px; height: 13px; }
+
+/* ---- User card (bottom) ------------------------------------------------------ */
+.app-shell.app-shell--insight .sidebar .sidebar__user {
+  margin: 10px 0 0; padding: 9px 10px; gap: 10px; border-radius: 12px; flex-shrink: 0;
+  background: var(--sb-card); border: 1px solid var(--sb-border); box-shadow: none; color: inherit; text-decoration: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+.app-shell.app-shell--insight .sidebar a.sidebar__user:hover { border-color: rgba(var(--sb-gold-rgb), .5); background: var(--sb-tint); }
+.app-shell.app-shell--insight .sidebar .sidebar__user > svg { margin-inline-start: auto; flex-shrink: 0; color: var(--sb-text); opacity: .7; }
+.app-shell.app-shell--insight .sidebar .sidebar__user-avatar {
+  width: 36px; height: 36px; border-radius: 50%; font-size: 12px; font-weight: 800; color: var(--sb-on-gold);
+  background: linear-gradient(135deg, var(--sb-gold-soft), var(--sb-gold));
+  box-shadow: 0 0 0 2px var(--sb-bottom), 0 0 0 3.5px rgba(var(--sb-gold-rgb), .45);
+}
+.app-shell.app-shell--insight .sidebar .sidebar__user-text strong { font-size: 13px; font-weight: 700; color: var(--sb-text-strong); }
+.app-shell.app-shell--insight .sidebar .sidebar__user-text span { font-size: 11.5px; color: var(--sb-text); }
+
+/* ---- Collapsed (icons only, tablets / desktop toggle) ------------------------- */
+.app-shell.app-shell--insight .sidebar.is-collapsed { width: 76px; --sb-width: 76px; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__brand { justify-content: center; padding-inline: 0; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__section-title { visibility: hidden; height: 10px; padding: 0; margin: 6px 0; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__link { justify-content: center; padding-inline: 0; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__count { position: absolute; top: 3px; inset-inline-end: 10px; min-width: 16px; height: 16px; padding: 0 4px; font-size: 9.5px; }
+.app-shell.app-shell--insight .sidebar.is-collapsed :is(.sidebar__user-text, .sidebar__user > svg, .theme-switch span, .sidebar__ai-btn span, .sidebar__promo) { display: none; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__user { justify-content: center; padding: 8px 0; background: none; border-color: transparent; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .theme-switch,
+.app-shell.app-shell--insight .sidebar.is-collapsed .theme-switch--3 { grid-template-columns: 1fr; }
+
+/* Off-canvas drawer on phones: keep the same look, full labels. */
+@media (max-width: 768px) {
+  .app-shell.app-shell--insight .sidebar { --sb-width: min(300px, 84vw); width: var(--sb-width); padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .app-shell.app-shell--insight .sidebar .sidebar__link.is-active::before { inset-inline-start: -12px; }
+}
+
+/* The sidebar's AI button replaces the floating AI button in every portal. */
+.app-shell.app-shell--insight .ai-fab { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell.app-shell--insight .sidebar * { transition: none !important; }
+  .app-shell.app-shell--insight .sidebar .sidebar__link:hover svg { transform: none; }
+}
+
+/* ---- Per-portal flavour ---------------------------------------------------------
+   Same navy + gold family; only the navy hue (and, for Security, the gold's warmth)
+   changes so each portal is recognisable at a glance.
+   --sb-navy is the light-theme base; dark theme derives a deeper shade from it.
+   ---------------------------------------------------------------------------- */
+.app-shell.app-shell--insight .sidebar[data-portal="academic_staff"],
+.app-shell.app-shell--insight .sidebar[data-portal="supervisor"]       { --sb-navy: #0F2455; } /* reference: Academic Staff */
+.app-shell.app-shell--insight .sidebar[data-portal="university"]       { --sb-navy: #12285E; } /* classic university navy */
+.app-shell.app-shell--insight .sidebar[data-portal="student"]          { --sb-navy: #17275F; } /* a touch more indigo */
+.app-shell.app-shell--insight .sidebar[data-portal="faculty"]          { --sb-navy: #0E2D55; } /* leans teal-blue */
+.app-shell.app-shell--insight .sidebar[data-portal="admin"]            { --sb-navy: #1A1F52; } /* ink / violet navy */
+.app-shell.app-shell--insight .sidebar[data-portal="data_analyst"]     { --sb-navy: #0B2B4F; } /* deep ocean navy */
+.app-shell.app-shell--insight .sidebar[data-portal="security_admin"],
+.app-shell.app-shell--insight .sidebar[data-portal="security_officer"] {                          /* near-black navy + amber gold */
+  --sb-navy: #0E1727; --sb-gold: #EAB64F; --sb-gold-rgb: 234, 182, 79; --sb-gold-soft: #F6D58B; --sb-on-gold: #1A1204;
+}

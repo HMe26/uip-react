@@ -1,0 +1,84 @@
+/* pages/error-page.css — full-page 404/403/500. Reuses .public-wrap /
+   .public-topbar chrome (same shell every no-auth page uses) but the body
+   is its own "instrument panel" layout: the ErrorRing status gauge next
+   to a diagnostic readout, not a generic centered icon-title-desc card. */
+
+.error-page {
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - 220px);
+  padding: var(--space-6) 0;
+}
+
+.error-page__panel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-7);
+  width: 100%;
+}
+
+.error-page__ring { flex: none; }
+
+.error-page__body { flex: 1; min-width: 0; }
+
+.error-page__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-2);
+}
+.error-page__eyebrow strong { color: inherit; }
+[data-code-color="404"] .error-page__eyebrow { color: var(--uip-indigo-600); }
+[data-code-color="403"] .error-page__eyebrow { color: var(--color-danger); }
+[data-code-color="500"] .error-page__eyebrow { color: var(--uip-gold-600); }
+
+.error-page__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-display-lg);
+  line-height: var(--leading-tight);
+  margin: 0 0 var(--space-3);
+}
+
+.error-page__desc {
+  color: var(--text-secondary);
+  max-width: 52ch;
+  margin: 0 0 var(--space-5);
+}
+
+.error-page__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-5);
+}
+
+.error-page__log {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--border-subtle);
+  overflow-wrap: anywhere;
+}
+.error-page__log-path { color: var(--text-primary); }
+.error-page__log-code { font-weight: 700; }
+[data-code-color="404"] .error-page__log-code { color: var(--uip-indigo-600); }
+[data-code-color="403"] .error-page__log-code { color: var(--color-danger); }
+[data-code-color="500"] .error-page__log-code { color: var(--uip-gold-600); }
+
+@media (max-width: 720px) {
+  .error-page { min-height: calc(100vh - 260px); padding: var(--space-5) 0; }
+  .error-page__panel { flex-direction: column; text-align: center; gap: var(--space-5); }
+  .error-page__desc { margin-inline: auto; }
+  .error-page__actions { justify-content: center; }
+  .error-page__log { flex-direction: column; align-items: center; gap: var(--space-1); text-align: center; }
+}
+
+[dir="rtl"] .error-page__log { direction: ltr; text-align: right; }

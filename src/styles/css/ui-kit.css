@@ -1,0 +1,87 @@
+/* ==========================================================================
+   UI kit — ONE implementation of the patterns every admin/portal page rebuilt on its own.
+   Rules for this file (so it never turns into the next layer of the pile):
+     • single-class selectors only (specificity 0,1,0) → a page can always override with one extra class, never `!important`
+     • sizes/colours come from tokens (variables.css + tokens-extra.css), no literals
+     • mobile behaviour is built in (tables become cards, toolbars stack, chip rows swipe)
+   Imported BEFORE the page stylesheets in index.css on purpose.
+   ========================================================================== */
+
+/* ---- surfaces ------------------------------------------------------------ */
+.ui-card { padding: var(--ui-pad-card-lg); border-radius: var(--ui-radius-card); border: 1px solid var(--ui-border); background: var(--ui-surface); box-shadow: var(--ui-shadow-card); min-width: 0; }
+.ui-card--flat { box-shadow: none; }
+.ui-card--muted { background: var(--ui-surface-muted); box-shadow: none; }
+.ui-card__title { margin: 0 0 var(--ui-gap-sm); font-size: 15px; font-weight: 800; letter-spacing: -.01em; }
+.ui-stack { display: grid; gap: var(--ui-gap-lg); }
+.ui-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-gap-sm); }
+.ui-muted { color: var(--text-secondary); }
+.ui-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- controls -------------------------------------------------------------- */
+.ui-input { width: 100%; height: var(--ui-ctl-h); padding-inline: 12px; border-radius: var(--ui-radius-ctl); border: 1px solid var(--ui-border); background: var(--bg-canvas); color: var(--text-primary); font: inherit; font-size: 13.5px; }
+.ui-input:focus { outline: none; border-color: var(--color-primary); box-shadow: var(--ui-ring); }
+.ui-input:disabled { opacity: .55; cursor: not-allowed; }
+.ui-field { display: grid; gap: 6px; min-width: 0; }
+.ui-field__label { font-size: 11.5px; font-weight: 700; color: var(--text-secondary); }
+
+/* ---- toolbar: search + controls; stacks on small screens ---------------------- */
+.ui-toolbar { display: grid; grid-template-columns: minmax(220px, 1fr) auto; gap: var(--ui-gap-md); align-items: center; }
+.ui-toolbar__controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-gap-sm); min-width: 0; }
+@media (max-width: 1180px) { .ui-toolbar { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) { .ui-toolbar__controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .ui-toolbar__controls > * { min-width: 0; } }
+
+/* ---- chips / pills / segmented -------------------------------------------------- */
+.ui-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-full); border: 1px solid var(--ui-border); background: var(--ui-surface-muted); color: var(--text-secondary); font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.ui-chip:hover { color: var(--text-primary); border-color: rgba(var(--color-primary-rgb), .4); }
+.ui-chip:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.ui-chip.is-on { background: var(--ui-tint-primary); border-color: var(--color-primary); color: var(--color-primary); }
+.ui-chip--danger.is-on { background: var(--ui-tint-danger); border-color: var(--color-danger); color: var(--color-danger); }
+/* one swipeable line instead of a wrapped wall (use on phones) */
+.ui-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ui-chips--scroll { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.ui-chips--scroll::-webkit-scrollbar { display: none; }
+.ui-chips--scroll > * { flex: none; scroll-snap-align: start; }
+@media (max-width: 760px) { .ui-chips--auto { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; margin-inline: -12px; padding: 2px 12px 6px; } .ui-chips--auto::-webkit-scrollbar { display: none; } .ui-chips--auto > * { flex: none; scroll-snap-align: start; } }
+.ui-segmented { display: inline-flex; padding: 3px; gap: 2px; border-radius: var(--ui-radius-ctl); border: 1px solid var(--ui-border); background: var(--bg-canvas); }
+.ui-segmented > button { border: 0; background: none; padding: 0 12px; height: calc(var(--ui-ctl-h) - 8px); border-radius: var(--radius-sm); font: inherit; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; }
+.ui-segmented > button.is-on { background: var(--ui-surface); color: var(--color-primary); box-shadow: 0 1px 4px rgba(20, 28, 70, .12); }
+
+/* ---- badges --------------------------------------------------------------------- */
+.ui-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: var(--radius-full); font-size: 11.5px; font-weight: 700; background: var(--ui-surface-muted); color: var(--text-secondary); white-space: nowrap; }
+.ui-badge--primary { background: var(--ui-tint-primary); color: var(--color-primary); }
+.ui-badge--success { background: var(--ui-tint-success); color: var(--color-success); }
+.ui-badge--warning { background: var(--ui-tint-warning); color: var(--color-warning); }
+.ui-badge--danger { background: var(--ui-tint-danger); color: var(--color-danger); }
+
+/* ---- KPI tiles ---------------------------------------------------------------------- */
+.ui-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--ui-gap-md); }
+.ui-kpi { display: grid; gap: 2px; padding: 14px 16px; border-radius: var(--ui-radius-ctl); border: 1px solid var(--ui-border); background: var(--ui-surface-muted); min-width: 0; }
+.ui-kpi small { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.ui-kpi strong { font-size: 22px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+@media (max-width: 520px) { .ui-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .ui-kpi { padding: 12px; } }
+
+/* ---- table: real table on desktop, stacked cards on phones (cells need data-label="Column") ---- */
+.ui-table-wrap { overflow-x: auto; border-radius: var(--ui-radius-card); border: 1px solid var(--ui-border); background: var(--ui-surface); }
+.ui-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; }
+.ui-table th { text-align: start; padding: 12px 16px; font-size: 12px; font-weight: 700; color: var(--text-secondary); white-space: nowrap; background: var(--ui-surface); border-bottom: 1px solid var(--ui-border); }
+.ui-table td { padding: 13px 16px; vertical-align: middle; border-bottom: 1px solid var(--ui-border); }
+.ui-table tbody tr:last-child td { border-bottom: 0; }
+.ui-table tbody tr:hover td { background: rgba(var(--color-primary-rgb), .04); }
+.ui-table .is-nowrap { white-space: nowrap; width: 1%; }
+@media (max-width: 760px) {
+  .ui-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .ui-table, .ui-table tbody { display: block; }
+  .ui-table tr { display: grid; gap: 8px; padding: 14px 16px; border-bottom: 1px solid var(--ui-border); }
+  .ui-table tbody tr:last-child { border-bottom: 0; }
+  .ui-table td { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 0; border: 0; text-align: end; }
+  .ui-table td::before { content: attr(data-label); flex: none; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-align: start; }
+  .ui-table .is-nowrap { width: auto; white-space: normal; }
+}
+
+/* ---- empty / notice ---------------------------------------------------------------------- */
+.ui-empty { display: grid; justify-items: center; gap: 6px; padding: 32px 16px; text-align: center; color: var(--text-secondary); }
+.ui-empty strong { color: var(--text-primary); }
+.ui-notice { display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-radius: var(--ui-radius-ctl); font-size: 13px; background: var(--ui-tint-warning); color: var(--text-primary); }
+
+/* ---- scroll container for pinned mobile pages (app-bar + list that scrolls inside) -------------- */
+.ui-scroll-y { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }

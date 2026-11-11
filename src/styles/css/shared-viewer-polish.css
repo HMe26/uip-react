@@ -1,0 +1,53 @@
+/* Shared page — file viewer card: real inner padding (the title used to sit on the card edge on phones), clear header, even buttons.
+   Loaded LAST in SharedItem.jsx; selectors are prefixed with `.shp .shp__main` to beat the older responsive layers. */
+
+.shp .shp__main .shp__viewer { --vw-pad: 18px; }
+.shp .shp__main .shp__viewer .shp__head {
+  position: relative; display: flex; flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 14px;
+  margin: 0; padding: 22px var(--vw-pad) 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.shp .shp__main .shp__viewer.is-folded .shp__head { border-bottom: 0; padding-bottom: 18px; }
+
+/* little grab handle: tells the phone user this is a sheet, and gives the top edge some air */
+.shp .shp__main .shp__viewer .shp__head::before {
+  content: ''; position: absolute; top: 8px; left: 50%; width: 38px; height: 4px; margin-left: -19px; border-radius: 4px;
+  background: var(--border-subtle); opacity: .9;
+}
+
+.shp .shp__main .shp__viewer .shp__vtitle {
+  display: block; flex: none; margin: 0; padding-inline: 2px; font-size: 17px; font-weight: 800; line-height: 1.4; letter-spacing: .005em;
+  color: var(--text-primary, inherit); overflow-wrap: anywhere; unicode-bidi: plaintext; text-align: start;
+}
+
+/* actions: equal-width soft buttons, one row */
+.shp .shp__main .shp__viewer .shp__head .shp__actions {
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 10px; width: 100%; margin: 0;
+}
+.shp .shp__main .shp__viewer .shp__head .shp__actions .btn {
+  min-height: 44px; padding: 0 12px; gap: 8px; border-radius: 14px; font-size: 13.5px; font-weight: 700; white-space: nowrap;
+  justify-content: center; background: color-mix(in srgb, var(--bg-surface) 70%, var(--border-subtle)); border: 1px solid var(--border-subtle);
+  transition: background-color .15s, border-color .15s, transform .1s;
+}
+.shp .shp__main .shp__viewer .shp__head .shp__actions .btn:hover { border-color: color-mix(in srgb, var(--brand-primary, #4f6bff) 55%, var(--border-subtle)); }
+.shp .shp__main .shp__viewer .shp__head .shp__actions .btn:active { transform: scale(.98); }
+.shp .shp__main .shp__viewer .shp__head .shp__actions .btn span { overflow: hidden; text-overflow: ellipsis; }
+
+/* the preview itself keeps full width, but sits clearly under the header */
+.shp .shp__main .shp__viewer .shp__viewer-body { padding: 0; }
+.shp .shp__main .shp__viewer .shp__preview { margin: 0; }
+.shp .shp__main .shp__viewer .shp__note { padding: 24px var(--vw-pad); text-align: center; }
+
+@media (min-width: 761px) {
+  .shp .shp__main .shp__viewer { --vw-pad: 20px; }
+  .shp .shp__main .shp__viewer .shp__head { flex-direction: row; align-items: center; justify-content: space-between; padding: 18px var(--vw-pad) 16px; }
+  .shp .shp__main .shp__viewer .shp__head::before { display: none; }
+  .shp .shp__main .shp__viewer .shp__vtitle { flex: 1 1 auto; min-width: 0; }
+  .shp .shp__main .shp__viewer .shp__head .shp__actions { width: auto; grid-auto-columns: max-content; }
+  .shp .shp__main .shp__viewer .shp__preview { margin-inline: 12px; margin-bottom: 12px; }
+}
+
+@media (max-width: 380px) {
+  .shp .shp__main .shp__viewer { --vw-pad: 14px; }
+  .shp .shp__main .shp__viewer .shp__head .shp__actions .btn { padding: 0 8px; font-size: 12.5px; }
+}

@@ -1,0 +1,17 @@
+/* Stacked pages (hooks/usePanelStack.js). Only active once the hook adds .pnl-on, so with animations off / reduced motion /
+   the Android app the page keeps its normal flowing layout. The hook writes transform, z-index, border-radius and --dim/--sha/--shy. */
+.pnl { position: relative; }
+.pnl-on {
+  min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: center;
+  background: var(--bg-canvas);
+  box-shadow: 0 var(--shy, 0px) 80px -26px rgba(10, 12, 40, var(--sha, 0));
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.pnl-on.pnl--free { min-height: 0; display: block; }
+.pnl-on > * { width: 100%; box-sizing: border-box; }   /* .lp4-shell centres with auto margins; keep it full-width inside the flex column */
+/* the page that is being covered dims as the other one slides over it */
+.pnl-on::after { content: ""; position: absolute; inset: 0; z-index: 50; border-radius: inherit; pointer-events: none; background: #0a0c20; opacity: var(--dim, 0); }
+@media (max-width: 760px) { .pnl-on { box-shadow: 0 var(--shy, 0px) 50px -22px rgba(10, 12, 40, var(--sha, 0)); } }
+@media (prefers-reduced-motion: reduce) { .pnl-on::after { display: none; } }
+html[data-motion="off"] .pnl-on::after { display: none; }

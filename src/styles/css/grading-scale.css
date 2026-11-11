@@ -1,0 +1,58 @@
+/* Grading scale editor (components/courses/GradingScaleEditor.jsx) — grades as compact cards instead of a stretched table. */
+.gsc { display: flex; flex-direction: column; gap: 16px; max-width: 860px; }
+.gsc-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 20px; box-shadow: 0 1px 2px rgba(19, 21, 38, .03); }
+.gsc-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); }
+.gsc-head__title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 15px; color: var(--text-primary); }
+.gsc-level { min-width: 200px; }
+.gsc-sec-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.gsc-sec-title h2 { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.gsc-sec-title span { font-size: 12px; color: var(--text-secondary); }
+
+/* visual scale: one segment per grade, width = size of its range */
+.gsc-strip { display: flex; gap: 2px; height: 34px; margin-bottom: 18px; direction: ltr; }
+.gsc-strip__seg { flex-basis: 0; min-width: 0; display: grid; place-items: center; overflow: hidden; font-size: 12px; font-weight: 700; color: #fff; background: var(--color-success); border-radius: 6px; white-space: nowrap; }
+.gsc-strip__seg:nth-child(even) { filter: brightness(.92); }
+.gsc-strip__seg.is-fail { background: var(--color-danger); }
+.gsc-strip__seg:not(.is-fail) { background: linear-gradient(90deg, #0A9F6B, #4830F0); background-size: 400% 100%; }
+
+/* compact aligned rows */
+.gsc-table { display: flex; flex-direction: column; border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; }
+.gsc-row { display: grid; grid-template-columns: 1fr 1fr 1.4fr 1fr 56px 34px; align-items: center; gap: 10px; padding: 7px 12px; border-top: 1px solid var(--border-subtle); background: var(--bg-surface); transition: background .12s; }
+.gsc-row:first-child { border-top: 0; }
+.gsc-row:not(.gsc-row--head):hover, .gsc-row:focus-within { background: var(--bg-muted); }
+.gsc-row.is-fail { background: rgba(var(--color-danger-rgb, 220, 58, 75), .06); }
+.gsc-row--head { padding-block: 9px; background: var(--bg-muted); font-size: 11.5px; font-weight: 700; color: var(--text-secondary); }
+.gsc-row--head > span { text-align: center; }
+.gsc-cell { width: 100%; height: 34px; padding: 0 8px; font: inherit; font-size: 13.5px; font-weight: 600; text-align: center; color: var(--text-primary); background: transparent; border: 1px solid transparent; border-radius: 8px; outline: 0; direction: ltr; transition: border-color .12s, background .12s; }
+.gsc-cell:hover { border-color: var(--border-strong); }
+.gsc-cell:focus { border-color: var(--color-primary); background: var(--bg-surface); }
+.gsc-cell--letter { font-size: 15px; font-weight: 800; }
+.gsc-row.is-fail .gsc-cell--letter { color: var(--color-danger); }
+.gsc-range { font-size: 12.5px; color: var(--text-secondary); direction: ltr; text-align: center; font-variant-numeric: tabular-nums; }
+.gsc-failbox { display: grid; place-items: center; cursor: pointer; }
+.gsc-failbox input { position: absolute; opacity: 0; pointer-events: none; }
+.gsc-failbox span { width: 18px; height: 18px; border: 1.5px solid var(--border-strong); border-radius: 5px; background: var(--bg-surface); display: grid; place-items: center; transition: all .12s; }
+.gsc-failbox input:checked + span { background: var(--color-danger); border-color: var(--color-danger); }
+.gsc-failbox input:checked + span::after { content: ''; width: 4px; height: 8px; margin-bottom: 2px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.gsc-failbox input:focus-visible + span { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.gsc-del { width: 30px; height: 30px; display: inline-grid; place-items: center; border: 0; border-radius: 8px; background: transparent; color: var(--text-secondary); cursor: pointer; opacity: .55; transition: all .12s; }
+.gsc-row:hover .gsc-del, .gsc-del:focus-visible { opacity: 1; }
+.gsc-del:hover { background: rgba(var(--color-danger-rgb, 220, 58, 75), .12); color: var(--color-danger); }
+.gsc-add { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border: 0; border-top: 1px dashed var(--border-strong); background: transparent; color: var(--color-primary); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.gsc-add:hover { background: rgba(var(--color-primary-rgb, 72, 48, 240), .06); }
+@media (max-width: 520px) { .gsc-row { grid-template-columns: 56px 66px 1fr 56px 34px 30px; gap: 6px; padding-inline: 8px; } }
+
+.gsc-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.gsc-field--wide { grid-column: 1 / -1; }
+@media (min-width: 720px) { .gsc-field--wide { grid-column: span 2; } }
+
+.gsc-switch { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-top: 1px solid var(--border-subtle); cursor: pointer; }
+.gsc-switch input { position: absolute; opacity: 0; pointer-events: none; }
+.gsc-switch__track { flex: none; position: relative; width: 38px; height: 22px; margin-top: 1px; border-radius: 999px; background: var(--border-strong); transition: background .18s; }
+.gsc-switch__track::after { content: ''; position: absolute; top: 3px; inset-inline-start: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .25); transition: inset-inline-start .18s; }
+.gsc-switch input:checked + .gsc-switch__track { background: var(--color-primary); }
+.gsc-switch input:checked + .gsc-switch__track::after { inset-inline-start: 19px; }
+.gsc-switch input:focus-visible + .gsc-switch__track { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.gsc-switch__text { font-size: 13px; line-height: 1.6; color: var(--text-primary); }
+
+.gsc-actions { display: flex; gap: 8px; flex-wrap: wrap; position: sticky; bottom: 0; padding: 12px 0; background: linear-gradient(to top, var(--bg-canvas) 70%, transparent); z-index: 2; }

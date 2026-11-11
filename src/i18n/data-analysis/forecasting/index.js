@@ -1,0 +1,28 @@
+// Auto-extracted from api/app/Views/data-analysis/forecasting/index.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Linear regression': 'الانحدار الخطي',
+  'OLS fit · 95% prediction interval': 'نموذج OLS · فاصل تنبؤ 95%',
+  'Ordinary least squares fit over monthly history, with a 95% prediction interval.': 'نموذج المربعات الصغرى على التاريخ الشهري مع فاصل تنبؤ 95%.',
+  'Current': 'الحالي',
+  'Forecast': 'التوقع',
+  'growth': 'نمو',
+  'Forecast model': 'نموذج التنبؤ',
+  'Historical performance and projected trajectory': 'الأداء التاريخي والمسار المتوقع',
+  'Actual': 'الفعلي',
+  'Forecast (dashed) with 95% band': 'التوقع (متقطع) مع نطاق 95%',
+  'Confidence interval': 'فاصل الثقة',
+  'Training period': 'فترة التدريب',
+  'Details & AI explanation': 'التفاصيل وشرح الذكاء الاصطناعي',
+  'Not enough history to draw a forecast.': 'لا يوجد تاريخ كافٍ لرسم التوقع.',
+  '(95% CI)': '(95% ثقة)',
+  'AI explanations for forecasts aren\'t available yet — an admin needs to add an API key under Settings → AI. The statistical forecasts themselves work independently.': 'شرح الذكاء الاصطناعي للتنبؤات مش متاح دلوقتي — لازم الأدمن يضيف API key من الإعدادات (Settings → AI). التوقعات الإحصائية نفسها شغالة بشكل مستقل.',
+  'Forecasting': 'التنبؤات',
+  'Next Month Projection': 'توقع الشهر القادم',
+  'Real statistical forecasts (linear regression) over the platform\'s last 12 months of actual data, with a 95% confidence band and accuracy metrics.': 'توقعات إحصائية حقيقية (انحدار خطي) على بيانات المنصة الفعلية آخر 12 شهرًا، مع فترة ثقة 95% ومقاييس دقة.',
+  'Trending Up': 'اتجاه صاعد',
+  'Trending Down': 'اتجاه هابط',
+  'Flat': 'مستقر',
+  'MAE': 'متوسط الخطأ المطلق (MAE)',
+  'RMSE': 'جذر متوسط مربع الخطأ (RMSE)',
+};

@@ -1,0 +1,1 @@
+var e={Name:`الاسم`,Email:`البريد الإلكتروني`,Role:`الدور`,Status:`الحالة`,Joined:`تاريخ الانضمام`,Action:`الإجراء`,Active:`نشط`,Suspended:`موقوف`,Pending:`قيد الانتظار`,Banned:`محظور`,Activate:`تفعيل`,Suspend:`إيقاف`,Edit:`تعديل`,Delete:`حذف`,Save:`حفظ`,Cancel:`إلغاء`,Search:`بحث`,"All Roles":`كل الأدوار`,"All Statuses":`كل الحالات`,"Loading…":`جارٍ التحميل…`};export{e as t};

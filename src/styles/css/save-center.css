@@ -1,0 +1,62 @@
+/* Save Center: toasts, "Save changes?" dialog, cloud panel pieces. Uses the platform tokens with fallbacks. */
+.sc-root { --sc-bg: var(--panel, #fff); --sc-fg: var(--g-fg, var(--text-primary, #111827)); --sc-mute: var(--g-mute, #6b7280); --sc-line: var(--g-line, rgba(127,127,127,.28)); --sc-acc: var(--os-accent, var(--primary, #2563eb)); }
+.sc-toasts { position: fixed; inset-block-end: 16px; inset-inline-end: 16px; z-index: 100001; display: flex; flex-direction: column; gap: 10px; width: min(380px, calc(100vw - 24px)); pointer-events: none; }
+.sc-toast { pointer-events: auto; display: flex; gap: 10px; align-items: flex-start; padding: 12px 12px 12px 14px; background: var(--sc-bg); color: var(--sc-fg); border: 1px solid var(--sc-line); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.22); animation: sc-in .22s ease-out; }
+.sc-toast--saved { border-inline-start: 4px solid #16a34a; }
+.sc-toast--remind { border-inline-start: 4px solid #f59e0b; }
+.sc-toast__ic { margin-top: 1px; color: #16a34a; flex: none; }
+.sc-toast--remind .sc-toast__ic { color: #f59e0b; }
+.sc-toast__body { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; font-size: 13px; }
+.sc-toast__body b { font-size: 13.5px; overflow-wrap: anywhere; }
+.sc-toast__act { display: flex; gap: 8px; margin-top: 6px; }
+.sc-line { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 5px; color: var(--sc-mute); line-height: 1.45; }
+.sc-line--ok { color: #16a34a; } .sc-line--warn { color: #b45309; } .sc-line--bad { color: #e5484d; } .sc-line--off { color: var(--sc-mute); }
+.sc-link { background: none; border: 0; padding: 0 2px; color: var(--sc-acc); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; }
+.sc-x { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--sc-mute); cursor: pointer; }
+.sc-x:hover { background: rgba(127,127,127,.18); }
+.sc-x--abs { position: absolute; inset-block-start: 10px; inset-inline-end: 10px; }
+.sc-btn { height: 32px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--sc-line); background: var(--panel-2, rgba(127,127,127,.12)); color: var(--sc-fg); font: inherit; font-weight: 600; font-size: 13px; cursor: pointer; }
+.sc-btn:hover:not(:disabled) { filter: brightness(1.07); }
+.sc-btn:disabled { opacity: .5; cursor: default; }
+.sc-btn--primary { background: var(--sc-acc); border-color: transparent; color: #fff; }
+.sc-btn--danger { color: #e5484d; border-color: rgba(229,72,77,.45); }
+.sc-scrim { position: fixed; inset: 0; z-index: 100002; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.45); }
+.sc-dlg { position: relative; width: min(440px, 100%); max-height: 90vh; overflow: auto; padding: 20px; border-radius: 14px; background: var(--sc-bg); color: var(--sc-fg); border: 1px solid var(--sc-line); box-shadow: 0 24px 60px rgba(0,0,0,.4); font-size: 14px; line-height: 1.55; }
+.sc-dlg--wide { width: min(620px, 100%); }
+.sc-dlg h3 { margin: 0 0 8px; display: flex; align-items: center; gap: 8px; font-size: 17px; }
+.sc-dlg p { margin: 6px 0; }
+.sc-dlg__name { font-weight: 700; padding: 8px 10px; border-radius: 8px; background: rgba(127,127,127,.12); overflow-wrap: anywhere; }
+.sc-dlg__sub { color: var(--sc-mute); font-size: 13px; }
+.sc-dlg__err { color: #e5484d; font-weight: 600; }
+.sc-dlg__btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+/* settings panel */
+.sc-where { display: grid; gap: 10px; }
+.sc-where > div { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--g-line, var(--sc-line)); border-radius: 10px; background: var(--panel-2, rgba(127,127,127,.08)); }
+.sc-where b, .sc-where span { display: block; }
+.sc-where span { font-size: 12.5px; color: var(--g-mute, var(--sc-mute)); }
+.sc-tone--ok { color: #16a34a !important; } .sc-tone--warn { color: #b45309 !important; } .sc-tone--bad { color: #e5484d !important; }
+.sc-prov { display: grid; gap: 10px; margin-top: 8px; }
+.sc-card { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--g-line, var(--sc-line)); border-radius: 10px; background: var(--panel-2, rgba(127,127,127,.08)); }
+.sc-card.is-on { border-color: #16a34a; }
+.sc-card__txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.sc-card__txt span { font-size: 12.5px; color: var(--g-mute, var(--sc-mute)); overflow-wrap: anywhere; }
+.sc-logo { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-weight: 800; color: #fff; flex: none; }
+.sc-logo--google { background: linear-gradient(135deg, #4285f4, #34a853 55%, #fbbc05); }
+.sc-logo--microsoft { background: #0f6cbd; }
+.sc-logo { overflow: hidden; }
+.sc-logo__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sc-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 12px; }
+.sc-check { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+/* tray */
+.os-tray__cloud { position: relative; display: grid; place-items: center; height: 26px; min-width: 26px; padding: 0 5px; border: 0; border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
+.os-tray__cloud:hover { background: rgba(127,127,127,.2); }
+.os-tray__cloud--ok { color: #16a34a; } .os-tray__cloud--warn { color: #f59e0b; } .os-tray__cloud--bad { color: #e5484d; } .os-tray__cloud--busy { color: var(--os-accent, #2563eb); }
+.os-tray__badge { position: absolute; inset-block-start: -2px; inset-inline-end: -2px; min-width: 14px; height: 14px; padding: 0 3px; border-radius: 7px; background: #f59e0b; color: #000; font-size: 9px; line-height: 14px; text-align: center; }
+@keyframes sc-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .sc-toast { animation: none; } }
+
+/* backup row: a real checkbox (global input rules used to stretch it) + a one-line button */
+.sc-actions { justify-content: space-between; gap: 12px 16px; }
+.sc-check { flex: 1 1 240px; min-width: 0; line-height: 1.4; }
+.sc-check input[type="checkbox"] { flex: 0 0 18px; width: 18px; height: 18px; min-height: 0; margin: 0; padding: 0; }
+.sc-actions .os-btn { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 7px; white-space: nowrap; }

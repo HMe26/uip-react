@@ -1,0 +1,43 @@
+/* dashboard-fit.css — loaded LAST (see styles/index.css).
+   Fixes two layout bugs seen on every dashboard:
+   1) Topbar: the sidebar toggle button was flex-shrunk to 0 width (so it
+      "disappeared") and the "Workspace" breadcrumb wrapped one letter per line.
+   2) Tables: <body> sets overflow-wrap:anywhere, which let a table column
+      shrink to a single character (names stacked letter by letter). Tables now
+      keep their natural width and their wrapper scrolls horizontally instead. */
+
+/* ---- 1) Topbar ---------------------------------------------------------- */
+.topbar > div:first-child { min-width: 0; flex: 1 1 auto; }
+.topbar__icon-btn { flex-shrink: 0; }
+.topbar__crumbs { flex-shrink: 0; white-space: nowrap; }
+.topbar__crumbs span, .topbar__crumbs svg { flex-shrink: 0; white-space: nowrap; }
+.topbar__crumbs strong { min-width: 0; max-width: 28ch; }
+.topbar__search { flex: 0 1 auto; min-width: 0; }
+.topbar__actions { flex-shrink: 0; }
+.topbar__ask-ai { flex-shrink: 0; white-space: nowrap; }
+
+/* Not enough room for "Workspace >": keep only the page title. */
+@media (max-width: 1100px) {
+  .app-shell--admin .topbar__crumbs span,
+  .app-shell--admin .topbar__crumbs svg { display: none; }
+  .app-shell--admin .topbar__search { width: min(220px, 24vw); }
+}
+
+/* ---- 2) Tables (admin, exam, security, staff, query-builder, data) ------- */
+.adm-table-wrap, .ex-table-wrap, .sec-table-wrap, .st-table-wrap, .qb-table-wrap,
+.table-responsive { overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; }
+
+.adm-table, .ex-table, .sec-table, .st-table, .qb-table, .adm-matrix {
+  width: max-content;
+  min-width: 100%;
+}
+.adm-table th, .ex-table th, .sec-table th, .st-table th, .qb-table th { white-space: nowrap; }
+.adm-table td, .ex-table td, .sec-table td, .st-table td, .qb-table td,
+.adm-matrix td, .adm-matrix th {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+/* Names/titles keep a readable minimum so they wrap at spaces, not per letter. */
+.adm-table td:first-child, .ex-table td:first-child, .st-table td:first-child { min-width: 160px; }
+/* Badges and numbers never split. */
+.adm-table .badge, .adm-table .status-badge, .ex-table .badge, .st-table .badge { white-space: nowrap; }

@@ -1,0 +1,39 @@
+/* permission-matrix.css — "Permission matrix" on /admin/users/:id (Roles & Permissions tab).
+   One card per module; each permission is a pill: green-ish check when granted, muted when not. */
+
+.pm-summary { display: flex; align-items: center; gap: 14px; margin: 4px 0 18px; padding: 12px 16px; border: 1px solid var(--border-subtle); border-radius: 14px; background: var(--bg-canvas); }
+.pm-summary__stat { display: flex; align-items: baseline; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--color-primary); white-space: nowrap; }
+.pm-summary__stat strong { font-size: 20px; font-weight: 800; line-height: 1; }
+.pm-summary__stat--muted { color: var(--text-secondary); }
+.pm-summary__bar { flex: 1; height: 8px; border-radius: 999px; background: var(--bg-muted, #e8eaf3); overflow: hidden; }
+.pm-summary__bar > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 60%, #7c5cff)); transition: width .4s ease; }
+
+.pm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+
+.pm-card { display: flex; flex-direction: column; gap: 12px; padding: 14px 16px 16px; border: 1px solid var(--border-subtle); border-radius: 16px; background: var(--bg-surface); transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+.pm-card:hover { border-color: rgba(var(--color-primary-rgb), .4); box-shadow: 0 10px 24px -16px rgba(20, 28, 70, .35); transform: translateY(-1px); }
+.pm-card--none { background: var(--bg-canvas); }
+.pm-card--none .pm-card__icon { background: var(--bg-muted, #eceef6); color: var(--text-secondary); }
+
+.pm-card__head { display: flex; align-items: center; gap: 10px; }
+.pm-card__head h4 { flex: 1; min-width: 0; margin: 0; font-family: inherit; font-size: 14.5px; font-weight: 700; color: var(--text-primary); overflow-wrap: anywhere; }
+.pm-card__icon { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 10px; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.pm-card__count { flex: none; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; background: var(--bg-muted, #eceef6); color: var(--text-secondary); }
+.pm-card--part .pm-card__count { background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.pm-card--full .pm-card__count { background: rgba(22, 163, 74, .14); color: #15803d; }
+
+.pm-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pm-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 6px; border: 1px solid var(--border-subtle); border-radius: 999px; font-size: 12.5px; font-weight: 600; text-transform: capitalize; color: var(--text-secondary); background: var(--bg-surface); cursor: var(--cur-default, default); }
+.pm-chip__mark { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: var(--bg-muted, #eceef6); color: var(--text-secondary); }
+.pm-chip:not(.is-on) { opacity: .75; text-decoration: line-through; text-decoration-color: rgba(100, 112, 138, .45); }
+.pm-chip.is-on { border-color: rgba(var(--color-primary-rgb), .35); background: rgba(var(--color-primary-rgb), .08); color: var(--color-primary); }
+.pm-chip.is-on .pm-chip__mark { background: var(--color-primary); color: #fff; }
+.pm-chip { max-width: 100%; white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+.pm-chip--extra { min-width: 0; overflow: hidden; text-overflow: ellipsis; text-transform: none; font-family: var(--font-mono, monospace); font-size: 11.5px; font-weight: 500; }
+:dir(rtl) > .pm-chip, .pm-chip:dir(rtl) { padding: 5px 6px 5px 12px; }
+
+@media (max-width: 640px) {
+  .pm-grid { grid-template-columns: 1fr; }
+  .pm-summary { flex-wrap: wrap; }
+  .pm-summary__bar { order: 3; flex-basis: 100%; }
+}

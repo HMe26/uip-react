@@ -1,0 +1,51 @@
+/* Volume boost (lib/volumeBoost.js + components/VolumeBoost.jsx) */
+.vb-chip {
+  display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; border: none; border-radius: 999px; padding: 3px 8px;
+  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; cursor: var(--cur-pointer, pointer);
+  background: rgba(var(--color-primary-rgb, 80, 90, 220), .12); color: var(--color-primary, #4f5bd5);
+}
+.vb-chip.is-on { background: var(--color-primary, #4f5bd5); color: #fff; }
+.vb-chip.is-busy { opacity: .6; animation: vb-pulse 1s ease-in-out infinite; }
+.msg-row.is-mine .vb-chip { background: rgba(255, 255, 255, .22); color: #fff; }
+.msg-row.is-mine .vb-chip.is-on { background: #fff; color: var(--color-primary, #4f5bd5); }
+@keyframes vb-pulse { 50% { opacity: .95; } }
+
+.vb-panel { display: flex; flex-direction: column; gap: 9px; width: 100%; min-width: 0; box-sizing: border-box; color: inherit; }
+.vb-panel__head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.vb-panel__title { display: inline-flex; align-items: center; gap: 7px; min-width: 0; font-size: 13px; font-weight: 700; line-height: 1.2; opacity: .92; }
+.vb-panel__title svg { flex: none; color: #6ea8ff; }
+.vb-panel__value {
+  flex: none; border: 0; border-radius: 999px; padding: 4px 11px; font: inherit; font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; cursor: pointer;
+  background: rgba(255, 255, 255, .1); color: inherit; transition: background .15s ease, color .15s ease;
+}
+.vb-panel__value:hover { background: rgba(255, 255, 255, .18); }
+.vb-panel__value.is-on { background: rgba(255, 180, 84, .18); color: #ffb454; }
+
+.vb-panel__slider { padding: 2px 3px; }
+.vb-panel__range { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 20px; margin: 0; padding: 0; background: none; border: 0; outline: none; cursor: pointer; }
+.vb-panel__range::-webkit-slider-runnable-track { height: 6px; border-radius: 6px; background: linear-gradient(to right, #6ea8ff 0 var(--p, 0%), rgba(255, 255, 255, .22) var(--p, 0%) 100%); }
+.vb-panel__range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -6px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 6px rgba(0, 0, 0, .55); transition: transform .12s ease; }
+.vb-panel__range:active::-webkit-slider-thumb { transform: scale(1.15); }
+.vb-panel__range::-moz-range-track { height: 6px; border-radius: 6px; background: rgba(255, 255, 255, .22); }
+.vb-panel__range::-moz-range-progress { height: 6px; border-radius: 6px; background: #6ea8ff; }
+.vb-panel__range::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 1px 6px rgba(0, 0, 0, .55); }
+.vb-panel__range:focus-visible::-webkit-slider-thumb { outline: 2px solid #6ea8ff; outline-offset: 2px; }
+
+.vb-panel__presets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.vb-panel__presets button {
+  border: 0; border-radius: 9px; padding: 7px 0; font: inherit; font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer;
+  background: rgba(255, 255, 255, .08); color: inherit; transition: background .15s ease;
+}
+.vb-panel__presets button:hover { background: rgba(255, 255, 255, .16); }
+.vb-panel__presets button.is-on { background: #6ea8ff; color: #0b1020; }
+.vb-panel__note { font-size: 11.5px; line-height: 1.4; opacity: .75; text-align: start; }
+.vb-panel__note--err { color: #ff9b9b; opacity: 1; }
+
+/* standalone use on light surfaces (file viewer / assistant / meeting tiles) */
+.vb-inline { display: inline-flex; align-items: center; gap: 8px; }
+.vb-inline .vb-panel { min-width: 0; flex-direction: row; align-items: center; gap: 8px; }
+.vb-inline .vb-panel__title { display: none; }
+.vb-inline .vb-panel__slider { width: 120px; }
+.vb-inline .vb-panel__range::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--color-primary, #4f5bd5) 0 var(--p, 0%), rgba(128, 128, 128, .35) var(--p, 0%) 100%); }
+.vb-inline .vb-panel__value { background: rgba(var(--color-primary-rgb, 80, 90, 220), .12); color: var(--color-primary, #4f5bd5); }
+.vb-inline .vb-panel__presets, .vb-inline .vb-panel__note { display: none; }

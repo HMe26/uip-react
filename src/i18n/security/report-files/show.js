@@ -1,0 +1,28 @@
+// Auto-extracted from api/app/Views/security/report-files/show.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Archive': 'أرشفة',
+  'Archived': 'مؤرشف',
+  'Category': 'التصنيف',
+  'Delete': 'حذف',
+  'Details': 'التفاصيل',
+  'Download': 'تنزيل',
+  'Downloads': 'التنزيلات',
+  'File': 'الملف',
+  'No in-browser preview for this file type — use Download.': 'لا تتوفر معاينة داخل المتصفح لهذا النوع من الملفات — استخدم زر التنزيل.',
+  'No version history yet.': 'لا يوجد سجل بعد.',
+  'Permanently delete this report? The file and every version on disk will be deleted too.': 'حذف هذا التقرير نهائياً؟ سيتم حذف الملف وكل إصداراته من القرص أيضاً.',
+  'Preview': 'معاينة',
+  'Print': 'طباعة',
+  'Replace': 'استبدال',
+  'Size': 'الحجم',
+  'Type': 'النوع',
+  'Unarchive': 'إلغاء الأرشفة',
+  'Updated': 'آخر تحديث',
+  'Uploaded': 'تاريخ الرفع',
+  'Uploaded By': 'رفع بواسطة',
+  'Version History': 'سجل الإصدارات',
+  'Views': 'المشاهدات',
+  'en': 'ar',
+  'v': 'إصدار',
+};

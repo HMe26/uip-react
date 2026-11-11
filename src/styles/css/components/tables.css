@@ -1,0 +1,50 @@
+/* components/tables.css */
+
+/* `.table-responsive` — THE FIX (was previously only defined inside a
+   ≤768px media query in responsive.css, which meant it did nothing at
+   all on desktop). Combined with `.data-table` being forced to
+   `width:100%` and every cell inheriting `overflow-wrap:anywhere` from
+   <body> (base.css, added as a safety net for long unbroken tokens like
+   URLs), a table with many columns — or even a handful of columns with
+   long headers — had nowhere to shrink to except breaking every header
+   one letter per line ("OWNER_ID" stacked O/W/N/E/R/_/I/D vertically).
+   That happened on desktop just as much as mobile; it was never actually
+   a responsive/mobile bug, it was a table-sizing bug that mobile's
+   narrower viewport just made more likely to trigger.
+   Fix: this wrapper always scrolls horizontally when its table doesn't
+   fit, on any screen size, and the table below sizes to its natural
+   content width instead of being squeezed into 100% of the wrapper. */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--text-small);
+}
+.data-table th {
+  text-align: start; padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary); font-weight: 600; font-size: var(--text-caption);
+  text-transform: uppercase; border-bottom: 1px solid var(--border-subtle);
+  /* Headers are short labels — never a reason for one to wrap, and
+     nowrap is what stops the letter-by-letter stacking above. */
+  white-space: nowrap;
+}
+.data-table td {
+  padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle);
+  /* Cancel the inherited break-anywhere safety net from base.css: here
+     it's actively harmful (it told the layout engine each column could
+     shrink to a single character). Regular text still wraps normally at
+     spaces via the browser's default white-space; a genuinely unbroken
+     long token (a UUID, a URL) now just makes its column wider instead
+     of collapsing the whole row — and .table-responsive above scrolls
+     to it instead of squeezing everything else to fit. */
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.data-table tbody tr { transition: background var(--duration-fast) var(--ease-standard); }
+.data-table tbody tr:hover { background: var(--glass-bg); }

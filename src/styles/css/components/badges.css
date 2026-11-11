@@ -1,0 +1,22 @@
+/* components/badges.css */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; font-size: var(--text-caption); font-weight: 700;
+  letter-spacing: 0.02em; border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+.badge-success { background: rgba(25, 200, 182,0.15); color: var(--uip-teal-600); }
+.badge-danger  { background: rgba(240, 85, 90,0.15); color: var(--uip-coral-600); }
+.badge-primary { background: rgba(var(--color-primary-rgb),0.14); color: var(--color-primary); }
+.badge-neutral { background: var(--glass-bg); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+.badge-warning { background: rgba(245, 165, 36,0.16); color: var(--uip-gold-600); }
+
+/* The platform-wide "Coming Soon" badge — every unfinished feature wears
+   this exact badge so it always reads as a deliberate roadmap item, never
+   a bug or missing page. */
+.badge-coming-soon {
+  background: linear-gradient(135deg, var(--uip-gold-500), var(--uip-gold-600));
+  color: var(--uip-navy-950);
+  box-shadow: 0 2px 10px rgba(245, 165, 36, 0.35);
+}
+.badge-coming-soon::before { content: "✦"; font-size: 0.75em; }

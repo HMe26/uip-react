@@ -1,0 +1,1 @@
+import{s as e}from"./client-DIKyLPas.js";import{t}from"./AcademicStaffExamPicker-Jkea6lZ0.js";var n=e();function r(){return(0,n.jsx)(t,{suffix:`targets`,icon:`filter`,titleKey:`Manage Targeting & Publish`,descriptionKey:`Pick an exam to manage its target audience and publishing.`})}export{r as default};

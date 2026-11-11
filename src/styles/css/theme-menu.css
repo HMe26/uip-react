@@ -1,0 +1,33 @@
+/* Code-viewer theme picker (ThemeMenu in ProtectedFile.jsx): a real menu instead of the browser's <select> popup. Colours come from --zb-* (set by themeVars). */
+.shp-theme {
+  display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border-radius: 8px; cursor: pointer;
+  background: var(--zb-btn); color: var(--zb-text); border: 1px solid var(--zb-line); font: inherit; font-size: 12.5px; white-space: nowrap;
+}
+.shp-theme:hover, .shp-theme.is-open { background: var(--zb-btn-h); border-color: var(--zb-accent); }
+.shp-theme svg { transition: transform .15s ease; }
+.shp-theme.is-open svg { transform: rotate(180deg); }
+.shp-theme__menu {
+  z-index: 2147483000; overflow-y: auto; overscroll-behavior: contain; padding: 6px;
+  background: var(--zb-menu); color: var(--zb-text); border: 1px solid var(--zb-line); border-radius: 12px;
+  box-shadow: 0 16px 48px var(--zb-shadow); animation: shpThemeIn .12s ease-out;
+}
+.shp-theme__menu button {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 8px;
+  background: transparent; color: inherit; font: inherit; font-size: 13px; text-align: start; cursor: pointer;
+}
+.shp-theme__menu button:hover { background: var(--zb-hover); }
+.shp-theme__menu button.is-on { background: var(--zb-accent-soft); color: var(--zb-strong); }
+/* slim scrollbar in the menu's own colours (the global one is tuned for the site palette) */
+.shp-theme__menu::-webkit-scrollbar { width: 8px; }
+.shp-theme__menu::-webkit-scrollbar-thumb { background: var(--zb-line); border: 2px solid transparent; background-clip: content-box; border-radius: 8px; }
+.shp-theme__menu::-webkit-scrollbar-thumb:hover { background: var(--zb-muted); background-clip: content-box; }
+@keyframes shpThemeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* theme preview chip: editor background + three coloured "code lines" */
+.shp-swatch { flex: 0 0 auto; display: inline-flex; flex-direction: column; justify-content: center; gap: 3px; width: 30px; height: 22px; padding: 0 5px; border-radius: 6px; border: 1px solid; box-sizing: border-box; box-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
+.shp-swatch i { display: block; height: 3px; border-radius: 2px; }
+.shp-theme { gap: 8px; }
+.shp-theme .shp-swatch { width: 24px; height: 18px; padding: 0 4px; gap: 2px; }
+.shp-theme .shp-swatch i { height: 2.5px; }
+.shp-theme__menu button { display: flex; align-items: center; gap: 10px; }
+.shp-theme__menu .shp-theme__name { flex: 1; text-align: start; }

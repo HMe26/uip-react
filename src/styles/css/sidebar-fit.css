@@ -1,0 +1,25 @@
+/* Sidebar fit — long nav lists (e.g. the Data Analyst portal, ~20 links) no
+   longer push the "Ask UIPE AI" card on top of the links.
+   The sidebar is one fixed-height column: brand / user card stay put, ONLY the
+   nav list scrolls, and the promo + footer keep their natural height.
+   Loaded last so it wins over insight-portal.css (`overflow: visible` on the nav). */
+.app-shell--insight .sidebar { display: flex; flex-direction: column; overflow: hidden; }
+.app-shell--insight .sidebar .sidebar__nav {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  margin-bottom: 12px; padding-inline-end: 4px;
+
+  overscroll-behavior: contain;
+}
+.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar { width: 6px; }
+.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 999px; }
+.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+.app-shell--insight .sidebar .sidebar__brand,
+.app-shell--insight .sidebar .sidebar__user,
+.app-shell--insight .sidebar .sidebar__promo,
+.app-shell--insight .sidebar .sidebar__footer { flex-shrink: 0; }
+.app-shell--insight .sidebar .sidebar__promo { margin-top: 0; }
+
+/* Short screens: the promo card would eat the nav's space — hide it. */
+@media (max-height: 760px) {
+  .app-shell--insight .sidebar .sidebar__promo { display: none; }
+}

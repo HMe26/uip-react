@@ -1,0 +1,63 @@
+/* components/charts.css
+ * Bar-chart widgets used across dashboard/analytics views
+ * (.chart-bars / .chart-bars__col / .chart-bars--sm)
+ */
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  height: 180px;
+  padding-top: var(--space-4);
+}
+
+.chart-bars--sm {
+  height: 140px;
+}
+
+.chart-bars__col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* ≤600px: once columns would drop below a legible width, stop shrinking
+   them and let the row scroll horizontally instead of clipping bars. */
+@media (max-width: 600px) {
+  .chart-bars {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding-inline: var(--space-1);
+    padding-bottom: var(--space-2);
+    margin-inline: calc(var(--space-1) * -1);
+    gap: var(--space-4);
+  }
+
+  .chart-bars__col {
+    flex: 0 0 auto;
+    width: 52px;
+    scroll-snap-align: start;
+  }
+
+  .chart-bars__col > span.text-caption {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+}
+
+.chart-bars__col > span.text-caption {
+  color: var(--text-secondary);
+}
+
+.chart-bars__col > span.text-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--text-primary, inherit);
+}

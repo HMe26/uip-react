@@ -1,0 +1,31 @@
+/* responsive-tables.css — wide tables become cards whenever they do not fit their box.
+   Flagged by lib/labelTables.js: table[data-rt] + data-label on every cell, and table[data-cards] (+ .rt-cards on
+   the wrapper) whenever the table is wider than the space it has — measured in JS, so it also covers the range
+   where the sidebar is open (~900–1300px) and the last columns (the action buttons) used to be clipped.
+   Phones and small tablets (<= 900px) are always cards. */
+.rt-wrap.rt-cards { overflow: visible !important; background: none !important; border: 0 !important; box-shadow: none !important; border-radius: 0 !important; max-width: 100%; }
+
+table[data-rt][data-cards], table[data-rt][data-cards] > tbody { display: block; width: 100% !important; min-width: 0 !important; }
+table[data-rt][data-cards] > thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+table[data-rt][data-cards] > tbody > tr {
+  display: grid; gap: 10px; padding: 14px 16px; margin-bottom: 12px;
+  border: 1px solid var(--border-subtle); border-radius: 18px; background: var(--bg-surface);
+  box-shadow: 0 1px 2px rgba(20, 28, 70, .04), 0 8px 24px -16px rgba(20, 28, 70, .10);
+}
+table[data-rt][data-cards] > tbody > tr:hover { background: var(--bg-surface); }
+table[data-rt][data-cards] > tbody > tr > td {
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+  padding: 0 !important; border: 0 !important; background: none !important; text-align: end; min-width: 0; white-space: normal;
+}
+table[data-rt][data-cards] > tbody > tr > td::before {
+  content: attr(data-label); flex: none; max-width: 42%; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-align: start;
+}
+table[data-rt][data-cards] > tbody > tr > td:first-child { padding-bottom: 10px !important; border-bottom: 1px dashed var(--border-subtle) !important; text-align: start; justify-content: flex-start; }
+table[data-rt][data-cards] > tbody > tr > td:first-child::before,
+table[data-rt][data-cards] > tbody > tr > td.ap-nolabel::before { display: none; }
+table[data-rt][data-cards] > tbody > tr > td.ap-span { display: block; text-align: center; padding: 26px 10px !important; }
+table[data-rt][data-cards] > tbody > tr > td.ap-span::before { display: none; }
+/* action cells: buttons sit together at the end of the card */
+table[data-rt][data-cards] > tbody > tr > td.col-actions, table[data-rt][data-cards] > tbody > tr > td.adm-actions {
+  flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding-top: 10px !important; border-top: 1px dashed var(--border-subtle) !important;
+}

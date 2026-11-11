@@ -1,0 +1,153 @@
+/* ==========================================================================
+   motion.css — the platform-wide, LIGHT motion system.
+
+   Goals: feel alive, never feel heavy.
+   - CSS only (no JS, no observers, no libraries).
+   - Only opacity + transform are animated (GPU-friendly, no layout/paint work).
+   - Every animation plays ONCE on mount (fill-mode: backwards, so no transform
+     is left behind to break position:fixed children or create stacking contexts).
+   - No infinite loops, no blur/backdrop-filter, no big shadows animating.
+   - Short: 160–260 ms, stagger capped at the first 8 items.
+   - :where() keeps specificity at 0, so any portal/page rule can still override.
+   - Hover effects only on real hover devices; everything off for reduced motion.
+
+   Tokens (change here to tune the whole platform):
+   ========================================================================== */
+:root {
+  --m-dur: 420ms;
+  --m-dur-fast: 180ms;
+  --m-ease: cubic-bezier(.2, .7, .2, 1);
+  --m-rise: 18px;
+  --m-step: 60ms;           /* stagger step between siblings */
+}
+
+@keyframes m-rise { from { opacity: 0; transform: translateY(var(--m-rise)); } }
+@keyframes m-fade { from { opacity: 0; } }
+@keyframes m-pop  { from { opacity: 0; transform: scale(.94) translateY(10px); } }
+@keyframes m-grow { from { transform: scaleX(0); } }
+@keyframes m-icon { from { opacity: 0; transform: scale(.5) rotate(-18deg); } }
+@keyframes m-slide-in { from { opacity: 0; transform: translateX(var(--m-slide, -14px)); } }
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* ---- 1. Page enter: whatever a route renders directly inside the shell ---- */
+  :where(.app-shell__main) > :where(*:not(.insight-eyebrow)) {
+    animation: m-rise var(--m-dur) var(--m-ease) backwards;
+  }
+  :where(.app-shell__main) > :where(*:nth-child(2)) { animation-delay: calc(var(--m-step) * 1); }
+  :where(.app-shell__main) > :where(*:nth-child(3)) { animation-delay: calc(var(--m-step) * 2); }
+  :where(.app-shell__main) > :where(*:nth-child(4)) { animation-delay: calc(var(--m-step) * 3); }
+  :where(.app-shell__main) > :where(*:nth-child(n+5)) { animation-delay: calc(var(--m-step) * 4); }
+
+  /* collection containers stay still — their children animate (no double motion) */
+  :where(.app-shell__main) > :where(.insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid, .public-projects-grid, .insight-list, .um-rows) { animation: none; }
+
+  /* auth + public shells that are not wrapped by .app-shell__main */
+  :where(.auth-card, .lp2-vc__head, .lp2-ex-main) { animation: m-rise var(--m-dur) var(--m-ease) backwards; }
+
+  /* ---- 2. Collections: cards / KPIs / tiles stagger in (first 8 only) -------- */
+  :where(
+    .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid,
+    .public-projects-grid, .insight-list, .um-rows
+  ) > :where(*) {
+    animation: m-rise var(--m-dur) var(--m-ease) backwards;
+  }
+  :where(
+    .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid,
+    .public-projects-grid, .insight-list, .um-rows
+  ) > :where(*:nth-child(2)) { animation-delay: calc(var(--m-step) * 1); }
+  :where(
+    .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid,
+    .public-projects-grid, .insight-list, .um-rows
+  ) > :where(*:nth-child(3)) { animation-delay: calc(var(--m-step) * 2); }
+  :where(
+    .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid,
+    .public-projects-grid, .insight-list, .um-rows
+  ) > :where(*:nth-child(4)) { animation-delay: calc(var(--m-step) * 3); }
+  :where(
+    .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid,
+    .public-projects-grid, .insight-list, .um-rows
+  ) > :where(*:nth-child(5)) { animation-delay: calc(var(--m-step) * 4); }
+  :where(
+    .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid,
+    .public-projects-grid, .insight-list, .um-rows
+  ) > :where(*:nth-child(6)) { animation-delay: calc(var(--m-step) * 5); }
+  :where(
+    .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid,
+    .public-projects-grid, .insight-list, .um-rows
+  ) > :where(*:nth-child(7)) { animation-delay: calc(var(--m-step) * 6); }
+  :where(
+    .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid,
+    .public-projects-grid, .insight-list, .um-rows
+  ) > :where(*:nth-child(n+8)) { animation-delay: calc(var(--m-step) * 7); }
+
+  /* ---- 3. Tables: rows fade in (opacity only — transforms on <tr> are costly) -- */
+  :where(.data-table, .adm-table, .ex-table, .sec-table) tbody > :where(tr) {
+    animation: m-fade var(--m-dur) var(--m-ease) backwards;
+  }
+  :where(.data-table, .adm-table, .ex-table, .sec-table) tbody > :where(tr:nth-child(2)) { animation-delay: 30ms; }
+  :where(.data-table, .adm-table, .ex-table, .sec-table) tbody > :where(tr:nth-child(3)) { animation-delay: 60ms; }
+  :where(.data-table, .adm-table, .ex-table, .sec-table) tbody > :where(tr:nth-child(4)) { animation-delay: 90ms; }
+  :where(.data-table, .adm-table, .ex-table, .sec-table) tbody > :where(tr:nth-child(5)) { animation-delay: 120ms; }
+  :where(.data-table, .adm-table, .ex-table, .sec-table) tbody > :where(tr:nth-child(n+6)) { animation-delay: 150ms; }
+
+  /* ---- 4. Overlays: scrim fades, dialog pops ------------------------------- */
+  :where(.modal-overlay) { animation: m-fade var(--m-dur-fast) linear backwards; }
+  :where(.modal-box, .sec-modal) { animation: m-pop var(--m-dur) var(--m-ease) backwards; }
+
+  /* ---- 4b. Chrome: sidebar, topbar, bars, icons (one-shot, cheap) ------------ */
+  :where(.sidebar__link) { animation: m-slide-in var(--m-dur) var(--m-ease) backwards; }
+  [dir="rtl"] :where(.sidebar__link) { --m-slide: 14px; }
+  :where(.sidebar__nav > *:nth-child(1) .sidebar__link:nth-child(n)) { animation-delay: 40ms; }
+  :where(.sidebar__nav > *:nth-child(2) .sidebar__link:nth-child(n)) { animation-delay: 120ms; }
+  :where(.sidebar__nav > *:nth-child(n+3) .sidebar__link:nth-child(n)) { animation-delay: 200ms; }
+  :where(.sidebar__brand, .sidebar__footer) { animation: m-fade var(--m-dur) linear backwards; }
+  :where(.topbar) { animation: m-fade var(--m-dur) linear backwards; }
+  :where(.topbar__actions > *) { animation: m-icon var(--m-dur) var(--m-ease) backwards; }
+  :where(.topbar__actions > *:nth-child(2)) { animation-delay: 50ms; }
+  :where(.topbar__actions > *:nth-child(3)) { animation-delay: 100ms; }
+  :where(.topbar__actions > *:nth-child(n+4)) { animation-delay: 150ms; }
+  :where(.adm-bar__fill, .st-bar__fill, .progress__fill, .ex-bar__fill) { transform-origin: left center; animation: m-grow 800ms var(--m-ease) 200ms backwards; }
+  [dir="rtl"] :where(.adm-bar__fill, .st-bar__fill, .progress__fill, .ex-bar__fill) { transform-origin: right center; }
+  :where(.adm-kpi__top svg, .card-stat .icon, .insight-kpi__icon, .adm-hero-icon) { animation: m-icon 520ms var(--m-ease) 120ms backwards; }
+  :where(.page-header, .insight-hero, .adm-hero) { animation: m-rise var(--m-dur) var(--m-ease) backwards; }
+  :where(.readiness-ring__progress) { animation-duration: 1.1s; }
+
+  /* ---- 5. Small states ------------------------------------------------------ */
+  :where(.empty-state, .adm-empty, .chart-empty) { animation: m-fade 320ms var(--m-ease) backwards; }
+  :where(.tab-link, .st-tab) { transition: color var(--m-dur-fast) linear, border-color var(--m-dur-fast) linear, background-color var(--m-dur-fast) linear; }
+  :where(input, select, textarea, .form-input) { transition: border-color var(--m-dur-fast) linear, box-shadow var(--m-dur-fast) linear; }
+  :where(.btn, .tab-link, .dropdown__item) { -webkit-tap-highlight-color: transparent; }
+}
+
+/* ---- 6. Hover feedback: real pointers only (no sticky hover on touch) ------- */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  :where(.card-project, .pp-card, .ex-card, .st-pcard, .adm-kpi, .um-stat) {
+    transition: transform var(--m-dur) var(--m-ease), box-shadow var(--m-dur) var(--m-ease), border-color var(--m-dur-fast) linear;
+  }
+  :where(.card-project, .ex-card, .st-pcard, .adm-kpi, .um-stat, .adm-panel, .st-panel, .card, .glass-panel:not(.sidebar), .sec-card, .prf-card):hover:where(:not(:has(.modal-overlay, .st-modal-overlay, .sec-modal-overlay, .ex-modal-scrim, .gr-modal, .drawer-overlay, .ua-sheet-overlay, .file-preview-overlay, .nf-scrim, .sc-scrim, .att-sheet, .export-menu, .ai-pop, [role="dialog"], [aria-modal="true"]))) {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px -16px rgba(var(--color-primary-rgb, 76, 99, 255), .45);
+    border-color: rgba(var(--color-primary-rgb, 76, 99, 255), .4);
+  }
+  :where(.adm-panel, .st-panel, .card, .glass-panel:not(.sidebar), .sec-card, .prf-card) { transition: transform var(--m-dur) var(--m-ease), box-shadow var(--m-dur) var(--m-ease), border-color var(--m-dur-fast) linear; }
+  /* A transformed ancestor becomes the containing block of `position: fixed`, so a dialog rendered inside a hovered card
+     was squeezed into the card (and flickered as hover toggled). Cards that host an open dialog/popover never lift,
+     and drop their transition so no transform survives while it is open. */
+  :where(.card-project, .pp-card, .ex-card, .st-pcard, .adm-kpi, .um-stat, .adm-panel, .st-panel, .card, .glass-panel:not(.sidebar), .sec-card, .prf-card, .st-kpi, .fc-kpi, .ex-kpi, .pol-card):has(.modal-overlay, .st-modal-overlay, .sec-modal-overlay, .ex-modal-scrim, .gr-modal, .drawer-overlay, .ua-sheet-overlay, .file-preview-overlay, .nf-scrim, .sc-scrim, .att-sheet, .export-menu, .ai-pop, [role="dialog"], [aria-modal="true"]) { transition: none; transform: none; }
+  :where(.sidebar__link):hover { transform: translateX(-3px); }
+  [dir="ltr"] :where(.sidebar__link):hover { transform: translateX(3px); }
+  :where(.sidebar__link) { transition: transform var(--m-dur-fast) var(--m-ease), background-color var(--m-dur-fast) linear, color var(--m-dur-fast) linear; }
+  :where(.topbar__icon-btn, .topbar__ask-ai, .topbar__palette-btn):hover { transform: translateY(-2px); }
+  :where(.topbar__icon-btn, .topbar__ask-ai, .topbar__palette-btn) { transition: transform var(--m-dur-fast) var(--m-ease), background-color var(--m-dur-fast) linear; }
+  :where(.btn):not(:disabled):hover { transform: translateY(-1px); }
+  :where(.dropdown__item, .um-row, .st-row) { transition: background-color var(--m-dur-fast) linear, transform var(--m-dur-fast) var(--m-ease); }
+}
+
+/* Slow / battery-saver devices: drop the stagger entirely, keep a single quick fade. */
+@media (prefers-reduced-motion: no-preference) and (update: slow) {
+  :where(.app-shell__main, .insight-grid, .grid-2, .adm-grid, .adm-kpis, .ex-kpis, .um-stats, .st-grid, .pol-grid, .public-projects-grid, .insight-list, .um-rows) > :where(*) {
+    animation: m-fade var(--m-dur-fast) linear backwards !important;
+    animation-delay: 0s !important;
+  }
+}

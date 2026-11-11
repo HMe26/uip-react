@@ -1,0 +1,54 @@
+/* ==========================================================================
+   motion-boost.css — makes the open / landing animations actually show.
+
+   Why they were missing:
+   - landing-motion.css only styles .lp2--fx pages; the new Landing (.lp4) got none of it, and
+     four keyframes it referenced (lp-shimmer, lp-twinkle, lp-btn-bg, lp-sheen) were never defined.
+   - animations.css kills every animation for prefers-reduced-motion (Windows "Show animations" off
+     counts), so such visitors saw a completely static site. They now get a short, calm fade only
+     (no movement, no loops). The Admin "Platform animations" switch (html[data-motion="off"]) still
+     turns everything off.
+   Only opacity + transform are animated. All one-shot except the slow ambient loops.
+   ========================================================================== */
+@keyframes lp-shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes lp-twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .55; transform: scale(.82); } }
+@keyframes lp-btn-bg { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes lp-sheen { 0% { inset-inline-start: -60%; } 55%, 100% { inset-inline-start: 140%; } }
+@keyframes lp4-rise { from { opacity: 0; transform: translateY(26px); } }
+@keyframes lp4-pop { from { opacity: 0; transform: translateY(30px) scale(.94); } }
+@keyframes lp4-fade { from { opacity: 0; } }
+@keyframes lp4-glow { 0%, 100% { transform: translate3d(0, 0, 0) scale(1); } 50% { transform: translate3d(2%, 4%, 0) scale(1.06); } }
+@keyframes lp4-ping { 0% { box-shadow: 0 0 0 0 rgba(10, 159, 107, .45); } 80%, 100% { box-shadow: 0 0 0 9px rgba(10, 159, 107, 0); } }
+@keyframes app-side-in { from { opacity: 0; transform: translateX(-26px); } }
+@keyframes app-side-in-rtl { from { opacity: 0; transform: translateX(26px); } }
+@keyframes app-logo-in { from { opacity: 0; transform: scale(.8); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="off"]) :is(.lp4-pill) { animation: lp4-rise .7s var(--m-ease, cubic-bezier(.2,.7,.2,1)) .05s backwards; }
+  html:not([data-motion="off"]) :is(.lp4-dot) { animation: lp4-ping 2.2s ease-out 1s infinite; }
+  html:not([data-motion="off"]) :is(.lp4-hero h1) { animation: lp4-rise .8s cubic-bezier(.2,.7,.2,1) .15s backwards; }
+  html:not([data-motion="off"]) :is(.lp4-grad) { background-size: 220% 100%; animation: lp-shimmer 7s ease-in-out infinite; }
+  html:not([data-motion="off"]) :is(.lp4-lead) { animation: lp4-rise .8s cubic-bezier(.2,.7,.2,1) .28s backwards; }
+  html:not([data-motion="off"]) :is(.lp4-cta) { animation: lp4-rise .8s cubic-bezier(.2,.7,.2,1) .4s backwards; }
+  html:not([data-motion="off"]) :is(.lp4-note) { animation: lp4-rise .8s cubic-bezier(.2,.7,.2,1) .5s backwards; }
+  html:not([data-motion="off"]) :is(.lp4-win--main) { animation: lp4-pop .9s cubic-bezier(.2,.7,.2,1) .3s backwards; }
+  html:not([data-motion="off"]) :is(.lp4-glow) { animation: lp4-glow 16s ease-in-out infinite; }
+  html:not([data-motion="off"]) :is(.lp4-stats li) { animation: lp4-rise .7s cubic-bezier(.2,.7,.2,1) backwards; }
+  html:not([data-motion="off"]) :is(.lp4-stats li:nth-child(1)) { animation-delay: .6s; }
+  html:not([data-motion="off"]) :is(.lp4-stats li:nth-child(2)) { animation-delay: .7s; }
+  html:not([data-motion="off"]) :is(.lp4-stats li:nth-child(3)) { animation-delay: .8s; }
+  html:not([data-motion="off"]) :is(.lp4-stats li:nth-child(4)) { animation-delay: .9s; }
+  html:not([data-motion="off"]) :is(.lp4-final) { animation: lp4-pop .9s cubic-bezier(.2,.7,.2,1) backwards; }
+  html:not([data-motion="off"]) :is(.app-shell .sidebar) { animation: app-side-in .6s cubic-bezier(.2,.7,.2,1) backwards; }
+  html:not([data-motion="off"]) :is([dir="rtl"] .app-shell .sidebar) { animation-name: app-side-in-rtl; }
+  html:not([data-motion="off"]) :is(.app-shell .sidebar .sidebar__brand-id .bw, .app-shell .sidebar .sidebar__logo--mark) { animation: app-logo-in .7s cubic-bezier(.2,.9,.3,1.2) .2s backwards; }
+  html:not([data-motion="off"]) :is(.app-shell .sidebar .sidebar__brand-sub) { animation: lp4-fade .6s linear .45s backwards; }
+}
+
+/* Reduced motion: no movement at all, just a calm fade so the page does not feel dead. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="off"]) :is(.lp4-hero__copy, .lp4-stage, .lp4-stats, .lp4-final, .app-shell .sidebar, .app-shell__main) {
+    animation: lp4-fade .45s linear backwards !important;
+    animation-duration: .45s !important;
+  }
+}

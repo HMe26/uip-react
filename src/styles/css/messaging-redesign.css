@@ -1,0 +1,593 @@
+/* ============================================================================
+   Messages — redesign layer (loaded after messaging-app / -mobile / -laptop).
+   Three soft cards (conversations · chat · details) with a themeable wallpaper behind the chat,
+   gradient "mine" bubbles, a floating composer, and panels that can be hidden so the chat gets the full width.
+   Tokens only (light/dark/RTL come for free). Wallpaper = [data-wall] on .msg-app, picked in the details panel.
+   ========================================================================== */
+
+/* ---------- Wallpapers (CSS only, no images) ---------- */
+.msg-app { --wall-dot: rgba(60, 60, 130, .10); --wall-veil: transparent; }
+[data-theme="dark"] .msg-app { --wall-dot: rgba(255, 255, 255, .07); --wall-veil: rgba(8, 10, 24, .38); }
+
+html body .msg-app[data-msg-app] .msg-thread,
+html body .msg-app[data-msg-app][data-wall="dots"] .msg-thread {
+  background:
+    radial-gradient(circle at 15% 8%, rgba(var(--color-primary-rgb), .13), transparent 42%),
+    radial-gradient(circle at 88% 85%, rgba(20, 184, 166, .11), transparent 45%),
+    radial-gradient(var(--wall-dot) 1.3px, transparent 1.4px) 0 0 / 22px 22px,
+    var(--bg-canvas);
+}
+html body .msg-app[data-msg-app][data-wall="sunset"] .msg-thread {
+  background: linear-gradient(var(--wall-veil), var(--wall-veil)), linear-gradient(rgba(255, 255, 255, .34), rgba(255, 255, 255, .34)), linear-gradient(160deg, #ffd6a5, #ff9ec4 55%, #a78bfa);
+}
+html body .msg-app[data-msg-app][data-wall="night"] .msg-thread {
+  background: radial-gradient(rgba(255, 255, 255, .12) 1.2px, transparent 1.3px) 0 0 / 16px 16px, #1b1f3b;
+}
+html body .msg-app[data-msg-app][data-wall="mint"] .msg-thread {
+  background: linear-gradient(var(--wall-veil), var(--wall-veil)), linear-gradient(160deg, #d3f9e8, #b6e6f5);
+}
+/* the list area is transparent so the wallpaper shows through (and behind the floating composer) */
+html body .msg-app .msg-thread__scroll { background: transparent; }
+/* on the dark wallpaper the little system chips need light text */
+.msg-app[data-wall="night"] .msg-day-sep span { color: var(--text-primary); }
+
+/* Details panel: wallpaper picker */
+.msg-wall-picker { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px; }
+.msg-wall-swatch { height: 56px; border-radius: 14px; border: 1px solid var(--border-subtle); cursor: var(--cur-pointer, pointer); padding: 0; transition: transform .15s; }
+.msg-wall-swatch:hover { transform: translateY(-2px); }
+.msg-wall-swatch[aria-pressed="true"] { outline: 2.5px solid var(--color-primary); outline-offset: 2px; }
+.msg-wall-swatch--dots { background: radial-gradient(circle at 15% 8%, rgba(var(--color-primary-rgb), .18), transparent 50%), radial-gradient(rgba(60, 60, 130, .16) 1.3px, transparent 1.4px) 0 0 / 14px 14px, var(--bg-canvas); }
+.msg-wall-swatch--sunset { background: linear-gradient(160deg, #ffd6a5, #ff9ec4 55%, #a78bfa); }
+.msg-wall-swatch--night { background: radial-gradient(rgba(255, 255, 255, .14) 1.2px, transparent 1.3px) 0 0 / 12px 12px, #1b1f3b; }
+.msg-wall-swatch--mint { background: linear-gradient(160deg, #d3f9e8, #b6e6f5); }
+
+/* ---------- Header: glass strip + panel toggles ---------- */
+html body .msg-app .msg-thread__header {
+  background: color-mix(in srgb, var(--bg-surface) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.msg-app .msg-panel-btn[aria-pressed="true"] { background: rgba(var(--color-primary-rgb), .13); color: var(--color-primary); }
+.msg-app .msg-panel-btn[aria-pressed="false"] { background: none; color: var(--text-secondary); }
+.msg-app .msg-panel-btn:hover { background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+[dir="rtl"] .msg-rail-toggle svg { transform: scaleX(-1); }   /* the list sits on the right in RTL */
+.msg-info-toggle svg { transform: scaleX(-1); }               /* the details sit on the right in LTR */
+[dir="rtl"] .msg-info-toggle svg { transform: none; }
+
+/* ---------- Day separators ---------- */
+html body .msg-app .msg-day-sep span {
+  background: color-mix(in srgb, var(--bg-surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  border: 1px solid var(--border-subtle); box-shadow: 0 1px 2px rgba(20, 28, 70, .06);
+}
+
+/* ---------- Bubbles ---------- */
+html body .msg-app[data-msg-app] .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  border: 0; box-shadow: 0 1px 2px rgba(20, 28, 70, .10);
+}
+html body .msg-app[data-msg-app] .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 62%, #7c5cff));
+  color: #fff; box-shadow: 0 6px 16px -8px rgba(var(--color-primary-rgb), .55);
+}
+html body .msg-app .msg-bubble { border-radius: 18px; }
+html body .msg-app .msg-row.show-avatar:not(.is-mine) .msg-bubble { border-start-start-radius: 6px; }
+html body .msg-app .msg-row.is-mine.show-avatar .msg-bubble { border-start-end-radius: 6px; }
+
+/* ---------- Composer: one floating pill ---------- */
+html body .msg-app .msg-composer { border-top: 0; background: transparent; padding: 6px 20px 16px; }
+html body .msg-app .msg-composer__toolbar { padding: 0 6px; margin-bottom: 6px; }
+html body .msg-app .msg-composer__input-row {
+  align-items: flex-end; gap: 8px; padding: 6px; background: var(--bg-surface);
+  border: 1px solid var(--border-subtle); border-radius: 22px;
+  box-shadow: 0 12px 30px -14px rgba(20, 28, 70, .35); transition: border-color .15s, box-shadow .15s;
+}
+html body .msg-app .msg-composer__input-row:focus-within { border-color: var(--color-primary); box-shadow: 0 12px 30px -14px rgba(20, 28, 70, .35), 0 0 0 3px rgba(var(--color-primary-rgb), .14); }
+html body .msg-app .msg-composer__input { border: 0; background: transparent; border-radius: 14px; }
+html body .msg-app .msg-composer__input:focus { border: 0; }
+html body .msg-app .msg-send-btn {
+  width: 44px; height: 44px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 62%, #7c5cff));
+  box-shadow: 0 8px 18px rgba(var(--color-primary-rgb), .38);
+}
+
+/* ---------- Conversation list rows ---------- */
+html body .msg-app .msg-conv { margin: 2px 8px; border-radius: 16px; border-inline-start-color: transparent; }
+html body .msg-app .msg-conv.is-active { background: rgba(var(--color-primary-rgb), .11); border-inline-start-color: transparent; }
+html body .msg-app .msg-rail__search { border-radius: 14px; }
+
+/* ---------- Desktop / laptop: three separate cards ---------- */
+@media (min-width: 761px) {
+  html body .msg-app[data-msg-app] {
+    /* Gaps between the cards must be OPAQUE page colour: transparent let the shell's header/title text behind the
+       app show through the 16px gutters. */
+    gap: 16px; margin-inline: 0; background: var(--bg-canvas); border: 0; box-shadow: none; overflow: visible; border-radius: 0;
+    isolation: isolate;
+  }
+  html body .msg-app[data-msg-app] > .msg-rail,
+  html body .msg-app[data-msg-app] > .msg-thread,
+  html body .msg-app[data-msg-app] > .msg-info {
+    border: 1px solid var(--border-subtle); border-radius: 24px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(20, 28, 70, .04), 0 10px 28px -18px rgba(20, 28, 70, .22);
+  }
+  html body .msg-app[data-msg-app] > .msg-rail,
+  html body .msg-app[data-msg-app] > .msg-info { background: var(--bg-surface); }
+  html body .msg-app[data-msg-app] > .msg-info { border-inline-start: 1px solid var(--border-subtle); }
+}
+@media (min-width: 761px) and (max-width: 1479px) {
+  /* narrower than a 3-column layout: the details panel floats over the chat as its own card */
+  html body .msg-app[data-msg-app] > .msg-info { top: 8px; bottom: 8px; inset-inline-end: 8px; border-radius: 20px; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 760px) {
+  html body.msg-page-active .msg-app .msg-composer { background: transparent; padding: 6px 10px calc(8px + var(--safe-bottom)); }
+  html body.msg-page-active .msg-app .msg-composer__input-row { border-radius: 24px; }
+  html body.msg-page-active .msg-app .msg-send-btn { border-radius: 50%; }
+  html body.msg-page-active .msg-app .msg-composer__input { border-radius: 18px; }
+}
+
+/* ---------- Message hover actions + "more" menu (cleaner, and never left hanging) ---------- */
+html body .msg-app .msg-hover-actions {
+  top: auto; bottom: calc(100% + 4px); height: auto; min-height: 38px; width: max-content; box-sizing: border-box; padding: 4px; gap: 2px; align-items: center; flex-wrap: nowrap;
+  background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid var(--border-subtle); border-radius: 14px;
+  box-shadow: 0 8px 22px -10px rgba(20, 28, 70, .35);
+}
+html body .msg-app .msg-hover-actions.is-open { display: flex; }   /* stays attached to the bubble while its menu is open */
+html body .msg-app .msg-hover-actions button {
+  position: relative; flex: none; width: 30px; height: 30px; border-radius: 10px; color: var(--text-secondary); transition: background .12s, color .12s;
+}
+html body .msg-app .msg-hover-actions button svg { width: 16px; height: 16px; }
+html body .msg-app .msg-hover-actions button:hover,
+html body .msg-app .msg-hover-actions button:focus-visible { background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+html body .msg-app .msg-hover-actions button:last-child { margin-inline-start: 2px; }
+/* tooltip (reads the aria-label, replaces the native black box) */
+html body .msg-app .msg-hover-actions button:hover::after,
+html body .msg-app .msg-hover-actions button:focus-visible::after {
+  content: attr(aria-label); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  padding: 4px 9px; border-radius: 8px; background: #1c2033; color: #fff; font-size: 12px; font-weight: 500; line-height: 1.4;
+  white-space: nowrap; pointer-events: none; z-index: 3;
+}
+
+.msg-menu__panel, .msg-reaction-picker {
+  animation: msg-pop .12s ease-out;
+  background: var(--bg-surface); border: 1px solid var(--border-subtle);
+  box-shadow: 0 14px 34px -12px rgba(20, 28, 70, .4);
+}
+.msg-menu__panel { min-width: 190px; padding: 5px; border-radius: 14px; }
+.msg-reaction-picker { border-radius: 16px; padding: 5px 7px; }
+.msg-menu__item { gap: 10px; padding: 9px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 600; }
+.msg-menu__item svg { flex: none; color: var(--text-secondary); }
+.msg-menu__item:hover { background: rgba(var(--color-primary-rgb), .09); }
+.msg-menu__item--danger, .msg-menu__item--danger svg { color: var(--color-danger); }
+.msg-menu__item--danger:hover { background: rgba(var(--color-danger-rgb, 220, 38, 38), .09); }
+@keyframes msg-pop { from { opacity: 0; transform: translateY(4px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .msg-menu__panel, .msg-reaction-picker { animation: none; } }
+
+/* ---------- Phones: chat mode gets the whole screen ----------
+   With a conversation open the top bar (page title, menu, language, notifications …) is hidden so the chat is as tall
+   as possible. The thread's own header has the back button; the conversation list screen keeps the top bar. */
+@media (max-width: 760px) {
+  html body.msg-page-active.msg-thread-open .app-shell .topbar { display: none !important; }
+  html body.msg-page-active.msg-thread-open .msg-app { margin: 0; }
+  html body.msg-page-active.msg-thread-open .msg-app .msg-thread__header { padding-top: env(safe-area-inset-top, 0px); min-height: calc(var(--msg-header-h) + env(safe-area-inset-top, 0px)); }
+}
+
+/* ============================================================================
+   Chat header + details panel — same card language as the rest of the chat
+   ========================================================================== */
+
+/* ---------- Header ---------- */
+html body .msg-app .msg-thread__header { gap: 10px; }
+html body .msg-app .msg-thread__peer-meta strong { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 15.5px; font-weight: 700; }
+.msg-thread__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.msg-thread__role {
+  flex: none; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; line-height: 1.6;
+  color: var(--color-primary); background: rgba(var(--color-primary-rgb), .1); border: 1px solid rgba(var(--color-primary-rgb), .2);
+}
+html body .msg-app .msg-thread__status { font-size: 12.5px; }
+/* every header button: same size, shape and hover */
+html body .msg-app .msg-thread__header .msg-icon-btn {
+  width: 38px; height: 38px; border-radius: 12px; border: 0; background: none; color: var(--text-secondary);
+  display: inline-grid; place-items: center; transition: background .12s, color .12s;
+}
+html body .msg-app .msg-thread__header .msg-icon-btn:hover { background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+html body .msg-app .msg-thread__header .msg-panel-btn[aria-pressed="true"] { background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+html body .msg-app .msg-thread__header .msg-panel-btn[aria-pressed="false"] { background: none; color: var(--text-secondary); }
+html body .msg-app .msg-thread__header-actions { gap: 4px; padding-inline-start: 6px; margin-inline-start: 2px; border-inline-start: 1px solid var(--border-subtle); }
+
+/* ---------- Details panel ---------- */
+html body .msg-app .msg-info__head { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); }
+html body .msg-app .msg-info__head .text-h4 { font-size: 15px; font-weight: 800; }
+html body .msg-app .msg-info__head .msg-icon-btn { width: 36px; height: 36px; border-radius: 12px; border: 0; background: none; color: var(--text-secondary); }
+html body .msg-app .msg-info__head .msg-icon-btn:hover { background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+html body .msg-app .msg-info__body { padding: 16px; gap: 20px; }
+
+.msg-info__hero { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 6px 0 2px; }
+.msg-info__hero .msg-avatar { width: 80px; height: 80px; font-size: 28px; margin-bottom: 4px; box-shadow: 0 10px 24px -12px rgba(var(--color-primary-rgb), .6); }
+.msg-info__hero strong { font-size: 17px; font-weight: 800; overflow-wrap: anywhere; }
+.msg-info__role { padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--color-primary); background: rgba(var(--color-primary-rgb), .1); border: 1px solid rgba(var(--color-primary-rgb), .2); }
+.msg-info__email { font-size: 12.5px; color: var(--text-secondary); unicode-bidi: isolate; overflow-wrap: anywhere; }
+.msg-info__org { font-size: 12.5px; color: var(--text-secondary); }
+
+html body .msg-app .msg-info__section-title { font-size: 12.5px; font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--text-secondary); margin: 0 4px 8px; }
+.msg-info__card { background: var(--bg-canvas); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 2px 14px; }
+html body .msg-app .msg-info__toggle-row { padding: 12px 0; font-size: 14px; font-weight: 600; }
+html body .msg-app .msg-info__toggle-row + .msg-info__toggle-row { border-top: 1px solid var(--border-subtle); }
+html body .msg-app .msg-switch { width: 42px; height: 24px; background: color-mix(in srgb, var(--text-secondary) 30%, transparent); transition: background .15s; }
+html body .msg-app .msg-switch::after { width: 20px; height: 20px; box-shadow: 0 1px 3px rgba(20, 28, 70, .3); }
+html body .msg-app .msg-switch.is-on { background: var(--color-primary); }
+html body .msg-app .msg-switch.is-on::after { inset-inline-start: 20px; }
+.msg-info input[type="text"] { width: 100%; height: 44px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--border-subtle); background: var(--bg-canvas); font: inherit; font-size: 14px; color: var(--text-primary); }
+.msg-info input[type="text"]:focus { outline: 0; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .14); }
+
+html body .msg-app .msg-info__member { padding: 10px 12px; gap: 12px; margin-bottom: 8px; border-radius: 14px; background: var(--bg-canvas); border: 1px solid var(--border-subtle); }
+html body .msg-app .msg-info__member-meta strong { font-size: 14px; font-weight: 700; }
+html body .msg-app .msg-info__member-role { font-size: 12px; text-transform: none; display: block; }
+
+html body .msg-app .msg-info__file { gap: 12px; padding: 9px 12px; margin-bottom: 8px; border-radius: 14px; background: var(--bg-canvas); border: 1px solid var(--border-subtle); text-decoration: none; color: inherit; transition: border-color .12s; }
+html body .msg-app .msg-info__file:hover { border-color: rgba(var(--color-primary-rgb), .45); }
+html body .msg-app .msg-info__file img { width: 38px; height: 38px; border-radius: 10px; }
+.msg-info__file-icon { flex: none; width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; color: var(--color-primary); background: rgba(var(--color-primary-rgb), .1); }
+.msg-info__file-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; unicode-bidi: plaintext; text-align: start; }
+.msg-info__file-size { flex: none; font-size: 11.5px; color: var(--text-secondary); direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+
+/* ---------- Pinned-messages bar: readable on every wallpaper, light and dark ---------- */
+html body .msg-app .msg-thread__pinned-bar {
+  background: color-mix(in srgb, var(--bg-surface) 88%, #f5a524 12%);
+  color: var(--text-primary);
+  border-bottom: 1px solid color-mix(in srgb, #f5a524 35%, var(--border-subtle));
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+html body .msg-app .msg-thread__pinned-bar svg { color: #f5a524; flex: none; }
+html body .msg-app .msg-thread__pinned-bar strong { color: var(--text-primary); }
+html body .msg-app .msg-thread__pinned-bar .msg-icon-btn {
+  width: auto; height: auto; padding: 4px 12px; border-radius: 999px;
+  background: rgba(var(--color-primary-rgb), .14); color: var(--color-primary); font-weight: 600;
+}
+
+/* ---------- Phones: the conversation list is its own screen, so its toggle has nothing to do ---------- */
+@media (max-width: 760px) {
+  html body .msg-app .msg-thread__header .msg-rail-toggle { display: none !important; }
+}
+
+/* ---------- Phones / touch: the message action bar appears on long press only ----------
+   A tap leaves :hover stuck on touch screens, which showed the bar on every touch. Hover only counts on
+   devices that really hover; on phones the bar needs .is-open (long press, see ThreadPanel). */
+@media (hover: none), (max-width: 760px) {
+  html body .msg-app .msg-row:hover .msg-hover-actions:not(.is-open) { display: none; }
+}
+
+/* ---------- Tablet portrait (761-900px) ----------
+   The fixed 240px portal sidebar leaves ~520-650px for Messages: not enough for list + chat side by side
+   (the "Messages" title wrapped one letter per line). Work like the phone layout instead: the list is a
+   full-width screen, opening a chat shows only the chat, and the back arrow returns to the list. */
+.msg-rail__title { white-space: nowrap; }
+.msg-rail__head { flex-wrap: wrap; gap: 8px; }
+@media (min-width: 761px) and (max-width: 900px) {
+  html body .msg-app[data-msg-app],
+  html body .msg-app[data-msg-app].has-info,
+  html body .msg-app[data-msg-app].rail-collapsed { grid-template-columns: minmax(0, 1fr) !important; }
+  html body .msg-app[data-msg-app]:not(.thread-open) .msg-thread { display: none; }
+  html body .msg-app[data-msg-app].thread-open .msg-rail { display: none; }
+  html body .msg-app .msg-thread__back { display: inline-grid; }
+  [dir="rtl"] .msg-app .msg-thread__back svg { transform: scaleX(-1); }
+  html body .msg-app .msg-thread__header .msg-rail-toggle { display: none !important; }
+}
+
+/* ---- Full platform: the messenger covers the sidebar and top bar ---- */
+html body .msg-app[data-msg-app].is-full {
+  position: fixed !important; inset: 0 !important; z-index: 2000;
+  background: var(--bg-canvas) !important;   /* opaque: nothing of the page behind may show in the gutters between the cards */
+  width: 100vw; max-width: 100vw; height: 100dvh !important; min-height: 0 !important;
+  margin: 0 !important; border: none; border-radius: 0; box-shadow: none;
+  padding-top: env(safe-area-inset-top, 0px);
+  --msg-rail-w: 360px;
+}
+html body .msg-app[data-msg-app].is-full.rail-collapsed { --msg-rail-w: 0px; }
+/* the real top bar / sidebar sit behind the full-screen messenger: hide them so their title never peeks through */
+html body:has(.msg-app[data-msg-app].is-full) :is(.topbar, .sidebar, .app-shell__main > .breadcrumb) { visibility: hidden; }
+@media (max-width: 700px) { .msg-full-btn { display: none !important; } }
+
+/* ---- Voice recording bar: the live timer + Send must stay visible (they used to render below the input, clipped by the card) ---- */
+html body .msg-app .msg-composer.is-recording .msg-composer__input-row { display: none; }
+html body .msg-app .msg-composer__recording {
+  display: flex; align-items: center; gap: 12px; padding: 8px 10px; min-height: 52px;
+  background: var(--bg-surface); color: var(--text-primary);
+  border: 1px solid var(--border-subtle); border-radius: 22px;
+  box-shadow: 0 12px 30px -14px rgba(20, 28, 70, .35);
+}
+html body .msg-app .msg-composer__recording > span:not(.msg-rec-dot):not(.msg-waveform-live) {
+  min-width: 48px; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-primary); direction: ltr;
+}
+html body .msg-app .msg-composer__recording .msg-waveform-live { flex: 1; min-width: 40px; }
+html body .msg-app .msg-composer__recording .btn { flex: none; padding-inline: 18px; min-height: 36px; border-radius: 14px; }
+html body .msg-app .msg-composer__recording .msg-icon-btn { flex: none; color: var(--text-secondary); }
+
+/* ---- Send button: insight-portal.css pushes it 64px past the row end (margin-inline-end:-64px) for the OLD layout; with the
+   redesigned pill that shoved it outside the card where it got clipped. Keep it inside the pill. ---- */
+html body .msg-app .msg-composer__input-row { padding-inline-end: 6px; }
+html body .msg-app .msg-send-btn { margin-inline-end: 0; flex: none; }
+html body .msg-app .msg-composer__input { min-width: 0; }
+
+/* live voice waveform (canvas, driven by the mic level) + noise-cancel toggle */
+html body .msg-app .msg-composer__recording canvas.msg-waveform-live {
+  flex: 1; min-width: 60px; height: 34px; background: none; opacity: 1; border-radius: 0; color: var(--color-primary); display: block;
+}
+html body .msg-app .msg-ns-btn {
+  flex: none; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 999px;
+  border: 1px solid var(--border-subtle); background: transparent; color: var(--text-secondary); font-family: inherit; font-weight: 700; font-size: 12px; line-height: 1; cursor: pointer; white-space: nowrap;
+}
+html body .msg-app .msg-ns-btn.is-on { background: rgba(var(--color-primary-rgb), .13); border-color: var(--color-primary); color: var(--color-primary); }
+@media (max-width: 520px) { html body .msg-app .msg-ns-btn { padding: 0 9px; font-size: 11px; } }
+/* Phones / APK: timer + waveform + noise toggle + cancel + Send must ALL fit inside the pill (Send used to be pushed off the edge and clipped). */
+html body .msg-app .msg-composer__recording { max-width: 100%; box-sizing: border-box; min-width: 0; }
+@media (max-width: 560px) {
+  html body .msg-app .msg-composer__recording { gap: 6px; padding: 6px 8px; min-height: 48px; }
+  html body .msg-app .msg-composer__recording > span:not(.msg-rec-dot):not(.msg-waveform-live) { min-width: 38px; font-size: 14px; }
+  html body .msg-app .msg-composer__recording canvas.msg-waveform-live { flex: 1 1 0; min-width: 20px; }
+  /* noise toggle becomes an icon-only chip (the label text is hidden, the icon stays) */
+  html body .msg-app .msg-ns-btn { font-size: 0; gap: 0; width: 34px; height: 34px; padding: 0; justify-content: center; }
+  html body .msg-app .msg-composer__recording .msg-icon-btn { width: 32px; height: 32px; padding: 0; }
+  html body .msg-app .msg-composer__recording .btn { padding-inline: 14px; min-height: 36px; flex: none; }
+}
+
+/* ---------- Deleted-message placeholder: a clearly visible dashed outline (the default border was almost invisible) ---------- */
+html body .msg-app .msg-bubble.msg-bubble--deleted,
+html body .msg-app .msg-row.is-mine .msg-bubble.msg-bubble--deleted {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 14px;
+  border: 1.5px dashed color-mix(in srgb, var(--text-secondary) 60%, transparent);
+  background: color-mix(in srgb, var(--text-secondary) 8%, transparent);
+  color: var(--text-secondary); font-style: italic; box-shadow: none;
+}
+html body .msg-app .msg-bubble--deleted svg { flex: none; opacity: .75; }
+
+/* ---------- Animated wallpaper (opt-in, per browser: Details panel -> "Animated background") ----------
+   Two decorative layers behind the messages: soft colour glows that drift, and a dot field that
+   slowly rises. transform only, one composited layer each, off for reduced-motion / slow screens /
+   the admin "Platform animations" switch (html[data-motion="off"]). */
+.msg-app[data-wall-anim="on"] { --wall-a: rgba(var(--color-primary-rgb), .22); --wall-b: rgba(20, 184, 166, .18); --wall-d: rgba(60, 60, 130, .16); }
+[data-theme="dark"] .msg-app[data-wall-anim="on"] { --wall-d: rgba(255, 255, 255, .13); }
+.msg-app[data-wall-anim="on"][data-wall="sunset"] { --wall-a: rgba(255, 255, 255, .45); --wall-b: rgba(167, 139, 250, .35); --wall-d: rgba(255, 255, 255, .5); }
+.msg-app[data-wall-anim="on"][data-wall="night"] { --wall-a: rgba(124, 139, 255, .30); --wall-b: rgba(76, 194, 255, .20); --wall-d: rgba(255, 255, 255, .22); }
+.msg-app[data-wall-anim="on"][data-wall="mint"] { --wall-a: rgba(255, 255, 255, .55); --wall-b: rgba(14, 165, 233, .22); --wall-d: rgba(20, 120, 110, .22); }
+
+@keyframes msg-wall-glow { 0% { transform: translate3d(-5%, -3%, 0) scale(1); } 100% { transform: translate3d(5%, 4%, 0) scale(1.1); } }
+@keyframes msg-wall-rise { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(0, -26px, 0); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  html body .msg-app[data-msg-app][data-wall-anim="on"] .msg-thread { isolation: isolate; }
+  .msg-app[data-wall-anim="on"] .msg-thread::before,
+  .msg-app[data-wall-anim="on"] .msg-thread::after { content: ''; position: absolute; z-index: -1; pointer-events: none; will-change: transform; }
+  .msg-app[data-wall-anim="on"] .msg-thread::before {
+    inset: 0;
+    background:
+      radial-gradient(closest-side circle at 26% 30%, var(--wall-a), transparent),
+      radial-gradient(closest-side circle at 74% 70%, var(--wall-b), transparent);
+    animation: msg-wall-glow 18s ease-in-out infinite alternate;
+  }
+  .msg-app[data-wall-anim="on"] .msg-thread::after {
+    inset: 0;
+    background: radial-gradient(var(--wall-d) 1.6px, transparent 1.7px) 0 0 / 26px 26px;
+    -webkit-mask-image: linear-gradient(#000 20%, transparent 92%); mask-image: linear-gradient(#000 20%, transparent 92%);
+    animation: msg-wall-rise 5s linear infinite;
+  }
+}
+@media (update: slow) {
+  .msg-app[data-wall-anim="on"] .msg-thread::before, .msg-app[data-wall-anim="on"] .msg-thread::after { animation: none; }
+}
+.msg-wall-anim { margin-top: 8px; }
+
+/* ---------- Readable text on every wallpaper, in light AND dark site theme ----------
+   The wallpaper is chosen separately from the site theme, so the message list gets its own text tokens:
+   dark wallpaper -> light text, pastel wallpapers -> dark text. Only the list is scoped (the composer keeps the site theme). */
+.msg-app[data-wall="night"] .msg-thread__scroll {
+  --text-primary: #F3F5FA; --text-secondary: #B9C1DE; --border-subtle: rgba(255, 255, 255, .16);
+  --msg-bubble-theirs: rgba(255, 255, 255, .10);
+  color: var(--text-primary);
+}
+.msg-app[data-wall="sunset"] .msg-thread__scroll,
+.msg-app[data-wall="mint"] .msg-thread__scroll {
+  --text-primary: #1A2040; --text-secondary: #46507A; --border-subtle: rgba(26, 32, 64, .14);
+  --msg-bubble-theirs: rgba(255, 255, 255, .78);
+  color: var(--text-primary);
+}
+html body .msg-app[data-msg-app][data-wall="night"] .msg-row.is-mine .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  background: rgba(var(--color-primary-rgb), .42); color: #F3F5FA;
+}
+html body .msg-app[data-msg-app][data-wall="night"] .msg-row:not(.is-mine) .msg-bubble:not(.msg-bubble--media):not(.msg-bubble--deleted) {
+  background: rgba(255, 255, 255, .10); color: #F3F5FA; border-color: rgba(255, 255, 255, .14);
+}
+html body .msg-app[data-msg-app][data-wall="night"] .msg-bubble a { color: #fff; }
+html body .msg-app[data-msg-app][data-wall="night"] .msg-row .lnk-card { background: rgba(255, 255, 255, .10); border-inline-start-color: #8EA2FF; color: #F3F5FA; }
+html body .msg-app[data-msg-app][data-wall="night"] .msg-row .lnk-card__icon { background: rgba(255, 255, 255, .14); }
+html body .msg-app[data-msg-app][data-wall="night"] .msg-row .msg-reply-quote { background: rgba(255, 255, 255, .10); color: #F3F5FA; }
+html body .msg-app[data-msg-app][data-wall="night"] .msg-bubble code,
+html body .msg-app[data-msg-app][data-wall="night"] .msg-bubble pre { background: rgba(255, 255, 255, .14); }
+html body .msg-app[data-msg-app][data-wall="night"] .msg-bubble .msg-mention { background: rgba(255, 255, 255, .2); color: #fff; }
+html body .msg-app[data-msg-app][data-wall="night"] .msg-bubble .msg-hashtag { color: #BFD0FF; }
+/* the link card keeps readable text inside "mine" bubbles of the default (tinted) style on every wallpaper */
+.msg-app[data-msg-app] .msg-bubble .lnk-card__meta strong,
+.msg-app[data-msg-app] .msg-bubble .lnk-card__meta span { color: inherit; }
+
+/* ---------- Location card v2: own colours, so the text is readable on any theme / wallpaper ---------- */
+.msg-app .loc-card {
+  --lc-bg: #ffffff; --lc-fg: #1c2033; --lc-sub: #667089; --lc-line: rgba(20, 28, 70, .10); --lc-chip: rgba(255, 255, 255, .92);
+  position: relative; width: 280px; max-width: 100%; border-radius: 20px; overflow: hidden; border: 1px solid var(--lc-line);
+  background: var(--lc-bg); color: var(--lc-fg); box-shadow: 0 10px 28px -14px rgba(10, 15, 40, .55);
+}
+[data-theme="dark"] .msg-app .loc-card,
+.msg-app[data-wall="night"] .loc-card {
+  --lc-bg: #1a1f3a; --lc-fg: #f3f5fa; --lc-sub: #aab3d2; --lc-line: rgba(255, 255, 255, .14); --lc-chip: rgba(26, 31, 58, .86);
+}
+.msg-app .loc-card__mapwrap { position: relative; display: block; color: inherit; text-decoration: none; }
+.msg-app .loc-card__mapwrap::after { content: ''; position: absolute; inset: auto 0 0 0; height: 46px; background: linear-gradient(to top, rgba(0, 0, 0, .22), transparent); pointer-events: none; }
+.msg-app .loc-card__chip {
+  position: absolute; z-index: 2; top: 10px; inset-inline-start: 10px; display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; color: var(--lc-fg); background: var(--lc-chip);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 2px 8px rgba(0, 0, 0, .18);
+}
+.msg-app .loc-card__chip svg { color: #e5484d; }
+.msg-app .loc-card__chip.is-live { color: #fff; background: #1fa855; }
+.msg-app .loc-card__chip.is-live .loc-live-dot { background: #fff; }
+.msg-app .loc-card__meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 13px; line-height: 1.4; background: var(--lc-bg); color: var(--lc-fg); }
+.msg-app .loc-card__text { display: flex; flex-direction: column; min-width: 0; gap: 1px; }
+.msg-app .loc-card__text strong { font-size: 13.5px; color: var(--lc-fg); display: block; }
+.msg-app .loc-card__text > span { font-size: 11.5px; color: var(--lc-sub); opacity: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-app .loc-card__open {
+  flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 6px 11px; border-radius: 999px; font-size: 12px; font-weight: 700;
+  color: #fff; background: var(--color-primary); opacity: 1;
+}
+.msg-app a.loc-card:hover .loc-card__open { filter: brightness(1.08); }
+.msg-app .loc-card__stop { margin: 0 13px 12px; width: calc(100% - 26px); border-radius: 12px; padding: 9px 10px; }
+.msg-app .loc-map { background: linear-gradient(135deg, #dfe9f3, #c9dcc4); }
+
+/* map: satellite / street switch + readable attribution on imagery */
+.msg-app .loc-map__style {
+  position: absolute; z-index: 3; bottom: 8px; inset-inline-start: 8px; padding: 4px 10px; border: 0; border-radius: 999px;
+  font: inherit; font-size: 11px; font-weight: 700; color: var(--lc-fg, #1c2033); background: var(--lc-chip, rgba(255, 255, 255, .92));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25); cursor: var(--cur-pointer, pointer);
+}
+.msg-app .loc-map--sat .loc-map__attr { background: rgba(0, 0, 0, .55); color: #fff; }
+.msg-app .loc-map--sat { background: #3b5a3a; }
+.msg-app .loc-map--street { background: #e9efe4; }
+.msg-app .loc-map__attr { z-index: 3; }
+.msg-app .loc-map--sat .loc-pin { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .6)); }
+
+/* fix: the old .loc-card__meta rule is a column and the bubble's `a { underline }` hit the whole card -> tall, centred, underlined footer */
+html body .msg-app .loc-card .loc-card__meta { flex-direction: row; align-items: center; justify-content: space-between; text-align: start; padding: 10px 12px; }
+html body .msg-app .msg-bubble a.loc-card,
+html body .msg-app .msg-bubble a.loc-card *,
+html body .msg-app .msg-bubble .loc-card__maplink,
+html body .msg-app .msg-bubble .loc-card__maplink * { text-decoration: none; }
+html body .msg-app .loc-card .loc-card__text { align-items: flex-start; text-align: start; flex: 1 1 auto; }
+html body .msg-app .loc-card .loc-card__text strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body .msg-app .loc-card .loc-card__open { opacity: 1; font-size: 12px; white-space: nowrap; color: #fff; }
+html body .msg-app .loc-card .loc-card__open svg { flex: none; }
+
+/* location / live-location cards are "media" bubbles: no bubble padding, so they sit flush at the side like photos and videos.
+   (the phone rule `.msg-bubble { padding: 10px 13px }` came later in the file and beat `.msg-bubble--media { padding: 0 }`) */
+html body .msg-app .msg-row .msg-bubble.msg-bubble--media { padding: 0 !important; background: transparent; border: 0; box-shadow: none; }
+html body .msg-app .msg-row .msg-bubble.msg-bubble--media .loc-card { margin: 0; }
+
+/* ---------------------------------------------------------------- the person's own photo as chat background */
+html body .msg-app[data-msg-app][data-wall="custom"] .msg-thread {
+  background:
+    linear-gradient(var(--wall-veil), var(--wall-veil)),
+    var(--msg-wall-img) var(--msg-wall-pos, center) / var(--msg-wall-size, cover) no-repeat,
+    var(--msg-wall-bgc, var(--bg-canvas));
+}
+/* the little date chips sit directly on the photo: give them their own backing so they stay readable on any picture */
+html body .msg-app[data-msg-app][data-wall="custom"] .msg-day-sep span {
+  background: color-mix(in srgb, var(--bg-surface) 82%, transparent); color: var(--text-secondary);
+  padding: 3px 10px; border-radius: 999px; backdrop-filter: blur(6px);
+}
+
+/* "My photos" row in the details panel */
+.msg-wall-mine { margin-top: 14px; }
+.msg-wall-mine__title { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
+.msg-wall-mine__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.msg-wall-add {
+  all: unset; box-sizing: border-box; height: 62px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+  border: 1.5px dashed color-mix(in srgb, var(--color-primary) 55%, transparent); color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 7%, transparent); cursor: var(--cur-pointer, pointer);
+}
+.msg-wall-add:hover:not(:disabled) { background: color-mix(in srgb, var(--color-primary) 14%, transparent); }
+.msg-wall-add:disabled { opacity: .55; cursor: progress; }
+.msg-wall-add:focus-visible, .msg-wall-mine__pick:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.msg-wall-mine__item { position: relative; }
+.msg-wall-mine__pick {
+  all: unset; box-sizing: border-box; display: block; width: 100%; height: 62px; border-radius: 16px; cursor: var(--cur-pointer, pointer);
+  background-size: cover; background-position: center; border: 1px solid rgba(127, 127, 150, .25);
+}
+.msg-wall-mine__pick[aria-pressed="true"] { outline: 2.5px solid var(--color-primary); outline-offset: 2px; }
+.msg-wall-mine__del {
+  all: unset; box-sizing: border-box; position: absolute; top: -6px; inset-inline-end: -6px; width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; background: #e5484d; color: #fff; cursor: var(--cur-pointer, pointer);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
+}
+.msg-wall-mine__err { margin: 8px 0 0; font-size: 12px; color: #e5484d; }
+
+/* ---------- Conversation-info panel: drag handle to widen / narrow it (desktop & laptop) ---------- */
+.msg-info-resizer { display: none; }
+@media (min-width: 761px) {
+  html body .msg-app[data-msg-app] > .msg-info-resizer--info,
+  html body .msg-app[data-msg-app] > .msg-info-resizer--rail {
+    display: block; position: absolute; top: 24px; bottom: 24px; z-index: calc(var(--z-sticky, 20) + 2);
+    width: 14px; touch-action: none; cursor: col-resize; outline: 0;
+  }
+  html body .msg-app[data-msg-app] > .msg-info-resizer--info { inset-inline-end: calc(var(--msg-info-w) + 1px); /* centred in the 16px gap between chat and panel */ }
+  /* conversation list: its inner edge is the gap on the inline-start side of the chat */
+  html body .msg-app[data-msg-app] > .msg-info-resizer--rail { inset-inline-start: calc(var(--msg-rail-w) + 1px); }
+  html body .msg-app[data-msg-app].rail-collapsed > .msg-info-resizer--rail { display: none; }
+  /* overlay mode (< 1480px): the panel floats 8px from the edge and is at most 92% wide */
+  @media (max-width: 1479px) {
+    html body .msg-app[data-msg-app] > .msg-info-resizer--info { inset-inline-end: calc(min(var(--msg-info-w), 92%) + 1px); }
+  }
+  .msg-info-resizer__grip {
+    position: absolute; top: 50%; inset-inline-start: 50%; width: 4px; height: 44px; border-radius: 4px;
+    transform: translate(-50%, -50%); background: var(--border-subtle); opacity: 0; transition: opacity .15s, background .15s, height .15s;
+  }
+  [dir="rtl"] .msg-info-resizer__grip { transform: translate(50%, -50%); }
+  .msg-info-resizer:hover .msg-info-resizer__grip,
+  .msg-info-resizer:focus-visible .msg-info-resizer__grip,
+  .msg-info-resizer.is-drag .msg-info-resizer__grip { opacity: 1; }
+  .msg-info-resizer:hover .msg-info-resizer__grip { background: rgba(var(--color-primary-rgb), .55); }
+  .msg-info-resizer:focus-visible .msg-info-resizer__grip { background: var(--color-primary); height: 60px; }
+  .msg-info-resizer.is-drag .msg-info-resizer__grip { background: var(--color-primary); height: 72px; }
+  .msg-info-resizer--rail .msg-info-resizer__tip { inset-inline-end: auto; inset-inline-start: 22px; }
+  .msg-info-resizer__tip {
+    position: absolute; top: 50%; inset-inline-end: 22px; transform: translateY(-50%); padding: 3px 9px; border-radius: 8px;
+    font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; color: #fff; background: rgba(20, 28, 70, .88); pointer-events: none; direction: ltr;
+  }
+}
+@media (max-width: 760px) { .msg-info-resizer { display: none !important; } }
+/* while dragging: no text selection, keep the cursor, and the chat does not eat the pointer */
+body.msg-resizing { cursor: col-resize !important; user-select: none; -webkit-user-select: none; }
+body.msg-resizing .msg-app iframe, body.msg-resizing .msg-app video { pointer-events: none; }
+/* a smooth, but not laggy, width change when using the keyboard / reset; none while dragging */
+@media (prefers-reduced-motion: no-preference) {
+  html body .msg-app[data-msg-app]:not(:has(.msg-info-resizer.is-drag)) { transition: grid-template-columns .18s ease; }
+}
+/* panel content follows the width instead of overflowing it */
+.msg-info__body { overflow-x: hidden; min-width: 0; }
+.msg-info__body > * { min-width: 0; }
+
+/* edit (adjust) button on a saved photo */
+.msg-wall-mine__edit {
+  all: unset; box-sizing: border-box; position: absolute; bottom: -6px; inset-inline-end: -6px; width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; background: var(--color-primary, #4f46e5); color: #fff; cursor: var(--cur-pointer, pointer);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
+}
+
+/* ---------- Background photo preview / adjust dialog ---------- */
+.wpe { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(8, 10, 24, .55); backdrop-filter: blur(3px); }
+.wpe__card {
+  width: min(460px, 100%); max-height: calc(100dvh - 32px); overflow: auto; display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding: 18px 18px 16px; border-radius: 22px; background: var(--bg-surface, #fff); color: var(--text-primary, #0f172a); box-shadow: 0 24px 60px -12px rgba(0, 0, 0, .45);
+}
+.wpe__title { margin: 0; font-size: 16px; font-weight: 700; align-self: stretch; }
+.wpe__frame {
+  position: relative; flex: none; overflow: hidden; border-radius: 16px; border: 1px solid rgba(127, 127, 150, .35); touch-action: none; user-select: none;
+  background: var(--msg-wall-img) var(--msg-wall-pos, center) / var(--msg-wall-size, cover) no-repeat, var(--msg-wall-bgc, var(--bg-canvas, #f1f5f9));
+}
+.wpe__frame.is-movable { cursor: grab; }
+.wpe__frame.is-movable:active { cursor: grabbing; }
+.wpe__bubbles { position: absolute; inset: auto 12px 14px 12px; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.wpe__b { max-width: 78%; padding: 8px 12px; border-radius: 16px; font-size: 13px; line-height: 1.4; box-shadow: 0 2px 8px rgba(0, 0, 0, .18); }
+.wpe__b--in { align-self: flex-start; background: var(--bg-surface, #fff); color: var(--text-primary, #0f172a); }
+.wpe__b--out { align-self: flex-end; background: var(--color-primary, #4f46e5); color: #fff; }
+.wpe__loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; opacity: .6; }
+.wpe__hint { margin: 0; font-size: 12px; color: var(--text-secondary, #64748b); text-align: center; }
+.wpe__seg { display: flex; gap: 4px; padding: 4px; border-radius: 14px; background: color-mix(in srgb, var(--text-primary, #0f172a) 7%, transparent); align-self: stretch; }
+.wpe__seg button { all: unset; box-sizing: border-box; flex: 1; text-align: center; padding: 8px 6px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: var(--cur-pointer, pointer); color: var(--text-secondary, #64748b); }
+.wpe__seg button.is-on { background: var(--bg-surface, #fff); color: var(--color-primary, #4f46e5); box-shadow: 0 1px 4px rgba(0, 0, 0, .18); }
+.wpe__seg button:focus-visible { outline: 2px solid var(--color-primary, #4f46e5); outline-offset: 1px; }
+.wpe__bg { display: flex; align-items: center; justify-content: space-between; gap: 10px; align-self: stretch; font-size: 13px; }
+.wpe__sw { display: flex; align-items: center; gap: 6px; }
+.wpe__dot { all: unset; box-sizing: border-box; width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(127, 127, 150, .5); cursor: var(--cur-pointer, pointer); }
+.wpe__dot.is-theme { background: linear-gradient(135deg, var(--bg-canvas, #f1f5f9) 50%, var(--bg-surface, #fff) 50%); }
+.wpe__dot.is-on { outline: 2.5px solid var(--color-primary, #4f46e5); outline-offset: 2px; }
+.wpe__sw input[type="color"] { width: 28px; height: 28px; padding: 0; border: 0; background: none; border-radius: 50%; cursor: var(--cur-pointer, pointer); }
+.wpe__actions { display: flex; justify-content: flex-end; gap: 8px; align-self: stretch; margin-top: 2px; }

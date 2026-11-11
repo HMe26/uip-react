@@ -1,0 +1,25 @@
+// Auto-extracted from api/app/Views/security/incident-show.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Add a note...': 'أضف ملاحظة...',
+  'Assignment': 'الإسناد',
+  'Category': 'الفئة',
+  'Change Status': 'تغيير الحالة',
+  'Description': 'الوصف',
+  'Evidence & Attachments': 'الأدلة والمرفقات',
+  'Export Report': 'تصدير التقرير',
+  'No description provided.': 'لا يوجد وصف.',
+  'No events yet.': 'لا توجد أحداث بعد.',
+  'No evidence uploaded yet.': 'لا توجد أدلة مرفوعة بعد.',
+  'Note (optional)': 'ملاحظة (اختياري)',
+  'Permanently delete this evidence?': 'حذف هذا الدليل نهائيًا؟',
+  'Post': 'إرسال',
+  'Save Assignment': 'حفظ الإسناد',
+  'Source IP': 'عنوان IP المصدر',
+  'System': 'النظام',
+  'Timeline': 'السجل الزمني',
+  'Unassigned': 'غير مُسند',
+  'Unknown': 'غير معروف',
+  'Update': 'تحديث',
+  'Upload Evidence': 'رفع دليل',
+};

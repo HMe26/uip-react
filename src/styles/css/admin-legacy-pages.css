@@ -1,0 +1,115 @@
+/* ============================================================================
+   Admin portal — legacy pages (Companies, Universities, Approvals, Projects, Dashboard, details, AI, messaging …)
+   Same language as System Activity, applied to every admin page that still uses the old page-header / adm-* markup.
+   Scoped to .app-shell--admin; spacing is left to each page's own margins. Logical properties → RTL/LTR/dark.
+   Hero icons per page: admin-hero-icons.css (data-admin-page is set by DashboardLayout).
+   ========================================================================== */
+.app-shell--admin { --ap-card-shadow: 0 1px 2px rgba(20, 28, 70, .04), 0 10px 28px -18px rgba(20, 28, 70, .14); }
+
+/* Hero */
+.app-shell--admin .page-header:not(.msg-page-header) {
+  position: relative; display: flex !important; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 12px 16px;
+  min-height: 98px; margin-bottom: 18px; padding: 22px 26px; padding-inline-start: 96px;
+  border-radius: 24px; border: 1px solid var(--border-subtle);
+  background: radial-gradient(520px 220px at 100% 0%, rgba(var(--color-primary-rgb), .16), transparent 70%), linear-gradient(135deg, rgba(var(--color-primary-rgb), .07), transparent 60%), var(--bg-surface);
+}
+[dir="rtl"] .app-shell--admin .page-header:not(.msg-page-header) {
+  background: radial-gradient(520px 220px at 0% 0%, rgba(var(--color-primary-rgb), .16), transparent 70%), linear-gradient(225deg, rgba(var(--color-primary-rgb), .07), transparent 60%), var(--bg-surface);
+}
+.app-shell--admin .page-header:not(.msg-page-header)::before,
+.app-shell--admin .page-header:not(.msg-page-header)::after { content: ""; position: absolute; inset-inline-start: 26px; top: 50%; width: 54px; height: 54px; transform: translateY(-50%); pointer-events: none; }
+.app-shell--admin .page-header:not(.msg-page-header)::before { border-radius: 17px; background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 62%, #7c5cff)); box-shadow: 0 10px 24px rgba(var(--color-primary-rgb), .32); }
+.app-shell--admin .page-header:not(.msg-page-header)::after { background: #fff; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: 26px 26px; mask-size: 26px 26px; }
+.app-shell--admin .page-header:not(.msg-page-header) .page-header__title { flex: 1 1 260px; min-width: 0; margin-inline-end: auto; }
+.app-shell--admin .page-header:not(.msg-page-header) .page-header__title h1 { margin: 0; font-size: clamp(21px, 2.6vw, 28px); line-height: 1.25; font-weight: 800; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.app-shell--admin .page-header:not(.msg-page-header) .page-header__title p { margin: 6px 0 0; max-width: 70ch; font-size: 14px; line-height: 1.65; color: var(--text-secondary); }
+.app-shell--admin .page-header:not(.msg-page-header) .page-header__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-inline-start: auto; }
+.app-shell--admin .page-header:not(.msg-page-header) .btn:not(.btn-sm) { height: 42px; border-radius: 12px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; }
+.app-shell--admin .page-header:not(.msg-page-header) .btn-primary { box-shadow: 0 8px 18px rgba(var(--color-primary-rgb), .28); }
+
+/* KPI tiles (old adm-kpi markup → icon tile at the corner) */
+.app-shell--admin .adm-kpis { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+.app-shell--admin .adm-kpi { position: relative; flex: 1 1 220px; min-width: 0; min-height: 84px; gap: 2px; padding: 16px 18px; padding-inline-end: 72px; border-radius: 16px; box-shadow: var(--ap-card-shadow); }
+.app-shell--admin .adm-kpi__top { display: block; font-size: 12.5px; font-weight: 600; }
+.app-shell--admin .adm-kpi__top svg { position: absolute; inset-inline-end: 16px; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; padding: 12px; box-sizing: border-box; border-radius: 13px; background: rgba(var(--color-primary-rgb), .12); border: 1px solid rgba(var(--color-primary-rgb), .22); }
+.app-shell--admin .adm-kpi__value { font-size: 24px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.app-shell--admin a.adm-kpi:hover { transform: translateY(-1px); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .1); }
+
+/* Segmented tabs (Approvals, details pages …) */
+.app-shell--admin .adm-tabs { gap: 6px; padding: 6px; margin-bottom: 16px; border: 1px solid var(--border-subtle); border-radius: 18px; background: var(--bg-surface); scrollbar-width: none; }
+.app-shell--admin .adm-tabs::-webkit-scrollbar { display: none; }
+.app-shell--admin .adm-tab { flex: 1 1 auto; margin: 0; padding: 10px 16px; border: 0; border-radius: 13px; text-align: center; }
+.app-shell--admin .adm-tab:hover { background: rgba(var(--color-primary-rgb), .07); color: var(--color-primary); }
+.app-shell--admin .adm-tab.is-active { background: var(--color-primary); color: #fff; box-shadow: 0 6px 16px rgba(var(--color-primary-rgb), .3); }
+
+/* Filters, panels, tables, pager, profile, bars */
+.app-shell--admin .adm-filters { padding: 14px 16px; border-radius: 20px; box-shadow: var(--ap-card-shadow); background: linear-gradient(180deg, rgba(var(--color-primary-rgb), .035), transparent), var(--bg-surface); }
+.app-shell--admin .adm-filters .form-input, .app-shell--admin .adm-filters select { height: 40px; border-radius: 12px; font-size: 13.5px; background: var(--bg-canvas); }
+.app-shell--admin .adm-filters .btn { height: 40px; border-radius: 12px; }
+.app-shell--admin .adm-panel { border-radius: 20px; padding: 20px 22px; box-shadow: var(--ap-card-shadow); }
+.app-shell--admin .adm-panel__head h2, .app-shell--admin .adm-panel__head h3, .app-shell--admin .adm-panel > h2, .app-shell--admin .adm-panel > h3 { font-weight: 800; letter-spacing: -.01em; }
+.app-shell--admin .adm-table-wrap { border-radius: 20px; box-shadow: var(--ap-card-shadow); }
+.app-shell--admin .adm-table td.ap-span { text-align: center; }
+.app-shell--admin .adm-pager { padding: 12px 18px; border-radius: 16px; border: 1px solid var(--border-subtle); background: var(--bg-surface); font-weight: 600; }
+.app-shell--admin .adm-profile { padding: 22px; border-radius: 22px; box-shadow: var(--ap-card-shadow); background: radial-gradient(420px 180px at 100% 0%, rgba(var(--color-primary-rgb), .1), transparent 70%), var(--bg-surface); }
+[dir="rtl"] .app-shell--admin .adm-profile { background: radial-gradient(420px 180px at 0% 0%, rgba(var(--color-primary-rgb), .1), transparent 70%), var(--bg-surface); }
+.app-shell--admin .adm-fact { border-radius: 14px; }
+.app-shell--admin .adm-bar__fill { background: linear-gradient(90deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 62%, #7c5cff)); }
+.app-shell--admin .adm-report-type { border-radius: 18px; }
+.app-shell--admin .badge { white-space: nowrap; }
+.app-shell--admin .adm-grid { gap: 18px; }
+
+@media (max-width: 900px) {
+  .app-shell--admin .adm-filters__search { max-width: none; flex-basis: 100%; }
+  .app-shell--admin .adm-grid { grid-template-columns: minmax(0, 1fr) !important; }
+}
+@media (max-width: 760px) {
+  .ap-hero__actions { width: 100%; margin-inline-start: 0; }
+  .ap-hero__actions .btn { flex: 1 1 140px; justify-content: center; }
+  .app-shell--admin .adm-panel { padding: 16px; border-radius: 18px; }
+  .app-shell--admin .adm-filters { padding: 12px; }
+  .app-shell--admin .adm-filters .form-input, .app-shell--admin .adm-filters select { flex: 1 1 100%; max-width: none !important; width: 100%; }
+  .app-shell--admin .adm-filter-form .form-input { width: 100%; }
+  .app-shell--admin .adm-bar { grid-template-columns: minmax(70px, 100px) 1fr auto !important; gap: 10px; }
+  .app-shell--admin .adm-pager { flex-direction: column; align-items: stretch; text-align: center; }
+  .app-shell--admin .adm-pager div { justify-content: space-between; }
+
+  .app-shell--admin .adm-table-wrap { overflow: visible; background: none; border: 0; box-shadow: none; border-radius: 0; }
+  .app-shell--admin .adm-panel .adm-table-wrap { margin-inline: 0; }
+  .app-shell--admin .adm-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .app-shell--admin .adm-table, .app-shell--admin .adm-table tbody { display: block; width: 100%; }
+  .app-shell--admin .adm-table tbody tr { display: grid; gap: 10px; padding: 14px 16px; margin-bottom: 12px; border: 1px solid var(--border-subtle); border-radius: 18px; background: var(--bg-surface); box-shadow: var(--ap-card-shadow); }
+  .app-shell--admin .adm-panel .adm-table tbody tr { box-shadow: none; background: var(--bg-canvas); }
+  .app-shell--admin .adm-table tbody tr:hover { background: var(--bg-surface); }
+  .app-shell--admin .adm-table tbody td { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 0; border: 0; background: none !important; text-align: end; min-width: 0; }
+  .app-shell--admin .adm-table tbody td::before { content: attr(data-label); flex: none; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-align: start; }
+  .app-shell--admin .adm-table tbody td:first-child { padding-bottom: 10px; border-bottom: 1px dashed var(--border-subtle); text-align: start; justify-content: flex-start; }
+  .app-shell--admin .adm-table tbody td:first-child::before, .app-shell--admin .adm-table tbody td.ap-nolabel::before { display: none; }
+  .app-shell--admin .adm-table tbody td.ap-span { display: block; text-align: center; padding: 26px 10px; }
+  .app-shell--admin .adm-table tbody td.ap-span::before { display: none; }
+  .app-shell--admin .adm-table tbody td.adm-actions, .app-shell--admin .adm-table td.adm-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding-top: 10px; border-top: 1px dashed var(--border-subtle); }
+  .app-shell--admin .adm-table td.adm-actions .btn { margin-inline-start: 0; min-height: 40px; padding-inline: 14px; width: auto; }
+  .app-shell--admin .adm-table td.adm-actions .btn.btn--icon { width: 40px; height: 40px; padding: 0; }
+  .app-shell--admin .adm-table td.adm-actions > div { display: flex; gap: 8px; }
+  .app-shell--admin .adm-person { flex: 1; }
+  .app-shell--admin .adm-table td.adm-actions .tbl-dl, .app-shell--admin .adm-table td.adm-actions a.btn:not(.btn-ghost) { width: auto; padding-inline: 12px; }
+}
+
+@media (max-width: 760px) {
+  .app-shell--admin .page-header:not(.msg-page-header) { flex-direction: row; align-items: center; min-height: 0; padding: 16px; padding-inline-start: 74px; border-radius: 20px; }
+  .app-shell--admin .page-header:not(.msg-page-header)::before, .app-shell--admin .page-header:not(.msg-page-header)::after { inset-inline-start: 16px; width: 44px; height: 44px; }
+  .app-shell--admin .page-header:not(.msg-page-header)::before { border-radius: 14px; }
+  .app-shell--admin .page-header:not(.msg-page-header)::after { -webkit-mask-size: 22px 22px; mask-size: 22px 22px; }
+  .app-shell--admin .page-header:not(.msg-page-header) .page-header__title { flex-basis: 0; }
+  .app-shell--admin .page-header:not(.msg-page-header) .page-header__actions { width: 100%; margin-inline-start: 0; }
+  .app-shell--admin .page-header:not(.msg-page-header) .page-header__actions .btn { flex: 1 1 140px; justify-content: center; }
+  .app-shell--admin .adm-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  /* The label stays in normal flow (NOT position:absolute) so the icon, which is absolutely placed,
+     is positioned against the card itself and sits in its corner instead of landing on top of the label. */
+  .app-shell--admin .adm-kpi { padding: 12px; padding-inline-end: 12px; min-height: 0; gap: 4px; }
+  .app-shell--admin .adm-kpi:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .app-shell--admin .adm-kpi__top { position: static; display: block; min-height: 34px; padding-inline-end: 42px; line-height: 1.35; overflow-wrap: normal; word-break: normal; }
+  .app-shell--admin .adm-kpi__top svg { top: 12px; inset-inline-end: 12px; transform: none; width: 34px; height: 34px; padding: 9px; border-radius: 11px; }
+  .app-shell--admin .adm-kpi__value { font-size: 21px; }
+  .app-shell--admin .adm-tab { flex: 0 0 auto; }
+}

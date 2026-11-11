@@ -1,0 +1,76 @@
+/* people-forms.css — redesigned "Add student / doctor-TA / supervisor" dialogs (token driven, RTL safe). */
+.pf-modal { display: flex; flex-direction: column; width: min(720px, calc(100vw - 32px)); max-height: min(92vh, 900px); background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: 16px; box-shadow: 0 24px 70px rgba(10, 12, 20, .3); overflow: hidden; }
+
+.pf-head { display: flex; align-items: center; gap: 14px; padding: 20px 24px; border-bottom: 1px solid var(--border-subtle); }
+.pf-head__icon { display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.pf-head__text { flex: 1; min-width: 0; }
+.pf-head h2 { margin: 0; font-size: 18px; font-weight: 800; }
+.pf-head p { margin: 3px 0 0; font-size: 13px; color: var(--text-secondary); }
+.pf-x { display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 10px; background: transparent; color: var(--text-secondary); cursor: var(--cur-pointer, pointer); }
+.pf-x:hover { background: var(--bg-muted); color: var(--text-primary); }
+
+.pf-body { flex: 1; overflow-y: auto; padding: 4px 24px 20px; }
+.pf-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 24px; border-top: 1px solid var(--border-subtle); }
+
+.pf-section { padding: 18px 0; }
+.pf-section + .pf-section { border-top: 1px solid var(--border-subtle); }
+.pf-section__head { margin-bottom: 14px; }
+.pf-section__head h3 { margin: 0; font-size: 14px; font-weight: 800; }
+.pf-section__head p { margin: 2px 0 0; font-size: 12.5px; color: var(--text-secondary); }
+
+.pf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
+.pf-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pf-field.is-wide { grid-column: 1 / -1; }
+.pf-label { font-size: 12.5px; font-weight: 700; }
+.pf-label i { color: var(--color-danger); font-style: normal; margin-inline-start: 3px; }
+.pf-hint { font-size: 12px; color: var(--text-secondary); }
+.pf-hint--bad { color: var(--color-danger); }
+
+.pf-modal .form-input { width: 100%; box-sizing: border-box; height: 42px; padding: 0 12px; margin: 0; border-radius: 10px; font-size: 14px; }
+.pf-modal textarea.form-input { height: auto; min-height: 76px; padding: 10px 12px; resize: vertical; }
+.pf-modal .form-input:disabled { opacity: .6; cursor: not-allowed; }
+
+.pf-error { display: flex; gap: 8px; align-items: flex-start; margin-top: 6px; padding: 11px 13px; border-radius: 10px; font-size: 13px; background: rgba(var(--color-danger-rgb), .09); border: 1px solid rgba(var(--color-danger-rgb), .25); color: var(--color-danger); }
+.pf-error svg { flex-shrink: 0; margin-top: 1px; }
+.pf-note { padding: 11px 13px; border-radius: 10px; font-size: 13px; background: rgba(var(--color-warning-rgb), .1); border: 1px solid rgba(var(--color-warning-rgb), .28); margin: 14px 0 0; }
+
+.pf-login { display: flex; flex-direction: column; gap: 14px; }
+.pf-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pf-opt { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; row-gap: 3px; align-items: center; text-align: start; padding: 13px 14px; border: 1.5px solid var(--border-subtle); border-radius: 12px; background: var(--bg-surface); color: var(--text-primary); cursor: var(--cur-pointer, pointer); transition: border-color .15s, background .15s; }
+.pf-opt svg { color: var(--text-secondary); }
+.pf-opt b { font-size: 13.5px; }
+.pf-opt small { grid-column: 1 / -1; font-size: 12px; line-height: 1.45; color: var(--text-secondary); }
+.pf-opt:hover { border-color: rgba(var(--color-primary-rgb), .45); }
+.pf-opt:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.pf-opt.is-on { border-color: var(--color-primary); background: rgba(var(--color-primary-rgb), .07); }
+.pf-opt.is-on svg { color: var(--color-primary); }
+
+.pf-pw { display: flex; flex-direction: column; gap: 8px; }
+.pf-pw__row { display: flex; gap: 8px; align-items: center; }
+.pf-pw__row .form-input { flex: 1; }
+.pf-iconbtn { display: grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; border: 1px solid var(--border-strong, var(--border-subtle)); border-radius: 10px; background: var(--bg-surface); color: var(--text-secondary); cursor: var(--cur-pointer, pointer); }
+.pf-iconbtn:hover:not(:disabled) { color: var(--color-primary); border-color: var(--color-primary); }
+.pf-iconbtn:disabled { opacity: .4; cursor: var(--cur-default, default); }
+.pf-meter { display: flex; align-items: center; gap: 5px; }
+.pf-meter i { flex: 0 0 44px; height: 5px; border-radius: 3px; background: var(--bg-muted); }
+.pf-meter i.on.s1, .pf-meter i.on.s2 { background: var(--color-danger); }
+.pf-meter i.on.s3 { background: var(--color-warning); }
+.pf-meter i.on.s4 { background: var(--color-success); }
+.pf-meter span { margin-inline-start: 6px; font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
+.pf-check { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; cursor: var(--cur-pointer, pointer); background: var(--bg-muted); }
+.pf-check input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--color-primary); }
+.pf-check b { display: block; font-size: 13px; }
+.pf-check small { display: block; margin-top: 2px; font-size: 12px; color: var(--text-secondary); line-height: 1.45; }
+
+.pf-perms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.pf-perm { display: flex; gap: 10px; align-items: center; padding: 11px 13px; border: 1.5px solid var(--border-subtle); border-radius: 12px; font-size: 13px; font-weight: 600; cursor: var(--cur-pointer, pointer); }
+.pf-perm input { width: 16px; height: 16px; accent-color: var(--color-primary); }
+.pf-perm.is-on { border-color: var(--color-primary); background: rgba(var(--color-primary-rgb), .07); }
+
+@media (max-width: 640px) {
+  .pf-modal { width: 100%; max-height: 94vh; border-radius: 16px 16px 0 0; }
+  .pf-head, .pf-foot, .pf-body { padding-inline: 16px; }
+  .pf-grid, .pf-opts, .pf-perms { grid-template-columns: 1fr; }
+  .pf-foot .btn { flex: 1; }
+}

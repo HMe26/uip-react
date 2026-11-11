@@ -1,0 +1,80 @@
+/* components/skeleton.css
+ * Global skeleton-loading primitives. Previously this pattern only
+ * existed inside messaging-app.css (.msg-skeleton-*), scoped to chat.
+ * These classes are the reusable, app-wide version — drop them into
+ * any card/table/list while real data is loading.
+ *
+ * Usage:
+ *   <div class="skeleton skeleton-text"></div>
+ *   <div class="skeleton skeleton-avatar"></div>
+ *   <div class="skeleton-card">
+ *     <div class="skeleton skeleton-avatar"></div>
+ *     <div class="skeleton skeleton-line" style="width:60%"></div>
+ *     <div class="skeleton skeleton-line" style="width:85%"></div>
+ *   </div>
+ *   <tr class="skeleton-table-row"> ... one <td><div class="skeleton skeleton-line"></div></td> per column ... </tr>
+ */
+
+.skeleton {
+  position: relative;
+  background: var(--glass-bg);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  color: transparent !important;
+  pointer-events: none;
+  user-select: none;
+}
+.skeleton::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  animation: uip-skeleton-sweep 1.4s ease-in-out infinite;
+}
+[data-theme="dark"] .skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+@keyframes uip-skeleton-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ---- shapes -------------------------------------------------------- */
+.skeleton-text,
+.skeleton-line {
+  display: block;
+  height: 0.85em;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+}
+.skeleton-text:last-child,
+.skeleton-line:last-child { margin-bottom: 0; }
+
+.skeleton-title { display: block; height: 1.2em; width: 45%; border-radius: var(--radius-sm); }
+
+.skeleton-avatar { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; }
+.skeleton-avatar.is-sm { width: 28px; height: 28px; }
+.skeleton-avatar.is-lg { width: 64px; height: 64px; }
+
+.skeleton-thumb { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-md); }
+
+.skeleton-badge { display: inline-block; width: 64px; height: 1.4em; border-radius: var(--radius-full); }
+
+.skeleton-btn { display: inline-block; width: 96px; height: 2.4em; border-radius: var(--radius-md); }
+
+/* ---- composed patterns ---------------------------------------------- */
+.skeleton-card {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+}
+.skeleton-card__row { display: flex; align-items: center; gap: var(--space-3); }
+
+/* A skeleton row sized to sit inside .data-table's own <tr>/<td> padding,
+   so it can replace real rows without altering table layout/columns. */
+.skeleton-table-row td { padding: var(--space-3) var(--space-4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after { animation: none; }
+}

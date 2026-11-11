@@ -1,0 +1,40 @@
+/* Accessibility (Settings > Personalization > Accessibility): text size, reduced motion, high contrast.
+   Classes are set on the .os root by DesktopOS: os--fs-l / os--fs-xl, os--rm, os--hc. */
+
+/* ---- text size: windows of the small apps and dialogs are zoomed; the Explorer / editors keep their own layout, so only its text grows ---- */
+.os--fs-l .os-win:not([data-app='explorer']):not([data-app='editor']):not([data-app='viewer']) .os-win__body,
+.os--fs-l .os-dlg, .os--fs-l .os-fly { zoom: 1.15; }
+.os--fs-xl .os-win:not([data-app='explorer']):not([data-app='editor']):not([data-app='viewer']) .os-win__body,
+.os--fs-xl .os-dlg, .os--fs-xl .os-fly { zoom: 1.3; }
+.os--fs-l .os-win[data-app='explorer'] .mp-item__name, .os--fs-l .mp-tree__row, .os--fs-l .mp-crumb, .os--fs-l .mp-search input, .os--fs-l .mp-btn,
+.os--fs-l .mp-quick button, .os--fs-l .mp-ctx, .os--fs-l .mp-pop, .os--fs-l .mp-items.is-list .mp-item { font-size: 15px !important; }
+.os--fs-xl .os-win[data-app='explorer'] .mp-item__name, .os--fs-xl .mp-tree__row, .os--fs-xl .mp-crumb, .os--fs-xl .mp-search input, .os--fs-xl .mp-btn,
+.os--fs-xl .mp-quick button, .os--fs-xl .mp-ctx, .os--fs-xl .mp-pop, .os--fs-xl .mp-items.is-list .mp-item { font-size: 17px !important; }
+.os--fs-l .os-icon__l { font-size: 14px; }
+.os--fs-xl .os-icon__l { font-size: 16px; }
+.os--fs-l .os-menubar, .os--fs-l .os-win__bar { font-size: 14px; }
+.os--fs-xl .os-menubar, .os--fs-xl .os-win__bar { font-size: 15.5px; }
+
+/* ---- reduced motion: no animations, no transitions, no Dock magnification ---- */
+.os--rm, .os--rm *, .os--rm *::before, .os--rm *::after { animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; scroll-behavior: auto !important; }
+
+/* ---- high contrast: solid surfaces, strong text and borders, visible focus ---- */
+.os--hc.os--light { --g-fg: #000; --g-mute: #1f2937; --g-line: #000; --g-hover: rgba(0, 0, 0, .14); --panel: #fff; --panel-2: #fff; --bar: #fff; }
+.os--hc.os--dark { --g-fg: #fff; --g-mute: #e5e7eb; --g-line: #fff; --g-hover: rgba(255, 255, 255, .22); --panel: #000; --panel-2: #000; --bar: #000; }
+.os--hc .os-win { border-width: 2px; }
+.os--hc .os-dock__rail { background: var(--panel) !important; border: 2px solid var(--g-line) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.os--hc .os-menubar { background: var(--panel) !important; color: var(--g-fg) !important; border-bottom: 2px solid var(--g-line); text-shadow: none !important; }
+.os--hc .os-menubar::before { display: none; }
+.os--hc .os-menubar button, .os--hc .os-menubar .os-clock { color: var(--g-fg) !important; }
+.os--hc .os-icon { text-shadow: none; background: color-mix(in srgb, var(--panel) 88%, transparent); color: var(--g-fg); border-radius: 8px; }
+.os--hc .os-icon__l { font-weight: 700; }
+.os--hc .os-fly, .os--hc .os-dlg, .os--hc .mp-ctx, .os--hc .mp-pop { border: 2px solid var(--g-line) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.os--hc button:focus-visible, .os--hc input:focus-visible, .os--hc textarea:focus-visible, .os--hc [tabindex]:focus-visible { outline: 3px solid var(--os-accent); outline-offset: 2px; }
+.os--hc .os-seg button.is-on, .os--hc .os-btn--primary, .os--hc .mp-btn--primary { outline: 2px solid var(--g-fg); }
+.os--hc .os-set__hint, .os--hc small { color: var(--g-mute); }
+
+
+/* PERFORMANCE: the boot screen stays in the page after it fades out — its two infinite animations (logo float, loading bar) kept running for the whole session */
+.os-boot.is-done, .os-boot.is-done * { animation: none !important; }
+/* the Explorer's folder pane blurred a big area at 44px; a lighter blur looks the same and costs far less (phones use no blur at all, see mobile.css) */
+.os:not(.os--mobile) .mp-side { -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }

@@ -1,0 +1,134 @@
+/* ==========================================================================
+   admin-faq.css — Admin › FAQ / Smart Answer Layer
+   Uses the Admin palette tokens from admin-portal.css (--color-primary,
+   --bg-surface, --bg-muted, --border-subtle, --st-radius …) so it follows
+   light / dark and RTL / LTR automatically. Logical properties only.
+   Import AFTER admin-portal.css.
+   ========================================================================== */
+
+/* ---- Table cells ---------------------------------------------------------- */
+.faq-key { display: block; font-family: var(--font-mono); font-size: 12.5px; font-weight: 600; color: var(--text-primary); letter-spacing: 0; }
+.faq-q { display: block; margin-top: 2px; max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; color: var(--text-secondary); }
+.faq-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.faq-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; background: var(--bg-muted); color: var(--text-secondary); white-space: nowrap; }
+.faq-chip--primary { background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.faq-chip--warn { background: rgba(var(--color-warning-rgb), .16); color: var(--color-warning); }
+.faq-chip button { display: inline-flex; border: 0; background: none; padding: 0; color: inherit; cursor: var(--cur-pointer, pointer); opacity: .7; }
+.faq-chip button:hover { opacity: 1; }
+.faq-hits { display: flex; align-items: center; gap: 10px; min-width: 110px; }
+.faq-hits b { min-width: 28px; font-variant-numeric: tabular-nums; text-align: end; font-size: 13px; }
+.faq-hits .adm-bar__track { flex: 1; height: 6px; max-width: 80px; }
+.faq-score { font-variant-numeric: tabular-nums; font-weight: 700; }
+.faq-score--low { color: var(--color-danger); }
+.faq-score--mid { color: var(--color-warning); }
+.faq-score--high { color: var(--color-success); }
+.faq-row-off td { opacity: .62; }
+.faq-row-off td.adm-actions, .faq-row-off td.faq-keep { opacity: 1; }
+
+/* ---- Switch --------------------------------------------------------------- */
+.faq-switch { position: relative; width: 38px; height: 22px; flex: 0 0 auto; border: 0; border-radius: 999px; background: var(--border-strong); cursor: var(--cur-pointer, pointer); transition: background var(--duration-fast) var(--ease-standard); }
+.faq-switch::after { content: ""; position: absolute; top: 3px; inset-inline-start: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: inset-inline-start var(--duration-fast) var(--ease-standard); }
+.faq-switch.is-on { background: var(--color-primary); }
+.faq-switch.is-on::after { inset-inline-start: 19px; }
+.faq-switch:disabled { opacity: .5; cursor: progress; }
+
+/* ---- Empty state ---------------------------------------------------------- */
+.faq-empty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 44px 20px; text-align: center; }
+.faq-empty__icon { width: 44px; height: 44px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.faq-empty strong { font-size: 14.5px; }
+.faq-empty p { margin: 0; max-width: 380px; font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+.faq-banner { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; margin-bottom: 14px; border: 1px solid var(--border-subtle); border-radius: var(--st-radius-sm); background: rgba(var(--color-primary-rgb), .05); font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
+.faq-banner svg { flex: 0 0 auto; margin-top: 2px; color: var(--color-primary); }
+
+/* ==========================================================================
+   Dialog — "New FAQ intent"
+   Same skeleton as the Role permissions dialog (.adm-perm): fixed head,
+   scrolling body of grouped cards, fixed footer.
+   ========================================================================== */
+.faq-dialog { width: min(860px, calc(100vw - 24px)); max-height: min(92vh, 900px); display: flex; flex-direction: column; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 16px; box-shadow: 0 24px 60px rgba(14, 18, 36, .28); overflow: hidden; animation: uip-rise-in var(--duration-normal) var(--ease-standard) both; }
+.faq-dialog__head { display: flex; align-items: flex-start; gap: 14px; padding: 20px 24px 16px; border-bottom: 1px solid var(--border-subtle); }
+.faq-dialog__icon { width: 40px; height: 40px; flex: 0 0 auto; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.faq-dialog__head h2 { margin: 0; font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+.faq-dialog__head p { margin: 3px 0 0; font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.faq-dialog__close { margin-inline-start: auto; }
+.faq-dialog__body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 18px 24px; display: flex; flex-direction: column; gap: 14px; background: var(--bg-muted); }
+.faq-dialog__foot { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 14px 24px; border-top: 1px solid var(--border-subtle); background: var(--bg-surface); }
+.faq-dialog__status { margin-inline-end: auto; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-secondary); min-width: 0; }
+.faq-dialog__status.is-error { color: var(--color-danger); font-weight: 600; }
+.faq-dialog__status.is-ready { color: var(--color-success); font-weight: 600; }
+
+.faq-sec { flex: 0 0 auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px 18px 18px; }
+.faq-sec__head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.faq-sec__head > svg { color: var(--color-primary); flex: 0 0 auto; }
+.faq-sec__head h3 { margin: 0; font-size: 14.5px; font-weight: 700; }
+.faq-sec__head small { display: block; margin-top: 1px; font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+.faq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+.faq-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.faq-grid--key { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+.faq-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.faq-field__label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12.5px; font-weight: 600; color: var(--text-primary); }
+.faq-field__label em { font-style: normal; font-weight: 400; color: var(--text-secondary); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.faq-field .form-input, .faq-field textarea.form-input { width: 100%; font-size: 13.5px; padding: 9px 12px; border-radius: 10px; }
+.faq-field input.form-input { height: 40px; }
+.faq-field textarea.form-input { min-height: 112px; resize: vertical; line-height: 1.6; }
+.faq-field .form-input.is-invalid { border-color: var(--color-danger); box-shadow: 0 0 0 3px rgba(var(--color-danger-rgb), .12); }
+.faq-field .form-input:disabled { background: var(--bg-muted); color: var(--text-secondary); cursor: not-allowed; }
+.faq-mono { font-family: var(--font-mono); letter-spacing: 0; }
+.faq-lang { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; margin-inline-end: 6px; border-radius: 5px; font-size: 10.5px; font-weight: 700; background: var(--bg-muted); color: var(--text-secondary); }
+.faq-hint { margin: 0; font-size: 12px; line-height: 1.5; color: var(--text-secondary); }
+.faq-hint--error { color: var(--color-danger); font-weight: 600; }
+.faq-either { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; font-size: 12px; color: var(--text-secondary); }
+.faq-either.is-error { color: var(--color-danger); font-weight: 600; }
+
+/* Role picker */
+.faq-roles { display: flex; flex-wrap: wrap; gap: 8px; }
+.faq-role { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border: 1px solid var(--border-subtle); border-radius: 999px; background: var(--bg-surface); color: var(--text-secondary); font-size: 13px; font-weight: 600; cursor: var(--cur-pointer, pointer); transition: border-color var(--duration-fast), background var(--duration-fast), color var(--duration-fast); }
+.faq-role:hover { border-color: var(--color-primary); color: var(--text-primary); }
+.faq-role.is-on { border-color: var(--color-primary); background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); }
+.faq-role--all { border-style: dashed; }
+.faq-role--all.is-on { border-style: solid; }
+.faq-role:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* Chip list input */
+.faq-tags { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; min-height: 92px; padding: 8px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-surface); cursor: var(--cur-text, text); transition: border-color var(--duration-fast), box-shadow var(--duration-fast); }
+.faq-tags:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .15); }
+.faq-tags .faq-chip { height: 26px; background: rgba(var(--color-primary-rgb), .1); color: var(--color-primary); font-size: 12.5px; max-width: 100%; }
+.faq-tags .faq-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.faq-tags .faq-chip--warn { background: rgba(var(--color-warning-rgb), .16); color: var(--color-warning); }
+.faq-tags input { flex: 1 1 120px; min-width: 100px; height: 26px; border: 0; outline: 0; background: transparent; color: var(--text-primary); font: inherit; font-size: 13px; }
+.faq-tags input::placeholder { color: var(--text-secondary); opacity: .8; }
+
+/* Matching sensitivity */
+.faq-range { display: flex; align-items: center; gap: 12px; height: 40px; }
+.faq-range input[type="range"] { flex: 1; accent-color: var(--color-primary); }
+.faq-range b { min-width: 46px; text-align: end; font-variant-numeric: tabular-nums; font-size: 14px; }
+.faq-stepper { display: flex; align-items: center; height: 40px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-surface); overflow: hidden; }
+.faq-stepper button { width: 38px; height: 100%; border: 0; background: none; font-size: 18px; color: var(--text-secondary); cursor: var(--cur-pointer, pointer); }
+.faq-stepper button:hover { background: var(--bg-muted); color: var(--text-primary); }
+.faq-stepper input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; text-align: center; background: transparent; color: var(--text-primary); font: inherit; font-weight: 700; font-variant-numeric: tabular-nums; }
+.faq-active { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 14px; margin-top: 14px; border: 1px solid var(--border-subtle); border-radius: 10px; background: var(--bg-canvas); }
+.faq-active strong { display: block; font-size: 13.5px; }
+.faq-active span { font-size: 12px; color: var(--text-secondary); }
+
+/* Live preview */
+.faq-preview__bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.faq-preview__stage { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 12px; background: var(--bg-canvas); border: 1px dashed var(--border-strong); }
+.faq-bubble { max-width: 86%; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
+.faq-bubble--user { align-self: flex-end; background: var(--color-primary); color: #fff; border-end-end-radius: 4px; }
+.faq-bubble--bot { align-self: flex-start; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-end-start-radius: 4px; }
+.faq-bubble--empty { color: var(--text-secondary); font-style: italic; }
+.faq-bot-tag { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 11.5px; font-weight: 700; color: var(--color-primary); }
+
+@media (max-width: 720px) {
+  .faq-grid, .faq-grid--3, .faq-grid--key { grid-template-columns: 1fr; }
+  .faq-dialog { max-height: 96vh; border-radius: 14px; }
+  .faq-dialog__head, .faq-dialog__foot { padding-inline: 16px; }
+  .faq-dialog__body { padding: 14px 16px; }
+  .faq-dialog__foot { flex-wrap: wrap; }
+  .faq-dialog__status { flex: 1 1 100%; }
+  .faq-bubble { max-width: 94%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq-dialog { animation: none; }
+  .faq-switch, .faq-switch::after, .faq-role, .faq-tags { transition: none; }
+}

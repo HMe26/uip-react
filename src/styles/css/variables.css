@@ -1,0 +1,140 @@
+/* ==========================================================================
+   UIPE DESIGN SYSTEM — Design Tokens
+   Phase 3 - UI Design
+   Signature element: the "Readiness Ring" — a radial glass gauge used
+   everywhere the AI Readiness Score appears (dashboard hero, project cards,
+   portfolio). It is the one recurring visual idea that ties the platform's
+   "AI evaluates your work" premise into the interface itself.
+   ========================================================================== */
+
+:root {
+  /* ---- Brand palette (named, not generic) ---------------------------- */
+  --uip-navy-950:  #0F1424;   /* deepest background / dark-mode canvas   */
+  --uip-navy-900:  #171E2E;   /* dark-mode raised surface                */
+  --uip-navy-800:  #1F2840;   /* dark-mode secondary surface             */
+  --uip-indigo-600:#515FFF;   /* primary brand — action, links, focus    */
+  --uip-indigo-700:#3E4BE6;   /* primary hover / pressed                 */
+  --uip-indigo-100:#EEF0FF;   /* primary tint (light mode chips)         */
+  --uip-gold-500:  #E8A62A;   /* accent — achievement / high readiness   */
+  --uip-gold-600:  #C98A12;
+  --uip-teal-500:  #1DB98A;   /* success / verified / approved           */
+  --uip-teal-600:  #12A277;
+  --uip-coral-500: #FF6B6B;   /* danger / rejected / critical            */
+  --uip-coral-600: #E5484D;
+  --uip-slate-500: #6E7891;   /* muted text / secondary                  */
+  --uip-slate-300: #C7CEDA;
+  --uip-cloud-50:  #F6F7FC;   /* light-mode canvas                       */
+  --uip-cloud-100: #EDEFFA;
+  --uip-white:     #FFFFFF;
+  --uip-violet-500:#8B5CF6;   /* secondary data-viz series              */
+
+  /* ---- Semantic aliases (theme-independent usage) --------------------- */
+  --color-primary:      var(--uip-indigo-600);
+  --color-primary-hover:var(--uip-indigo-700);
+  --color-primary-rgb:  81, 95, 255;         /* rgb of --color-primary, for rgba() tints/glows; overridden per-theme */
+  --color-accent:       var(--uip-gold-500);
+  --color-success:      var(--uip-teal-500);
+  --color-danger:       var(--uip-coral-500);
+  --color-warning:      var(--uip-gold-600); /* matches .badge-warning — was missing, used ad hoc elsewhere */
+  --color-on-primary:   var(--uip-white);   /* text/icon color on solid primary-color fills */
+  --color-muted:        var(--uip-slate-500);
+  --color-info:         var(--uip-violet-500);
+  --color-success-rgb:  29, 185, 138;
+  --color-danger-rgb:   255, 107, 107;
+  --color-warning-rgb:  232, 166, 42;
+
+  /* ---- Severity scale (Security portal design) ------------------------ */
+  --sev-critical: #FF6B6B;  --sev-critical-rgb: 255, 107, 107;
+  --sev-high:     #FF7A1A;  --sev-high-rgb:     255, 122, 26;
+  --sev-medium:   #E8A62A;  --sev-medium-rgb:   232, 166, 42;
+  --sev-low:      #1DB98A;  --sev-low-rgb:      29, 185, 138;
+  --sev-info:     #515FFF;  --sev-info-rgb:     81, 95, 255;
+  --chart-line-2: #19C4B0;  /* secondary series (teal) */
+
+  /* ---- Typography ------------------------------------------------------ */
+  /* One type system for the whole platform (the Academic Staff look):
+     Playfair Display (serif) for headings / brand / big numbers, Inter for body,
+     Cairo for Arabic body text, Amiri for Arabic headings (see the [dir=rtl] rule below). */
+  --font-display: 'Playfair Display', 'Georgia', 'Amiri', serif;                   /* headings, brand, KPIs */
+  --font-body-ltr:'Inter', 'Plus Jakarta Sans', 'Cairo', sans-serif;               /* English body copy   */
+  --font-body-rtl:'Cairo', 'Segoe UI', sans-serif;                                 /* Arabic body copy    */
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace; /* IDs, stats  */
+
+  /* Fluid scale: clamp(min, preferred-vw, max) so headings shrink
+     smoothly between phone and desktop instead of jumping at
+     breakpoints. Bounds tuned to stay legible down to 320px. */
+  --text-display-xl: clamp(1.85rem, 1.35rem + 2.3vw, 3.5rem);   /* 30→56px hero headline   */
+  --text-display-lg: clamp(1.5rem, 1.2rem + 1.4vw, 2.5rem);     /* 24→40px section titles  */
+  --text-h1: clamp(1.375rem, 1.2rem + 0.8vw, 2rem);             /* 22→32px page titles     */
+  --text-h2: clamp(1.125rem, 1.02rem + 0.5vw, 1.5rem);          /* 18→24px card headings   */
+  --text-h3: clamp(1.05rem, 0.98rem + 0.3vw, 1.25rem);          /* 16.8→20px sub-headings  */
+  --text-body: 1rem;           /* 16px                         */
+  --text-small: 0.875rem;      /* 14px                         */
+  --text-caption: 0.75rem;     /* 12px labels/badges           */
+
+  /* ---- Touch & viewport helpers --------------------------------------- */
+  --tap-target-min: 44px;      /* Apple/WCAG minimum comfortable tap size */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  /* ---- Spacing scale ----------------------------------------------------*/
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Radius ------------------------------------------------------------*/
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  /* ---- Glassmorphism primitives (overridden per-theme in themes/*.css) --*/
+  --glass-blur: 20px;
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-shadow: 0 8px 32px rgba(10, 15, 30, 0.25);
+
+  /* ---- Motion --------------------------------------------------------- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* ---- Layout ----------------------------------------------------------*/
+  --sidebar-width: 268px;
+  --sidebar-width-collapsed: 84px;
+  --topbar-height: 72px;
+  --content-max-width: 1440px;
+
+  /* ---- Z-index scale ------------------------------------------------- */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 500;
+  --z-toast: 600;
+}
+
+/* Default (light) surface + text mapping — overridden by themes/dark.css
+   when [data-theme="dark"] is set on <html> */
+:root,
+[data-theme="light"] {
+  --bg-canvas: #F6F7FC;
+  --bg-sidebar: #FBFCFF;
+  --bg-surface: var(--uip-white);
+  --text-primary: var(--uip-navy-950);
+  --text-secondary: var(--uip-slate-500);
+  --border-subtle: #E8EAF3;
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(10, 15, 30, 0.08);
+  --glass-shadow: 0 8px 32px rgba(20, 30, 60, 0.10);
+}

@@ -1,0 +1,9 @@
+.uip-draftbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 14px; font-size:13.5px; line-height:1.55; font-weight:500;
+  /* opaque + fixed colours: it sits on top of both light and dark windows, so it must not borrow the page's text colour (was dark text on a muddy translucent brown) */
+  color:#4a2f00; background:#fff1c9; border-bottom:1px solid #f2c24f; }
+.uip-draftbar strong { font-weight:800; color:#2e1c00; }
+.uip-draftbar__sp { flex:1 1 auto; }
+.uip-draftbar button { font:inherit; font-weight:700; cursor:pointer; padding:6px 16px; min-height:32px; border-radius:8px; border:1px solid #b97a00; background:#ffffff; color:#4a2f00; }
+.uip-draftbar button:hover { background:#ffe49a; }
+.uip-netchip { display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:2px 10px; border-radius:999px; background:color-mix(in srgb,#ef4444 16%,transparent); color:inherit; }
+.uip-netchip::before { content:''; width:7px; height:7px; border-radius:50%; background:#ef4444; }

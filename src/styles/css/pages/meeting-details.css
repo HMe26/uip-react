@@ -1,0 +1,91 @@
+/* pages/meeting-details.css — meeting details page (hero, fact tiles, link row, people list, host actions). */
+.md-page { display: flex; flex-direction: column; gap: var(--space-4, 16px); max-width: 1100px; width: 100%; margin-inline: auto; }
+
+.md-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-secondary, #64748b); text-decoration: none; }
+.md-back:hover { color: var(--color-primary, #515fff); }
+[dir="ltr"] .md-back__ico { transform: scaleX(-1); }
+
+/* hero */
+.md-hero {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  padding: 22px 24px; border-radius: 20px;
+  background: linear-gradient(135deg, rgba(81, 95, 255, 0.10), rgba(81, 95, 255, 0.02) 60%), var(--bg-surface, #fff);
+  border: 1px solid var(--border-subtle, rgba(15, 23, 42, 0.08));
+}
+.md-hero__main { display: flex; flex-direction: column; gap: 10px; min-width: 0; flex: 1; }
+.md-hero__badges { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.md-hero__title { margin: 0; font-size: clamp(22px, 3vw, 30px); line-height: 1.25; font-weight: 800; word-break: break-word; }
+.md-hero__host { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary, #64748b); }
+.md-hero__host strong { color: var(--text-primary, inherit); }
+.md-hero__desc { margin: 0; font-size: 14px; line-height: 1.7; color: var(--text-secondary, #64748b); max-width: 70ch; }
+.md-hero__cta { height: 46px; padding: 0 22px; border-radius: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 8px 22px rgba(81, 95, 255, 0.32); }
+.md-live-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; margin-inline-end: 6px; animation: md-pulse 1.6s ease-in-out infinite; }
+@keyframes md-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* avatar (host, participants) */
+.md-avatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #6d78ff, #4150e6); color: #fff; font-weight: 800; font-size: 14px;
+}
+.md-avatar--sm { width: 24px; height: 24px; font-size: 11px; }
+
+/* fact tiles */
+.md-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.md-fact {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px;
+  background: var(--bg-surface, #fff); border: 1px solid var(--border-subtle, rgba(15, 23, 42, 0.08));
+}
+.md-fact__ico { width: 38px; height: 38px; border-radius: 12px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: rgba(81, 95, 255, 0.10); color: var(--color-primary, #515fff); }
+.md-fact__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.md-fact__label { font-size: 12px; color: var(--text-secondary, #64748b); }
+.md-fact__value { font-size: 14.5px; font-weight: 700; overflow-wrap: anywhere; }
+.md-fact__value.is-on { color: #16a34a; }
+
+/* cards */
+.md-card { display: flex; flex-direction: column; gap: 14px; border-radius: 18px; }
+.md-card__title { margin: 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.md-card__hint { margin: 0; font-size: 13px; color: var(--text-secondary, #64748b); }
+.md-count { font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: rgba(81, 95, 255, 0.10); color: var(--color-primary, #515fff); }
+.md-empty { margin: 0; font-size: 14px; color: var(--text-secondary, #64748b); }
+
+/* join link */
+.md-link-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 8px 8px 14px; border-radius: 14px; background: rgba(15, 23, 42, 0.04); border: 1px dashed var(--border-subtle, rgba(15, 23, 42, 0.14)); }
+.md-link-row__url { flex: 1; min-width: 200px; font-size: 13px; word-break: break-all; text-align: left; background: none; padding: 0; }
+
+/* participants */
+.md-people { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.md-person { display: flex; align-items: center; gap: 12px; padding: 10px 4px; border-top: 1px solid var(--border-subtle, rgba(15, 23, 42, 0.07)); }
+.md-person:first-child { border-top: none; }
+.md-person__name { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* analytics */
+.md-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.md-stat { padding: 14px 16px; border-radius: 14px; background: rgba(15, 23, 42, 0.04); }
+.md-stat__label { margin: 0; font-size: 12px; color: var(--text-secondary, #64748b); }
+.md-stat__value { margin: 4px 0 0; font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* host actions */
+.md-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.md-actions__main { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* the older cards (attendance, invitations, recordings) share the same rhythm */
+.md-page .card.glass-panel { border-radius: 18px; }
+.md-page h2.text-h3 { font-size: 16px; font-weight: 700; }
+
+@media (max-width: 900px) { .md-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) {
+  .md-facts { grid-template-columns: 1fr; }
+  .md-hero { padding: 18px; }
+  .md-hero__cta { width: 100%; justify-content: center; }
+  .md-actions__danger { width: 100%; justify-content: center; }
+}
+
+/* Attendance report: on phones each participant becomes a card (label + value rows) instead of 7 squeezed columns */
+@media (max-width: 640px) {
+  .md-att, .md-att thead, .md-att tbody, .md-att tr, .md-att td { display: block; width: 100%; box-sizing: border-box; }
+  .md-att thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .md-att tbody tr { margin-bottom: 10px; padding: 8px 4px; border: 1px solid var(--border-color, rgba(0,0,0,.08)); border-radius: 12px; }
+  .md-att td { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 5px 10px !important; text-align: end; word-break: normal; overflow-wrap: anywhere; }
+  .md-att td::before { content: attr(data-label); flex-shrink: 0; color: var(--text-secondary, #6b7280); text-align: start; }
+  .md-att td:first-child { font-weight: 700; }
+}

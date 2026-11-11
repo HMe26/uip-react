@@ -1,0 +1,248 @@
+/* ==========================================================================
+   AI assistant — look & themes v2
+   Each theme re-declares the design tokens INSIDE the panel (surface, text, border, accent), so every existing rule adapts by itself,
+   including the dark themes. The wallpaper only paints .ai-conversation.
+   Themes: none (clean) · aurora · lagoon · forest · rose · amber · graphite (dark) · midnight (dark)
+   ========================================================================== */
+.ai-panel {
+  --ai-grad: linear-gradient(135deg, #5b6cff 0%, #8b5cf6 100%);
+  --ai-tint: rgba(var(--color-primary-rgb, 91, 108, 255), .11);
+  --ai-wall: radial-gradient(900px 420px at 85% -10%, rgba(var(--color-primary-rgb, 91, 108, 255), .08), transparent 60%), var(--bg-canvas);
+  --ai-ai-bubble: var(--bg-surface);
+  --ai-ai-border: var(--border-subtle);
+  --ai-shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 20px -10px rgba(16, 24, 40, .16);
+  --ai-bubble-radius: 18px;
+}
+
+/* ---------------- themes ---------------- */
+html body .ai-panel[data-wall="aurora"] {
+  --color-primary: #6d5efc; --color-primary-rgb: 109, 94, 252; --color-primary-hover: #5b4be6;
+  --ai-grad: linear-gradient(135deg, #6d5efc 0%, #b25cf2 100%);
+  --ai-wall: radial-gradient(520px 340px at 12% 4%, rgba(168, 120, 255, .30), transparent 62%), radial-gradient(560px 380px at 95% 96%, rgba(109, 94, 252, .22), transparent 60%), linear-gradient(180deg, #f6f3ff, #eef0ff);
+  --bg-canvas: #f3f1ff; --border-subtle: #e2defa;
+}
+html body .ai-panel[data-wall="lagoon"] {
+  --color-primary: #0b8fa6; --color-primary-rgb: 11, 143, 166; --color-primary-hover: #087a8e;
+  --ai-grad: linear-gradient(135deg, #0ea5b7 0%, #3b82f6 100%);
+  --ai-wall: radial-gradient(520px 340px at 90% 0%, rgba(59, 130, 246, .22), transparent 62%), radial-gradient(520px 360px at 0% 100%, rgba(14, 165, 183, .24), transparent 60%), linear-gradient(180deg, #eefaff, #e6f3fb);
+  --bg-canvas: #ebf6fb; --border-subtle: #d3e8f1;
+}
+html body .ai-panel[data-wall="forest"] {
+  --color-primary: #11865f; --color-primary-rgb: 17, 134, 95; --color-primary-hover: #0c7351;
+  --ai-grad: linear-gradient(135deg, #12a174 0%, #5cb85c 100%);
+  --ai-wall: radial-gradient(520px 340px at 8% 0%, rgba(92, 184, 92, .24), transparent 62%), radial-gradient(520px 360px at 100% 100%, rgba(18, 161, 116, .20), transparent 60%), linear-gradient(180deg, #f1fbf5, #e8f6ee);
+  --bg-canvas: #edf8f1; --border-subtle: #d4eadc;
+}
+html body .ai-panel[data-wall="rose"] {
+  --color-primary: #d93f78; --color-primary-rgb: 217, 63, 120; --color-primary-hover: #c22f66;
+  --ai-grad: linear-gradient(135deg, #e5487f 0%, #ff8a65 100%);
+  --ai-wall: radial-gradient(520px 340px at 92% 2%, rgba(255, 138, 101, .24), transparent 62%), radial-gradient(520px 360px at 0% 100%, rgba(229, 72, 127, .18), transparent 60%), linear-gradient(180deg, #fff5f8, #fdeef3);
+  --bg-canvas: #fdf0f4; --border-subtle: #f5d9e3;
+}
+html body .ai-panel[data-wall="amber"] {
+  --color-primary: #c9690a; --color-primary-rgb: 201, 105, 10; --color-primary-hover: #b05b07;
+  --ai-grad: linear-gradient(135deg, #f59e0b 0%, #ef6a3c 100%);
+  --ai-wall: radial-gradient(520px 340px at 10% 0%, rgba(245, 158, 11, .26), transparent 62%), radial-gradient(520px 360px at 100% 100%, rgba(239, 106, 60, .18), transparent 60%), linear-gradient(180deg, #fffaf0, #fdf3e3);
+  --bg-canvas: #fdf5e8; --border-subtle: #f1e2c7;
+}
+html body .ai-panel[data-wall="graphite"] {
+  --color-primary: #8ab4ff; --color-primary-rgb: 138, 180, 255; --color-primary-hover: #a9c7ff;
+  --bg-surface: #17181c; --bg-canvas: #0f1013; --text-primary: #ececf1; --text-secondary: #9b9ca8; --border-subtle: rgba(255, 255, 255, .09);
+  --glass-bg: rgba(255, 255, 255, .07);
+  --ai-grad: linear-gradient(135deg, #5b8cff 0%, #8b7bff 100%);
+  --ai-wall: radial-gradient(600px 380px at 90% 0%, rgba(120, 140, 255, .10), transparent 60%), #0f1013;
+  --ai-ai-bubble: #1e2025; --ai-ai-border: rgba(255, 255, 255, .07);
+  --ai-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 24px -12px rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+html body .ai-panel[data-wall="midnight"] {
+  --color-primary: #8794ff; --color-primary-rgb: 135, 148, 255; --color-primary-hover: #a3adff;
+  --bg-surface: #141937; --bg-canvas: #0c1026; --text-primary: #e9edff; --text-secondary: #9ba6d6; --border-subtle: rgba(160, 175, 255, .14);
+  --glass-bg: rgba(160, 175, 255, .10);
+  --ai-grad: linear-gradient(135deg, #6366f1 0%, #22d3ee 100%);
+  --ai-wall: radial-gradient(1.2px 1.2px at 20% 30%, rgba(255, 255, 255, .55), transparent 60%), radial-gradient(1px 1px at 70% 20%, rgba(255, 255, 255, .45), transparent 60%), radial-gradient(1.2px 1.2px at 40% 75%, rgba(255, 255, 255, .4), transparent 60%), radial-gradient(1px 1px at 88% 62%, rgba(255, 255, 255, .45), transparent 60%), radial-gradient(560px 380px at 8% 0%, rgba(99, 102, 241, .28), transparent 62%), radial-gradient(520px 360px at 100% 100%, rgba(34, 211, 238, .14), transparent 60%), #0c1026;
+  --ai-ai-bubble: #1b2147; --ai-ai-border: rgba(160, 175, 255, .14);
+  --ai-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 24px -12px rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+
+/* ---------------- panel + header ---------------- */
+html body .ai-panel { border-radius: 22px; box-shadow: 0 30px 80px -20px rgba(10, 15, 40, .45), 0 0 0 1px var(--border-subtle); }
+html body .ai-panel.is-maximized { border-radius: 0; box-shadow: none; }
+@media (max-width: 640px) { html body .ai-panel, html body .ai-panel.is-fullscreen { border-radius: 0; box-shadow: none; } }
+html body .ai-panel__header {
+  padding: 12px 14px; border-bottom: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--bg-surface) 88%, transparent); backdrop-filter: blur(14px) saturate(1.3);
+}
+html body .ai-panel .ai-avatar { background: var(--ai-grad); color: #fff; border-radius: 12px; box-shadow: 0 6px 16px -6px rgba(var(--color-primary-rgb), .65); }
+html body .ai-avatar--lg { border-radius: 18px; width: 60px; height: 60px; box-shadow: 0 14px 30px -10px rgba(var(--color-primary-rgb), .7); }
+html body .ai-panel__title-text strong { font-size: 15px; letter-spacing: -.01em; color: var(--text-primary); }
+html body .ai-panel.is-fullscreen .ai-panel__title-text strong { color: var(--text-primary); }
+html body .ai-panel__icon-btn { border-radius: 11px; }
+html body .ai-panel__text-btn { background: var(--ai-tint); border-radius: 11px; padding: 0 12px; }
+html body .ai-panel__text-btn:hover { background: rgba(var(--color-primary-rgb), .2); }
+
+/* ---------------- conversation area ---------------- */
+html body .ai-panel .ai-conversation { background: var(--ai-wall); }
+html body .ai-panel .ai-conversation__head { background: color-mix(in srgb, var(--bg-surface) 82%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-subtle); }
+html body .ai-panel .ai-messages { background: transparent; padding: 22px 18px; gap: 16px; scroll-behavior: smooth; }
+html body .ai-panel .ai-messages::-webkit-scrollbar { width: 8px; }
+html body .ai-panel .ai-messages::-webkit-scrollbar-thumb { background: rgba(127, 127, 150, .28); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+
+/* ---------------- bubbles ---------------- */
+html body .ai-panel .ai-bubble { font-size: 14.5px; line-height: 1.75; padding: 12px 16px; border-radius: 18px; }
+html body .ai-panel .ai-msg--assistant .ai-bubble {
+  background: var(--ai-ai-bubble); border: 1px solid var(--ai-ai-border); box-shadow: var(--ai-shadow); border-start-start-radius: 6px; color: var(--text-primary);
+}
+html body .ai-panel .ai-msg--user .ai-bubble {
+  background: var(--ai-grad); color: #fff; border: 0; border-start-end-radius: 6px;
+  box-shadow: 0 10px 24px -12px rgba(var(--color-primary-rgb), .75);
+}
+html body .ai-panel .ai-msg--user .ai-bubble, html body .ai-panel .ai-msg--user .ai-bubble * { color: #fff; }
+html body .ai-panel .ai-msg--error .ai-bubble { background: rgba(240, 85, 90, .10); border-color: rgba(240, 85, 90, .5); color: var(--color-danger); }
+html body .ai-panel .ai-bubble h1, html body .ai-panel .ai-bubble h2, html body .ai-panel .ai-bubble h3 { margin: 14px 0 6px; line-height: 1.35; letter-spacing: -.01em; }
+html body .ai-panel .ai-bubble h1 { font-size: 1.25em; } html body .ai-panel .ai-bubble h2 { font-size: 1.15em; } html body .ai-panel .ai-bubble h3 { font-size: 1.05em; }
+html body .ai-panel .ai-bubble h1:first-child, html body .ai-panel .ai-bubble h2:first-child, html body .ai-panel .ai-bubble h3:first-child { margin-top: 0; }
+html body .ai-panel .ai-bubble code { background: var(--ai-tint); color: var(--color-primary); border-radius: 6px; padding: 1px 6px; }
+html body .ai-panel .ai-msg--user .ai-bubble code { background: rgba(255, 255, 255, .22); color: #fff; }
+html body .ai-panel .ai-bubble pre { background: #0d1020; color: #e6eaff; border: 1px solid rgba(255, 255, 255, .08); border-radius: 14px; padding: 14px 16px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04); }
+html body .ai-panel .ai-bubble pre code { background: transparent; color: inherit; padding: 0; }
+html body .ai-panel .ai-bubble blockquote { border-inline-start: 3px solid var(--color-primary); background: var(--ai-tint); border-radius: 0 10px 10px 0; padding: 8px 12px; margin: 8px 0; }
+html body .ai-panel .ai-bubble table { border-collapse: separate; border-spacing: 0; border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden; }
+html body .ai-panel .ai-bubble th { background: var(--ai-tint); }
+html body .ai-panel .ai-msg__avatar { border-radius: 10px; }
+html body .ai-panel .ai-msg__meta { color: var(--text-secondary); }
+html body .ai-panel .ai-msg__actions button, html body .ai-panel .ai-msg__toolbar button { border-radius: 8px; }
+
+/* ---------------- welcome + suggestions ---------------- */
+html body .ai-panel .ai-welcome { align-items: center; text-align: center; padding-top: 14px; }
+html body .ai-panel .ai-welcome h3 { font-size: 26px; font-weight: 700; letter-spacing: -.02em; background: var(--ai-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+html body .ai-panel .ai-welcome p { margin-inline: auto; }
+html body .ai-panel .ai-welcome__head { margin-top: 18px; }
+html body .ai-panel .ai-suggestion-chip {
+  background: var(--ai-ai-bubble); border: 1px solid var(--ai-ai-border); border-radius: 14px; padding: 12px 14px; box-shadow: var(--ai-shadow);
+  transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+html body .ai-panel .ai-suggestion-chip:hover { transform: translateY(-2px); border-color: rgba(var(--color-primary-rgb), .55); }
+
+/* ---------------- composer ---------------- */
+html body .ai-panel .ai-composer { border-top: 0; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--bg-surface) 70%, transparent) 40%); padding: 8px 14px 14px; }
+html body .ai-panel .ai-composer__box {
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 22px; padding: 6px 8px;
+  box-shadow: 0 12px 30px -16px rgba(16, 24, 40, .35); transition: box-shadow .2s ease, border-color .2s ease;
+}
+html body .ai-panel .ai-composer__box:focus-within { border-color: rgba(var(--color-primary-rgb), .7); box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), .14), 0 12px 30px -16px rgba(16, 24, 40, .35); }
+html body .ai-panel .ai-composer__btn--send { background: var(--ai-grad); box-shadow: 0 8px 18px -8px rgba(var(--color-primary-rgb), .8); }
+html body .ai-panel .ai-composer__btn--send:hover { filter: brightness(1.08); }
+html body .ai-panel .ai-composer__btn--send:disabled { background: var(--border-subtle); box-shadow: none; filter: none; }
+html body .ai-panel .ai-composer__hint { justify-content: center; opacity: .8; }
+html body .ai-panel .ai-file-chip { background: var(--bg-surface); border-radius: 12px; }
+
+/* ---------------- history sidebar ---------------- */
+html body .ai-panel .ai-sidebar { background: color-mix(in srgb, var(--bg-surface) 94%, var(--bg-canvas)); border-inline-end: 1px solid var(--border-subtle); }
+html body .ai-panel .ai-conv-item { border-radius: 12px; border: 1px solid transparent; position: relative; }
+html body .ai-panel .ai-conv-item:hover { background: var(--ai-tint); }
+html body .ai-panel .ai-conv-item.is-active { background: var(--ai-tint); border-color: rgba(var(--color-primary-rgb), .25); }
+html body .ai-panel .ai-conv-item.is-active::before { content: ""; position: absolute; inset-block: 9px; inset-inline-start: 0; width: 3px; border-radius: 3px; background: var(--ai-grad); }
+html body .ai-panel .ai-sidebar__search input { border-radius: 12px; background: var(--bg-canvas); }
+
+/* ---------------- theme picker ---------------- */
+html body .ai-panel .ai-wall-pop { width: 252px; padding: 12px; border-radius: 16px; background: var(--bg-surface); border: 1px solid var(--border-subtle); box-shadow: 0 20px 50px -12px rgba(10, 15, 40, .45); }
+html body .ai-panel .ai-wall-picker { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+html body .ai-panel .ai-wall-swatch { height: 50px; border-radius: 14px; position: relative; overflow: hidden; border: 1px solid rgba(127, 127, 150, .25); }
+html body .ai-panel .ai-wall-swatch::after { content: ""; position: absolute; inset-inline-end: 6px; bottom: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--sw-accent, #6d5efc); box-shadow: 0 0 0 2px rgba(255, 255, 255, .85); }
+html body .ai-panel .ai-wall-swatch[aria-pressed="true"] { outline: 2.5px solid var(--color-primary); outline-offset: 2px; }
+.ai-wall-swatch--none { --sw-accent: #5b6cff; background: linear-gradient(160deg, #ffffff, #eef0fb) !important; }
+.ai-wall-swatch--aurora { --sw-accent: #8b5cf6; background: radial-gradient(circle at 20% 15%, rgba(178, 92, 242, .55), transparent 60%), linear-gradient(160deg, #f6f3ff, #e3e1ff) !important; }
+.ai-wall-swatch--lagoon { --sw-accent: #0ea5b7; background: radial-gradient(circle at 80% 15%, rgba(59, 130, 246, .5), transparent 60%), linear-gradient(160deg, #eefaff, #d3ecf7) !important; }
+.ai-wall-swatch--forest { --sw-accent: #12a174; background: radial-gradient(circle at 20% 15%, rgba(92, 184, 92, .5), transparent 60%), linear-gradient(160deg, #f1fbf5, #d6efe0) !important; }
+.ai-wall-swatch--rose { --sw-accent: #e5487f; background: radial-gradient(circle at 80% 15%, rgba(255, 138, 101, .5), transparent 60%), linear-gradient(160deg, #fff5f8, #f9dbe6) !important; }
+.ai-wall-swatch--amber { --sw-accent: #f59e0b; background: radial-gradient(circle at 20% 15%, rgba(245, 158, 11, .5), transparent 60%), linear-gradient(160deg, #fffaf0, #f9e7c8) !important; }
+.ai-wall-swatch--graphite { --sw-accent: #8ab4ff; background: radial-gradient(circle at 80% 10%, rgba(120, 140, 255, .35), transparent 60%), #17181c !important; }
+.ai-wall-swatch--midnight { --sw-accent: #22d3ee; background: radial-gradient(1px 1px at 30% 40%, #fff, transparent 60%), radial-gradient(1px 1px at 70% 25%, #fff, transparent 60%), radial-gradient(circle at 15% 10%, rgba(99, 102, 241, .6), transparent 60%), #141937 !important; }
+
+/* ---------------- floating button ---------------- */
+html body .ai-fab { background: var(--ai-grad, linear-gradient(135deg, #5b6cff, #8b5cf6)); box-shadow: 0 14px 30px -10px rgba(91, 108, 255, .7); }
+
+/* ---- Small screens: the header tools and the chat list must stay reachable ----
+   Before: below 860px the "chat list" button was display:none and the docked list was display:none, so in the wide / full-screen
+   views there was no way to open the conversations at all. Now the list becomes a slide-over drawer opened by that button. */
+.ai-panel__header-actions { flex-shrink: 0; }
+@media (max-width: 860px) {
+  html body .ai-history-toggle { display: flex; }
+  html body .ai-panel.is-fullscreen .ai-sidebar {
+    display: flex; position: absolute; inset-block: 0; inset-inline-start: 0; z-index: 6;
+    width: min(320px, 88%); flex: none; background: var(--bg-surface);
+    border-inline-end: 1px solid var(--border-subtle); box-shadow: 0 0 40px rgba(10, 15, 30, .28);
+    transform: none; visibility: visible; transition: transform var(--duration-normal) var(--ease-standard);
+  }
+  html body .ai-panel.is-fullscreen .ai-sidebar.is-collapsed {
+    display: flex; visibility: hidden; transform: translateX(-105%); box-shadow: none;
+  }
+  [dir="rtl"] html body .ai-panel.is-fullscreen .ai-sidebar.is-collapsed,
+  html[dir="rtl"] body .ai-panel.is-fullscreen .ai-sidebar.is-collapsed { transform: translateX(105%); }
+}
+@media (max-width: 520px) {
+  html body .ai-panel__header { padding: 10px 10px; gap: 6px; }
+  html body .ai-panel__header-actions { gap: 2px; }
+  html body .ai-panel__icon-btn { width: 34px; height: 34px; }
+  html body .ai-panel__title-text small { display: none; }
+  html body .ai-panel .ai-avatar { width: 30px; height: 30px; }
+}
+
+/* ---- Export from the chat list: the format picker and the preview must sit above the assistant panel (z-index 650) ---- */
+body:has(.ai-panel.is-open) .export-menu { z-index: 720; }
+body:has(.ai-panel.is-open) .modal-overlay { z-index: 730 !important; }
+.ai-conv-menu__export { justify-content: flex-start; }
+.ai-conv-menu__export > svg:last-child { margin-inline-start: auto; opacity: .6; }
+
+/* ---- Theme (background) picker was hidden under the chat ----
+   The header has backdrop-filter, which makes it its own stacking context, so the picker's z-index (30) only counted INSIDE the
+   header — and the chat body, which comes later in the DOM, was painted over it. Lift the whole header above the body. */
+html body .ai-panel__header { position: relative; z-index: 20; }
+html body .ai-panel .ai-wall-pop { z-index: 40; max-width: calc(100vw - 20px); max-height: calc(100dvh - 90px); overflow-y: auto; }
+/* Phones: anchor the picker to the panel (not to the small palette button) so it can never run off either edge of the screen. */
+@media (max-width: 640px) {
+  html body .ai-panel .ai-wall-wrap { position: static; }
+  html body .ai-panel .ai-wall-pop { inset-inline: 10px; inset-block-start: calc(100% + 6px); width: auto; }
+}
+
+
+/* FIX: wallpaper picker was anchored to the small palette button, so in the narrow laptop panel it ran past the panel edge
+   (first column + title clipped by the panel's overflow:hidden). Anchor it to the header (= panel width) at every size and
+   keep it inside the panel on whichever side the button is. */
+html body .ai-panel .ai-wall-wrap { position: static; }
+html body .ai-panel .ai-wall-pop {
+  inset-block-start: calc(100% + 6px); inset-inline-start: auto; inset-inline-end: 10px;
+  width: 252px; max-width: calc(100% - 20px); box-sizing: border-box;
+  max-height: calc(100dvh - 110px); overflow-y: auto;
+}
+
+/* ---------------- the person's own photo as background ---------------- */
+html body .ai-panel[data-wall="custom"] {
+  --ai-wall: linear-gradient(rgba(255, 255, 255, .06), rgba(255, 255, 255, .06)), var(--ai-wall-img) center / cover no-repeat, var(--bg-canvas);
+}
+[data-theme="dark"] .ai-panel[data-wall="custom"] {
+  --ai-wall: linear-gradient(rgba(8, 10, 24, .42), rgba(8, 10, 24, .42)), var(--ai-wall-img) center / cover no-repeat, var(--bg-canvas);
+}
+html body .ai-panel .ai-wall-mine { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
+html body .ai-panel .ai-wall-mine__title { display: block; font-size: 11.5px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
+html body .ai-panel .ai-wall-mine__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+html body .ai-panel .ai-wall-add {
+  height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: var(--cur-pointer, pointer);
+  border: 1.5px dashed color-mix(in srgb, var(--color-primary) 55%, transparent); color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 7%, transparent); padding: 0;
+}
+html body .ai-panel .ai-wall-add:disabled { opacity: .55; cursor: progress; }
+html body .ai-panel .ai-wall-mine__item { position: relative; }
+html body .ai-panel .ai-wall-mine__pick {
+  display: block; width: 100%; height: 50px; border-radius: 14px; padding: 0; cursor: var(--cur-pointer, pointer);
+  background-size: cover; background-position: center; border: 1px solid rgba(127, 127, 150, .25);
+}
+html body .ai-panel .ai-wall-mine__pick[aria-pressed="true"] { outline: 2.5px solid var(--color-primary); outline-offset: 2px; }
+html body .ai-panel .ai-wall-mine__del {
+  position: absolute; top: -6px; inset-inline-end: -6px; width: 19px; height: 19px; padding: 0; border: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; background: #e5484d; color: #fff; cursor: var(--cur-pointer, pointer);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
+}
+html body .ai-panel .ai-wall-mine__err { margin: 8px 0 0; font-size: 12px; color: #e5484d; }

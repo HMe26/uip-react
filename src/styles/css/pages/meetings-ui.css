@@ -1,0 +1,117 @@
+/* pages/meetings-ui.css — create-meeting dialog + public pre-join screen + chat composer / tile-menu fixes.
+   Uses the app tokens (--text-*, --glass-border, --color-primary …) so it follows light/dark automatically,
+   and logical properties only so Arabic (RTL) and English both lay out correctly. */
+
+/* ---------- shared: toggle switch ---------- */
+.mtg-switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+.mtg-switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+.mtg-switch__track { position: absolute; inset: 0; border-radius: 999px; background: color-mix(in srgb, var(--text-secondary, #64748b) 35%, transparent); transition: background 140ms ease; }
+.mtg-switch__track::after { content: ''; position: absolute; top: 3px; inset-inline-start: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: inset-inline-start 140ms ease; }
+.mtg-switch input:checked + .mtg-switch__track { background: var(--color-primary, #515fff); }
+.mtg-switch input:checked + .mtg-switch__track::after { inset-inline-start: 21px; }
+.mtg-switch input:focus-visible + .mtg-switch__track { outline: 2px solid var(--color-primary, #515fff); outline-offset: 2px; }
+
+/* ---------- create / edit meeting dialog ---------- */
+.mtg-dialog { width: min(600px, 94vw); padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+.mtg-dialog__head { padding: 22px 26px 16px; border-bottom: 1px solid var(--glass-border, rgba(128,128,128,.2)); }
+.mtg-dialog__head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.mtg-dialog__head p { margin: 4px 0 0; font-size: 13px; color: var(--text-secondary); }
+.mtg-dialog__body { padding: 20px 26px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+.mtg-dialog__foot { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 26px; border-top: 1px solid var(--glass-border, rgba(128,128,128,.2)); background: color-mix(in srgb, var(--text-secondary, #64748b) 5%, transparent); }
+.mtg-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.mtg-field > label, .mtg-label { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.mtg-hint { font-size: 12px; color: var(--text-secondary); margin: 0; }
+.mtg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 560px) { .mtg-row { grid-template-columns: 1fr; } }
+
+.mtg-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mtg-seg__opt { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; cursor: pointer;
+  border: 1.5px solid var(--glass-border, rgba(128,128,128,.25)); transition: border-color 120ms ease, background 120ms ease; }
+.mtg-seg__opt input { position: absolute; opacity: 0; pointer-events: none; }
+.mtg-seg__opt:hover { border-color: color-mix(in srgb, var(--color-primary, #515fff) 50%, transparent); }
+.mtg-seg__opt.is-on { border-color: var(--color-primary, #515fff); background: color-mix(in srgb, var(--color-primary, #515fff) 9%, transparent); }
+.mtg-seg__ico { width: 36px; height: 36px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  background: color-mix(in srgb, var(--color-primary, #515fff) 14%, transparent); color: var(--color-primary, #515fff); }
+.mtg-seg__txt strong { display: block; font-size: 14px; }
+.mtg-seg__txt span { display: block; font-size: 12px; color: var(--text-secondary); }
+
+.mtg-duration { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 14px; border: 1px solid var(--glass-border, rgba(128,128,128,.25)); }
+.mtg-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.mtg-chip { border: 1.5px solid var(--glass-border, rgba(128,128,128,.3)); background: transparent; color: var(--text-primary); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.mtg-chip:hover { border-color: var(--color-primary, #515fff); }
+.mtg-chip.is-on { background: var(--color-primary, #515fff); border-color: var(--color-primary, #515fff); color: #fff; }
+
+.mtg-toggle { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--glass-border, rgba(128,128,128,.25)); cursor: pointer; }
+.mtg-toggle__txt strong { display: block; font-size: 14px; }
+.mtg-toggle__txt span { display: block; font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.mtg-toggles { display: flex; flex-direction: column; gap: 10px; }
+
+/* ---------- public pre-join screen ---------- */
+.mtg-join { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.mtg-join__head { text-align: center; }
+.mtg-join__head h1 { margin: 0; font-size: clamp(22px, 3.4vw, 32px); font-weight: 800; }
+.mtg-join__head p { margin: 6px 0 0; color: var(--text-secondary); font-size: 14px; }
+.mtg-join__grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 860px) { .mtg-join__grid { grid-template-columns: 1fr; } }
+.mtg-join__card { padding: 18px; border-radius: 22px; display: flex; flex-direction: column; gap: 16px; }
+.mtg-preview { position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: 18px; overflow: hidden; background: #0e0f14; display: flex; align-items: center; justify-content: center; }
+.mtg-preview video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.mtg-preview__off { display: flex; flex-direction: column; align-items: center; gap: 10px; color: rgba(255,255,255,.75); font-size: 14px; }
+.mtg-preview__avatar { width: 84px; height: 84px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #515fff, #8b5cf6); }
+.mtg-preview__ctrls { position: absolute; inset-inline: 0; bottom: 14px; display: flex; justify-content: center; gap: 12px; z-index: 2; }
+.mtg-ctrl { width: 48px; height: 48px; border-radius: 50%; border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  background: rgba(255,255,255,.18); color: #fff; backdrop-filter: blur(10px); transition: transform 100ms ease, background 120ms ease; }
+.mtg-ctrl:hover { transform: scale(1.07); background: rgba(255,255,255,.28); }
+.mtg-ctrl.is-off { background: #ef4444; }
+.mtg-meter { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); font-size: 12.5px; }
+.mtg-meter__bar { flex: 1; height: 6px; border-radius: 999px; background: color-mix(in srgb, var(--text-secondary, #64748b) 22%, transparent); overflow: hidden; }
+.mtg-meter__bar > div { height: 100%; width: 0; background: #22c55e; transition: width 80ms linear; border-radius: inherit; }
+.mtg-devices { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.mtg-devices select { width: 100%; text-overflow: ellipsis; }
+.mtg-join__side { display: flex; flex-direction: column; gap: 14px; }
+.mtg-join__side h2 { margin: 0; font-size: 18px; font-weight: 800; }
+.mtg-join__facts { display: flex; flex-wrap: wrap; gap: 8px; }
+.mtg-fact { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: 12.5px; color: var(--text-secondary);
+  background: color-mix(in srgb, var(--text-secondary, #64748b) 10%, transparent); }
+.mtg-join__go { width: 100%; height: 50px; font-size: 16px; font-weight: 700; border-radius: 14px; }
+
+/* ---------- in-room chat composer ("To" row + field) ---------- */
+.meeting-chat-panel__compose { gap: 10px !important; background: var(--mr-surface) !important; }
+.meeting-chat-panel__to {
+  align-self: stretch !important; width: 100%; box-sizing: border-box; display: flex !important; align-items: center; gap: 8px !important;
+  padding: 6px 12px !important; border-radius: 12px !important; white-space: nowrap; font-size: 12.5px !important;
+}
+.meeting-chat-panel__to > span { flex: 0 0 auto; white-space: nowrap; font-weight: 600; }
+.meeting-chat-panel__to svg { flex: 0 0 auto; }
+.meeting-chat-panel__to select { flex: 1 1 auto; max-width: none !important; min-width: 0; color: var(--mr-text); }
+.meeting-chat-panel__to select option { color: #111; background: #fff; }
+.meeting-chat-panel__to em { flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; }
+.meeting-chat-panel__field { background: var(--mr-surface-2) !important; border-radius: 16px !important; align-items: flex-end; }
+.meeting-chat-panel__field textarea { color: var(--mr-text) !important; }
+.meeting-chat-panel__send:disabled { opacity: 1 !important; background: var(--mr-fill-3) !important; color: var(--mr-muted) !important; }
+.meeting-chat-react-line { display: flex; justify-content: center; }
+.meeting-chat-react-line span { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 12px; color: var(--mr-muted); background: var(--mr-fill-1); }
+.meeting-chat-react-line b { font-size: 16px; line-height: 1; }
+
+/* ---------- host menu on a tile (rendered in a portal so the tile can't clip it) ---------- */
+.meeting-tile__host-menu.is-floating { position: fixed; top: auto; inset-inline-end: auto; z-index: 960; max-height: min(70vh, 420px); overflow-y: auto; min-width: 220px; max-width: min(300px, 92vw); }
+.meeting-tile__host-menu.is-floating button { white-space: normal; }
+
+/* ---------- camera effects popover ---------- */
+.meeting-room__fx { min-width: 260px; padding: 10px; }
+.meeting-room__fx-title { font-size: 12px; font-weight: 700; color: var(--mr-muted); padding: 2px 4px 8px; }
+.meeting-room__fx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.meeting-room__fx-chip { border: 1px solid var(--mr-line-strong); background: var(--mr-fill-1); color: var(--mr-text); border-radius: 10px; padding: 9px 8px; font-size: 12.5px; font-weight: 600; cursor: var(--cur-pointer, pointer); font-family: inherit; }
+.meeting-room__fx-chip:hover:not(:disabled) { background: var(--mr-fill-2); }
+.meeting-room__fx-chip.is-on { background: var(--mr-primary); border-color: var(--mr-primary); color: #fff; }
+.meeting-room__fx-chip:disabled { opacity: 0.6; cursor: wait; }
+
+.meeting-room__fx { min-width: 300px; max-width: min(340px, 92vw); max-height: 70vh; overflow-y: auto; }
+.meeting-room__fx-bgs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.meeting-room__fx-bg { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 0; border: 2px solid transparent; border-radius: 12px; background: none; cursor: var(--cur-pointer, pointer); color: var(--mr-text); font-family: inherit; }
+.meeting-room__fx-bg img, .meeting-room__fx-bg-ico { width: 100%; aspect-ratio: 16 / 10; border-radius: 9px; object-fit: cover; background: var(--mr-fill-2); display: flex; align-items: center; justify-content: center; }
+.meeting-room__fx-bg-ico.is-blur { background: linear-gradient(135deg, var(--mr-fill-2), var(--mr-fill-3)); }
+.meeting-room__fx-bg em { font-style: normal; font-size: 11px; font-weight: 600; text-align: center; padding-bottom: 2px; }
+.meeting-room__fx-bg:hover:not(:disabled) { border-color: var(--mr-line-strong); }
+.meeting-room__fx-bg.is-on { border-color: var(--mr-primary); }
+.meeting-room__fx-bg:disabled { opacity: 0.6; cursor: wait; }

@@ -1,0 +1,99 @@
+/* Notes / Calculator / Calendar + the desktop switcher strip. Colours come from the desktop tokens, so they follow light / dark / accent. */
+.os-mini-ib { width: 30px; height: 30px; display: inline-grid; place-items: center; border: 0; border-radius: 7px; background: transparent; color: inherit; cursor: pointer; flex: none; }
+.os-mini-ib:hover { background: var(--g-hover); }
+.os-mini-ib.is-on { color: var(--os-accent); background: color-mix(in srgb, var(--os-accent) 14%, transparent); }
+.os-mini-btn { height: 30px; padding: 0 12px; border: 1px solid var(--g-line); border-radius: 7px; background: var(--panel-2); color: inherit; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.os-mini-btn:hover:not(:disabled) { border-color: var(--g-mute); }
+.os-mini-btn:disabled { opacity: .45; cursor: default; }
+.os-mini-btn.is-primary { background: var(--os-accent); border-color: transparent; color: #fff; }
+.os-mini-search { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 9px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--g-line); color: var(--g-mute); }
+.os-mini-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--g-fg); font: inherit; font-size: 13px; }
+
+/* Notes */
+.os-notes { display: flex; height: 100%; min-height: 0; background: var(--panel); color: var(--g-fg); }
+.os-notes__side { width: 240px; flex: none; display: flex; flex-direction: column; border-inline-end: 1px solid var(--g-line); background: var(--panel-2); min-height: 0; }
+.os-notes__bar { display: flex; align-items: center; gap: 6px; padding: 10px; }
+.os-notes__list { list-style: none; margin: 0; padding: 0 6px 8px; overflow: auto; flex: 1; }
+.os-notes__list button { width: 100%; text-align: start; display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 0; border-radius: 8px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.os-notes__list button:hover { background: var(--g-hover); }
+.os-notes__list button.is-on { background: color-mix(in srgb, var(--os-accent) 20%, transparent); }
+.os-notes__list b { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.os-notes__list small { color: var(--g-mute); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.os-notes__empty { padding: 18px 12px; color: var(--g-mute); font-size: 12.5px; text-align: center; }
+.os-notes__main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.os-notes__tools { display: flex; align-items: center; gap: 4px; padding: 10px 14px 4px; }
+.os-notes__title { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; font-size: 20px; font-weight: 700; }
+.os-notes__ta { flex: 1; min-height: 0; resize: none; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; font-size: 14.5px; line-height: 1.65; padding: 6px 16px 10px; }
+.os-notes__foot { display: flex; justify-content: space-between; padding: 6px 16px; border-top: 1px solid var(--g-line); color: var(--g-mute); font-size: 11.5px; }
+@media (max-width: 640px) { .os-notes__side { width: 120px; } }
+
+/* Calculator */
+.os-calc { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: 12px; background: var(--panel); color: var(--g-fg); outline: none; overflow: auto; }
+.os-calc__screen { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; padding: 10px 14px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--g-line); min-height: 92px; justify-content: flex-end; }
+.os-calc__screen small { color: var(--g-mute); font-size: 12px; min-height: 16px; }
+.os-calc__screen input { width: 100%; border: 0; outline: 0; background: transparent; color: inherit; text-align: end; font: inherit; font-size: 26px; font-weight: 600; direction: ltr; }
+.os-calc__screen span { color: var(--g-mute); font-size: 15px; min-height: 20px; }
+.os-calc__keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; flex: 1; min-height: 240px; }
+.os-calc__keys button { border: 1px solid var(--g-line); border-radius: 12px; background: var(--panel-2); color: inherit; font: inherit; font-size: 20px; font-weight: 500; cursor: pointer; min-height: 44px; }
+.os-calc__keys button:hover { filter: brightness(1.07); }
+.os-calc__keys button:active { transform: scale(.97); }
+.os-calc__keys .is-fn { color: var(--g-mute); font-size: 17px; }
+.os-calc__keys .is-op { background: color-mix(in srgb, var(--os-accent) 18%, var(--panel-2)); color: var(--os-accent); font-weight: 700; }
+.os-calc__keys .is-eq { background: var(--os-accent); border-color: transparent; color: #fff; font-weight: 700; }
+.os-calc__hist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.os-calc__hist button { width: 100%; display: flex; justify-content: space-between; gap: 10px; padding: 5px 8px; border: 0; border-radius: 6px; background: transparent; color: var(--g-mute); font: inherit; font-size: 12.5px; cursor: pointer; }
+.os-calc__hist button:hover { background: var(--g-hover); }
+.os-calc__hist b { color: var(--g-fg); font-weight: 600; }
+
+/* Calendar */
+.os-cal2 { display: flex; height: 100%; min-height: 0; background: var(--panel); color: var(--g-fg); }
+.os-cal2__grid { flex: 1.5; min-width: 0; overflow: auto; display: flex; flex-direction: column; padding: 12px 14px; }
+.os-cal2__grid > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.os-cal2__grid > header strong { font-size: 18px; }
+.os-cal2__grid > header span { display: inline-flex; align-items: center; gap: 4px; }
+.os-cal2__heads, .os-cal2__days { min-width: 280px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.os-cal2__heads span { text-align: center; font-size: 11.5px; color: var(--g-mute); padding: 4px 0; }
+.os-cal2__days { flex: 1; grid-auto-rows: minmax(44px, 1fr); }
+.os-cal2__days button { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; padding: 6px 2px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.os-cal2__days button:hover { background: var(--g-hover); }
+.os-cal2__days button.is-sel { border-color: var(--os-accent); background: color-mix(in srgb, var(--os-accent) 12%, transparent); }
+.os-cal2__days button.is-today b { background: var(--os-accent); color: #fff; }
+.os-cal2__days b { min-width: 26px; height: 26px; display: inline-grid; place-items: center; border-radius: 50%; font-size: 13px; font-weight: 600; }
+.os-cal2__days span { display: flex; gap: 3px; height: 6px; }
+.os-cal2 u { width: 6px; height: 6px; border-radius: 50%; display: inline-block; text-decoration: none; }
+.os-cal2__legend { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px; font-size: 11.5px; color: var(--g-mute); }
+.os-cal2__legend span { display: inline-flex; align-items: center; gap: 5px; }
+.os-cal2__side { flex: 0 1 280px; min-width: 200px; display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-inline-start: 1px solid var(--g-line); background: var(--panel-2); overflow: auto; }
+.os-cal2__side h4 { margin: 0; font-size: 14px; }
+.os-cal2__note { margin: 0; font-size: 12px; color: var(--g-mute); }
+.os-cal2__events { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.os-cal2__events li { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 9px; background: var(--panel); border: 1px solid var(--g-line); border-inline-start: 3px solid var(--ev); }
+.os-cal2__events li > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.os-cal2__events b { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.os-cal2__events small { color: var(--g-mute); font-size: 11.5px; }
+.os-cal2__events .os-cal2__none { display: block; border: 0; border-inline-start: 0; background: transparent; color: var(--g-mute); font-size: 12.5px; padding: 4px 0; }
+.os-cal2__add { display: flex; flex-wrap: wrap; gap: 6px; }
+.os-cal2__add input { height: 30px; padding: 0 9px; border-radius: 8px; border: 1px solid var(--g-line); background: var(--panel); color: inherit; font: inherit; font-size: 13px; min-width: 0; }
+.os-cal2__add input:first-child { flex: 1 1 100%; }
+.os-cal2__add input[type='time'] { flex: 1; }
+.os-cal2__up { margin-top: auto; display: flex; flex-direction: column; gap: 2px; }
+.os-cal2__up h5 { margin: 6px 0 2px; font-size: 11.5px; color: var(--g-mute); font-weight: 600; }
+.os-cal2__up button { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border: 0; border-radius: 6px; background: transparent; color: inherit; font: inherit; font-size: 12.5px; cursor: pointer; text-align: start; }
+.os-cal2__up button:hover { background: var(--g-hover); }
+.os-cal2__up span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.os-cal2__up em { font-style: normal; color: var(--g-mute); font-size: 11.5px; }
+@media (max-width: 700px) { .os-cal2 { flex-direction: column; overflow: auto; } .os-cal2__side { max-width: none; border-inline-start: 0; border-top: 1px solid var(--g-line); } }
+
+/* Desktops (Spaces) strip inside Mission Control */
+.os-taskview { flex-direction: column; gap: 18px; }
+.os-spaces { display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; justify-content: center; }
+.os-space { position: relative; display: flex; border-radius: 10px; background: rgba(255, 255, 255, .14); border: 2px solid transparent; }
+.os-space.is-on { border-color: var(--os-accent); background: rgba(255, 255, 255, .24); }
+.os-space > button:first-child { display: flex; flex-direction: column; gap: 2px; min-width: 112px; padding: 10px 16px; border: 0; background: transparent; color: #fff; font: inherit; cursor: pointer; border-radius: 8px; text-align: center; }
+.os-space b { font-size: 13px; }
+.os-space small { opacity: .75; font-size: 11.5px; }
+.os-space__x { position: absolute; top: 3px; inset-inline-end: 3px; width: 20px; height: 20px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(0, 0, 0, .35); color: #fff; cursor: pointer; opacity: 0; }
+.os-space:hover .os-space__x, .os-space__x:focus-visible { opacity: 1; }
+.os-space--add { width: 48px; place-items: center; align-items: center; justify-content: center; color: #fff; border: 2px dashed rgba(255, 255, 255, .5); background: transparent; cursor: pointer; }
+.os-taskview__tip { margin: 0; color: rgba(255, 255, 255, .75); font-size: 12.5px; }
+.os-win.is-off { display: none; }

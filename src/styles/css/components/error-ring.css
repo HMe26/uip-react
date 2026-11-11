@@ -1,0 +1,65 @@
+/* components/error-ring.css — the diagnostic twin of readiness-ring.css.
+   Same gauge geometry as .readiness-ring, restyled as a status instrument:
+   404 sweeps (still looking), 403 holds a fixed partial arc (denied,
+   not empty), 500 stutters once then breathes (the instrument is unwell). */
+
+.error-ring { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.error-ring__track { stroke: var(--border-subtle); fill: none; stroke-width: 8; }
+.error-ring__progress { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset var(--duration-slow) var(--ease-standard); }
+
+.error-ring__label { gap: 2px; }
+.error-ring__score { font-family: var(--font-mono); letter-spacing: 0.02em; }
+
+.error-ring__badge {
+  position: absolute;
+  inset-inline-end: -2px;
+  inset-block-end: 2px;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--glass-shadow);
+}
+
+/* ---- 404: dashed ring, slow searching sweep ------------------------- */
+.error-ring[data-code="404"] .error-ring__progress { stroke: var(--uip-indigo-600); }
+.error-ring[data-code="404"] .error-ring__badge { color: var(--uip-indigo-600); }
+.error-ring[data-sweep="true"] svg { animation: error-ring-sweep 5s linear infinite; transform-origin: 50% 50%; }
+
+/* ---- 403: fixed partial arc, deliberately still --------------------- */
+.error-ring[data-code="403"] .error-ring__progress { stroke: var(--color-danger); }
+.error-ring[data-code="403"] .error-ring__badge { color: var(--color-danger); }
+
+/* ---- 500: full arc, one stutter on mount then a slow unwell pulse --- */
+.error-ring[data-code="500"] .error-ring__progress { stroke: var(--uip-gold-600); animation: error-ring-glitch 900ms var(--ease-standard) 1, error-ring-pulse 2.6s ease-in-out 900ms infinite; }
+.error-ring[data-code="500"] .error-ring__badge { color: var(--uip-gold-600); }
+
+@keyframes error-ring-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes error-ring-glitch {
+  0%   { stroke: var(--uip-gold-600); stroke-dashoffset: 0; }
+  15%  { stroke: var(--color-danger); stroke-dashoffset: calc(var(--ring-circumference) * 0.18); }
+  30%  { stroke: var(--uip-gold-600); stroke-dashoffset: calc(var(--ring-circumference) * 0.05); }
+  45%  { stroke: var(--color-danger); stroke-dashoffset: calc(var(--ring-circumference) * 0.22); }
+  60%  { stroke: var(--uip-gold-600); stroke-dashoffset: 0; }
+  100% { stroke: var(--uip-gold-600); stroke-dashoffset: 0; }
+}
+
+@keyframes error-ring-pulse {
+  0%, 100% { stroke: var(--uip-gold-600); opacity: 1; }
+  50%      { stroke: var(--uip-gold-500); opacity: 0.72; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error-ring[data-sweep="true"] svg,
+  .error-ring[data-code="500"] .error-ring__progress {
+    animation: none !important;
+  }
+}

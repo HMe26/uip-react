@@ -1,0 +1,360 @@
+/* ==========================================================================
+   responsive.css — global responsive system
+   Breakpoints: 1280 (wide) / 1024 (laptop) / 900 (tablet) / 768 (drawer
+   kicks in) / 600 (phone landscape) / 400 (small phone)
+   Mobile-first overrides for the app shell, navigation, tables, modals,
+   dropdowns and touch targets. Works alongside variables.css (fluid type
+   tokens already scale headings) and app-shell.css (grids).
+   Status: Active - Phase 3/4 (UI Wiring)
+   @package UIPE
+   ========================================================================== */
+
+/* ---- Base: safe-area padding for notched devices, always on ------------ */
+body {
+  padding-top: var(--safe-top);
+  padding-inline-start: var(--safe-left);
+  padding-inline-end: var(--safe-right);
+}
+
+/* ---- ≤1280px: tighten the shell a touch on laptops --------------------- */
+@media (max-width: 1280px) {
+  :root { --content-max-width: 1180px; }
+  .grid-4 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---- ≤1024px: narrower sidebar, 2-col heavy grids ----------------------- */
+@media (max-width: 1024px) {
+  :root { --sidebar-width: 224px; }
+  .app-shell__main { padding: var(--space-5); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ---- ≤900px: tablet — collapse the two-column layout -------------------- */
+@media (max-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .topbar__search { width: min(280px, 34vw); }
+  .dialog-panel__grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ==========================================================================
+   ≤768px — DRAWER BREAKPOINT
+   Sidebar becomes an off-canvas drawer over the content instead of a
+   persistent column. Everything below this point assumes touch input.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .app-shell { display: block; }
+
+  .app-shell__main { padding: var(--space-4); max-width: 100%; }
+
+  .sidebar {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    top: var(--safe-top);
+    height: calc(100vh - var(--safe-top));
+    height: calc(100dvh - var(--safe-top));
+    width: min(300px, 84vw);
+    z-index: var(--z-modal);
+    transform: translateX(-100%);
+    transition: transform var(--duration-normal) var(--ease-standard);
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    padding-inline-start: max(var(--space-3), var(--safe-left));
+  }
+  .sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: 24px 0 48px rgba(10, 15, 30, 0.28);
+  }
+  [dir="rtl"] .sidebar { transform: translateX(100%); }
+  [dir="rtl"] .sidebar.is-open { transform: translateX(0); }
+
+  /* Collapsed state is meaningless once the sidebar is off-canvas —
+     always show full labels while the drawer is open. */
+  .sidebar.is-collapsed { width: min(300px, 84vw); }
+  .sidebar.is-collapsed .sidebar__link span,
+  .sidebar.is-collapsed .sidebar__section-title,
+  .sidebar.is-collapsed .sidebar__brand-text { display: block; }
+
+  .sidebar__link,
+  .dropdown__item { min-height: var(--tap-target-min); }
+
+  .sidebar__close-btn { display: flex; }
+
+  /* Dark backdrop behind the open drawer; closes the menu on tap. */
+  .sidebar-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(10, 15, 30, 0.5);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    z-index: calc(var(--z-modal) - 1);
+    animation: uip-fade-in var(--duration-fast) var(--ease-standard) both;
+  }
+  .sidebar-overlay.is-visible { display: block; }
+  body.sidebar-locked { overflow: hidden; }
+
+  /* ---- Topbar: shrink, hide the inline search, add tap-friendly icons -- */
+  .topbar { padding-inline: var(--space-4); gap: var(--space-2); }
+  .topbar__search { display: none; }
+  .topbar__actions { gap: var(--space-2); }
+  .topbar__icon-btn { width: var(--tap-target-min); height: var(--tap-target-min); }
+  .topbar__mobile-search-btn { display: flex; }
+
+  .topbar.search-open .topbar__search {
+    display: flex;
+    position: absolute;
+    inset-inline: var(--space-4);
+    top: 100%;
+    margin-top: var(--space-2);
+    width: auto;
+    z-index: var(--z-sticky);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--glass-shadow);
+    animation: uip-rise-in var(--duration-fast) var(--ease-standard) both;
+  }
+
+  /* ---- Dropdown menus become anchored, full-width sheets --------------- */
+  /* NOTE: responsive.css is imported BEFORE app-shell.css (see styles/index.css),
+     so a bare `.dropdown__menu` here lost to app-shell's `position:absolute;
+     min-width:200px` and the avatar menu overflowed off-screen. `.dropdown >`
+     raises specificity so the mobile sheet wins regardless of import order. */
+  .dropdown > .dropdown__menu {
+    position: fixed;
+    inset-inline: var(--space-3);
+    top: calc(var(--topbar-height) + var(--safe-top) + var(--space-2));
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    max-height: calc(100dvh - var(--topbar-height) - var(--safe-top) - var(--space-6));
+    overflow-y: auto;
+  }
+  .notif-dropdown { width: auto; max-height: 70vh; }
+
+  /* ---- Modals become bottom sheets — easier to reach with a thumb ------ */
+  .modal-overlay { align-items: flex-end; }
+  .modal-box {
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-bottom: calc(var(--space-6) + var(--safe-bottom));
+    animation: uip-slide-up var(--duration-normal) var(--ease-standard) both;
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+
+  /* ---- Grids collapse to a single column -------------------------------- */
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+
+  /* ---- Native <dialog> panels (per-row "Edit student" editors etc.)
+     become bottom sheets too, same treatment as .modal-box above, and
+     their field grids stack — a 3-column row of inputs was unusable at
+     phone widths. ------------------------------------------------------- */
+  .dialog-panel {
+    width: 100%;
+    max-width: 100%;
+    max-height: 90vh;
+    margin: auto auto 0 auto;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .dialog-panel__body { max-height: 90vh; padding-bottom: calc(var(--space-6) + var(--safe-bottom)); }
+  .dialog-panel__grid-2, .dialog-panel__grid-3 { grid-template-columns: 1fr; }
+
+  /* ---- Tables: on mobile, let the scrollable table bleed to the screen
+     edges instead of sitting inset inside the page's own padding (the
+     actual overflow-x:auto is unconditional now — see components/tables.css
+     .table-responsive, which used to be defined ONLY inside this ≤768px
+     block and so silently did nothing on desktop — see that file's
+     comment for why that was a real bug, not just a mobile gap). -------- */
+  .table-responsive {
+    margin-inline: calc(var(--space-4) * -1);
+    padding-inline: var(--space-4);
+  }
+  .data-table { min-width: 560px; }
+
+  /* ---- Page headers stack their actions full-width ---------------------- */
+  .page-header { flex-direction: column; align-items: stretch; gap: var(--space-3); }
+  .page-header__actions { width: 100%; }
+  .page-header__actions .btn { flex: 1; }
+
+  .card { padding: var(--space-4); }
+  .form-steps { gap: var(--space-3); }
+  .tabs { gap: var(--space-1); }
+  .tab-link { padding: var(--space-3); }
+}
+
+/* ---- ≤600px: phones (portrait) ------------------------------------------ */
+@media (max-width: 600px) {
+  :root { --topbar-height: 64px; }
+  .container { padding-inline: var(--space-4); }
+  .kv-list { grid-template-columns: 1fr; }
+  .kv-list dd { text-align: start; }
+  .card-stat { flex-wrap: wrap; }
+  .form-step { flex: 1 1 auto; }
+}
+
+/* ---- ≤400px: small phones (SE, compact Android) -------------------------- */
+@media (max-width: 400px) {
+  .container { padding-inline: var(--space-3); }
+  .app-shell__main { padding: var(--space-3); }
+  .btn { padding: 0.6em 1em; }
+  .sidebar__brand-text .text-h3 { font-size: var(--text-body); }
+}
+
+/* ---- Universal touch-target safety net (any pointer without hover) ------ */
+@media (hover: none) and (pointer: coarse) {
+  .btn, .topbar__icon-btn, .dropdown__item, .sidebar__link, .tab-link {
+    min-height: var(--tap-target-min);
+  }
+  a, button { -webkit-tap-highlight-color: transparent; }
+}
+
+/* ---- Landscape phones with short viewport: don't let the sidebar eat
+   the whole screen height awkwardly -------------------------------------- */
+@media (max-width: 900px) and (max-height: 480px) and (orientation: landscape) {
+  .sidebar { width: min(280px, 60vw); }
+}
+
+/* ==========================================================================
+   MOBILE RECOMPOSITION PATTERNS
+   Reusable building blocks for turning dense desktop sections into a real
+   mobile composition instead of a stacked shrink of the same markup.
+   Desktop rules are the default (unprefixed); the ≤768px block below is
+   where the actual recomposition kicks in. Used first on the Student
+   Dashboard pilot; intended to be reused across other portals' pages.
+   ========================================================================== */
+
+/* ---- Mobile-only accordion: a real <details>, so it's just permanently
+   open on desktop (no JS branching, degrades to a plain section if CSS
+   fails to load) and collapses secondary info on mobile. ------------------ */
+.mobile-accordion summary { cursor: var(--cur-pointer, pointer); list-style: none; }
+.mobile-accordion summary::-webkit-details-marker { display: none; }
+.mobile-accordion__chevron { transition: transform var(--duration-fast) var(--ease-standard); flex-shrink: 0; }
+.mobile-accordion[open] .mobile-accordion__chevron { transform: rotate(180deg); }
+
+/* ---- Mobile section tabs: reuses the existing [data-tabs]/[data-tab]/
+   [data-tab-panel] JS (app.js) and .tabs/.tab-link CSS, but panels use
+   .mobile-tab-panel (not .tab-panel) so desktop keeps showing every
+   section stacked — only mobile actually filters by the active tab. ------ */
+[data-mobile-tabs] { display: none; }
+.mobile-tab-panel { display: block; }
+.quick-links-scroll { display: none; }
+
+@media (max-width: 768px) {
+  [data-mobile-tabs] { display: flex; }
+  .mobile-tab-panel { display: none; }
+  .mobile-tab-panel.is-active { display: block; animation: uip-rise-in var(--duration-normal) var(--ease-standard) both; }
+
+  /* Aside cards that are fully superseded by the quick-links strip above
+     hide on mobile; a card marked [data-mobile-deadlines] (real list data,
+     not just a link) stays since nothing replaces it. */
+  aside.hide-on-mobile-tabs > .card.glass-panel:not([data-mobile-deadlines]) { display: none; }
+
+  /* ---- KPI horizontal scroller: a swipeable strip that keeps every
+     metric one thumb-flick away, instead of 4-8 full-width cards stacked
+     into a long, low-signal scroll (Category C recomposition). ---------- */
+  .kpi-scroll {
+    display: flex; gap: var(--space-3); overflow-x: auto; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    margin-inline: calc(var(--space-4) * -1); padding-inline: var(--space-4); padding-bottom: var(--space-1);
+  }
+  .kpi-scroll::-webkit-scrollbar { display: none; }
+  .kpi-scroll > * { flex: 0 0 auto; width: 72%; max-width: 230px; scroll-snap-align: start; }
+
+  /* ---- Quick-links icon strip: secondary "open a related page" cards
+     (that add no info of their own) collapse into one row of tap targets
+     instead of N full cards each holding a single sentence + button. ---- */
+  .quick-links-scroll {
+    display: flex; gap: var(--space-3); overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; margin-inline: calc(var(--space-4) * -1); padding-inline: var(--space-4);
+    padding-bottom: var(--space-1);
+  }
+  .quick-links-scroll::-webkit-scrollbar { display: none; }
+  .quick-link-pill {
+    flex: 0 0 auto; width: 84px; display: flex; flex-direction: column; align-items: center;
+    gap: var(--space-2); padding: var(--space-3) var(--space-2); border-radius: var(--radius-lg);
+    text-align: center; position: relative; color: var(--text-primary);
+  }
+  .quick-link-pill svg { width: 22px; height: 22px; color: var(--color-primary); }
+  .quick-link-pill span { font-size: var(--text-caption); font-weight: 600; line-height: 1.25; }
+  .quick-link-pill__badge {
+    position: absolute; top: 4px; inset-inline-end: 14px; min-width: 16px; height: 16px; padding: 0 4px;
+    border-radius: 999px; background: var(--color-danger); color: #fff; font-size: 9px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+}
+
+/* ---- Table -> Cards: opt-in mobile recomposition (Category D) ----------
+   Enable per-table via uip_data_table($cols, $rows, ['cards' => true])
+   (see app/Views/components/data-table.php) or by hand-adding
+   class="data-table data-table--cards" + a data-label attribute per <td>
+   matching its column header. Each row becomes its own card and each
+   value keeps its column header as a small label — instead of either
+   squeezing 6-9 columns unreadably or forcing a horizontal-scroll table
+   on a touch device. Desktop (>768px) is a completely untouched normal
+   table; the .data-table--cards class does nothing above that width.
+   Used first on Data Analysis Portal: report-files/index.php and the
+   Data Explorer dataset tables (roadmap item 5). Deliberately NOT used
+   on matrix/heatmap/pivot/cohort tables (e.g. advanced-analytics
+   correlation & pivot tabs) — there both the row AND column carry
+   meaning, and a card layout would destroy that relationship; those
+   stay as horizontally-scrollable tables via .table-responsive. -------- */
+@media (max-width: 768px) {
+  .data-table--cards,
+  .data-table--cards thead,
+  .data-table--cards tbody,
+  .data-table--cards tr,
+  .data-table--cards td {
+    display: block;
+    width: 100%;
+  }
+  .data-table--cards { min-width: 0; border-collapse: separate; border-spacing: 0; }
+
+  /* Visually hidden but still readable to screen readers/keyboard nav —
+     the labels move onto each cell via data-label below instead. */
+  .data-table--cards thead {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .data-table--cards tbody tr {
+    background: var(--glass-bg, rgba(255, 255, 255, .6));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-3);
+  }
+  .data-table--cards tbody tr:last-child { margin-bottom: 0; }
+
+  .data-table--cards td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border-subtle);
+    text-align: end;
+  }
+  .data-table--cards td:last-child { border-bottom: none; }
+  .data-table--cards td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-weight: 600;
+    font-size: var(--text-caption-size, .8rem);
+    color: var(--text-secondary);
+    text-align: start;
+  }
+  /* A cell with no data-label (colspan empty-state row) shouldn't grow
+     a label row of its own. */
+  .data-table--cards td:not([data-label])::before { content: none; }
+}
+
+/* ---- Print: no chrome, just content -------------------------------------- */
+@media print {
+  .sidebar, .topbar, .sidebar-overlay, .btn, .page-header__actions { display: none !important; }
+  .app-shell, .app-shell__content { display: block !important; }
+  .app-shell__main { padding: 0 !important; }
+}

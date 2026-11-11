@@ -1,0 +1,33 @@
+// Auto-extracted from api/app/Views/admin/notification-settings.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'A value of 0 disables that half of the policy. Applied by a scheduled cron job (cron/apply_notification_retention.php) running once a day.': 'قيمة 0 تعني تعطيل ذلك الجزء من السياسة. تُنفَّذ هذه السياسة عبر مهمة مجدولة (cron/apply_notification_retention.php) تعمل مرة يوميًا.',
+  'Auto-archive read notifications after (days, 0 = disabled)': 'أرشفة الإشعارات المقروءة بعد (أيام، 0 = تعطيل)',
+  'Auto-delete archived notifications after (days, 0 = disabled)': 'حذف الإشعارات المؤرشفة بعد (أيام، 0 = تعطيل)',
+  'Notification Retention Policy': 'سياسة الاحتفاظ بالإشعارات',
+  'Notification Settings': 'إعدادات الإشعارات',
+  'Platform-wide automatic archive/delete policy for read notifications.': 'سياسة الأرشفة والحذف التلقائي للإشعارات المقروءة، عبر كل المنصة.',
+  'Save': 'حفظ',
+  // Previously untranslated admin strings (now wrapped in t() in the page)
+  '0 disables this step.': 'القيمة 0 تعطل هذه الخطوة.',
+  'A notification is read': 'يتم اعتبار الإشعار مقروءًا',
+  'Applied by a scheduled job that runs once a day.': 'يتم تطبيقه بواسطة مهمة مجدولة تعمل مرة واحدة يوميًا.',
+  'Archive read notifications after': 'أرشفة الإشعارات المقروءة بعد',
+  'Archived': 'مؤرشف',
+  'Auto-archive': 'الأرشفة التلقائية',
+  'Auto-delete': 'الحذف التلقائي',
+  'Delete archived notifications after': 'حذف الإشعارات المؤرشفة بعد',
+  'Deleted': 'محذوف',
+  'Disabled': 'معطل',
+  'Discard': 'تجاهل',
+  'How it works': 'كيف يعمل',
+  'It stays in the inbox until the archive step runs.': 'يبقى في صندوق الوارد حتى يتم تنفيذ خطوة الأرشفة.',
+  'Moved out of the inbox': 'تم نقله خارج صندوق الوارد',
+  'Not scheduled': 'غير مجدول',
+  'Notification retention policy saved.': 'تم حفظ سياسة الاحتفاظ بالإشعارات.',
+  'Removed permanently': 'تمت إزالته نهائيًا',
+  'Saving…': 'جارٍ الحفظ…',
+  'Unsaved changes': 'تغييرات غير محفوظة',
+  'after {n} days': 'بعد {n} يومًا',
+  'days': 'أيام',
+};

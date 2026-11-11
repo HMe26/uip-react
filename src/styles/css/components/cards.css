@@ -1,0 +1,25 @@
+/* components/cards.css */
+.card {
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+}
+
+.card-project {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  transition: transform var(--duration-normal) var(--ease-standard),
+              box-shadow var(--duration-normal) var(--ease-standard);
+}
+.card-project:hover { transform: translateY(-4px); box-shadow: var(--glass-shadow); }
+.card-project__cover { border-radius: var(--radius-md); aspect-ratio: 16/9; object-fit: cover; }
+.card-project__meta { display: flex; align-items: center; gap: var(--space-2); color: var(--text-secondary); font-size: var(--text-small); }
+
+.card-stat { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.card-stat__value { font-family: var(--font-display); font-size: var(--text-display-lg); font-weight: 800; }
+.card-stat__label { color: var(--text-secondary); font-size: var(--text-small); }
+
+/* Feature card used for "Coming Soon" placeholder pages */
+.card-feature-placeholder {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+  border: 1px dashed var(--border-subtle);
+  opacity: 0.9;
+}

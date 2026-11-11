@@ -1,0 +1,130 @@
+/* academic-ui.css — shared look for the academic pages (courses, fees, grades, attendance, timetable...).
+   Built on the portal's st-* design (student-portal.css), so every role that shares the shell gets the same look.
+   Prefix: acx-. Token driven: works in light/dark, LTR/RTL. */
+
+.acx-page { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.acx-page > * { min-width: 0; }
+
+/* page header */
+.acx-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.acx-head__text { min-width: 0; flex: 1 1 320px; }
+.acx-head h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; color: var(--text-primary); }
+.acx-head p { margin: 6px 0 0; max-width: 680px; font-size: 13px; line-height: 1.65; color: var(--text-secondary); }
+.acx-head__actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* KPI row (uses .st-kpi) */
+.acx-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+.acx-kpi { position: relative; padding-inline-start: 62px; min-height: 84px; justify-content: center; }
+.acx-kpi__ic { position: absolute; inset-inline-start: 16px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--st-tint, rgba(var(--color-primary-rgb), .09)); color: var(--color-primary); }
+.acx-kpi--good .acx-kpi__ic { background: rgba(var(--color-success-rgb), .14); color: var(--color-success); }
+.acx-kpi--warn .acx-kpi__ic { background: rgba(var(--color-warning-rgb), .16); color: var(--color-warning); }
+.acx-kpi--bad .acx-kpi__ic { background: rgba(var(--color-danger-rgb), .14); color: var(--color-danger); }
+.acx-kpi .st-kpi__value { font-size: 24px; }
+
+/* panel with a title row */
+.acx-panel { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius, 14px); box-shadow: var(--st-shadow, none); min-width: 0; overflow: hidden; }
+.acx-panel__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); }
+.acx-panel__title { min-width: 0; }
+.acx-panel__title b { display: block; font-size: 15px; font-weight: 700; color: var(--text-primary); overflow-wrap: anywhere; }
+.acx-panel__title small { display: block; margin-top: 2px; font-size: 12px; color: var(--text-secondary); }
+.acx-panel__tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.acx-panel__body { padding: 16px 18px; }
+.acx-panel__foot { padding: 12px 18px; border-top: 1px solid var(--border-subtle); background: var(--bg-canvas); }
+
+/* label / value numbers row */
+.acx-nums { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+.acx-nums > * { display: flex; flex-direction: column; gap: 1px; font-size: 12px; color: var(--text-secondary); }
+.acx-nums b { font-size: 15px; font-weight: 800; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.acx-nums--inline > * { flex-direction: row; align-items: baseline; gap: 6px; }
+.acx-nums--inline b { font-size: 13px; }
+
+/* tables */
+.acx-table-wrap { overflow-x: auto; }
+.acx-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.acx-table th { text-align: start; padding: 10px 18px; font-size: 12px; font-weight: 600; color: var(--text-secondary); background: var(--bg-canvas); white-space: nowrap; }
+.acx-table td { padding: 13px 18px; border-top: 1px solid var(--border-subtle); vertical-align: middle; color: var(--text-primary); }
+.acx-table tbody tr:hover { background: color-mix(in srgb, var(--bg-canvas) 55%, transparent); }
+.acx-table td.is-end, .acx-table th.is-end { text-align: end; }
+.acx-table td.is-num { font-variant-numeric: tabular-nums; }
+.acx-table .acx-sub { display: block; margin-top: 2px; font-size: 11.5px; color: var(--text-secondary); }
+.acx-table tr.is-detail > td { background: var(--bg-canvas); }
+
+/* forms */
+.acx-form { display: grid; gap: 12px; padding: 16px 18px; border-top: 1px solid var(--border-subtle); background: var(--bg-canvas); }
+.acx-form__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.acx-form__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.acx-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.acx-field > span { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+.acx-input { width: 100%; min-height: 38px; padding: 8px 12px; border: 1px solid var(--border-strong, var(--border-subtle)); border-radius: var(--st-radius-sm, 10px); background: var(--bg-surface); color: var(--text-primary); font: inherit; font-size: 13.5px; }
+textarea.acx-input { min-height: 72px; resize: vertical; line-height: 1.55; }
+.acx-input::placeholder { color: var(--text-secondary); opacity: .7; }
+.acx-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .14); }
+
+/* list cards */
+.acx-list { display: flex; flex-direction: column; gap: 14px; }
+.acx-note { margin: 0; font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; }
+
+@media (max-width: 640px) {
+  .acx-head h1 { font-size: 20px; }
+  .acx-panel__head, .acx-panel__body, .acx-form, .acx-panel__foot { padding-inline: 14px; }
+  .acx-table th, .acx-table td { padding-inline: 12px; }
+  .acx-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+}
+
+/* ---- toolbar / tabs / list items (assignments, registration, summer...) ---- */
+.acx-toolbar { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); }
+.acx-toolbar .acx-input { flex: 1 1 220px; width: auto; }
+.acx-check { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; }
+.acx-check input { width: 16px; height: 16px; accent-color: var(--color-primary); }
+
+.acx-tabs { display: flex; gap: 2px; padding: 0 12px; border-bottom: 1px solid var(--border-subtle); overflow-x: auto; scrollbar-width: none; }
+.acx-tabs::-webkit-scrollbar { display: none; }
+.acx-tabs button { display: inline-flex; align-items: center; gap: 7px; padding: 13px 14px; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent; background: none; font: inherit; font-size: 13px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; cursor: pointer; }
+.acx-tabs button:hover { color: var(--text-primary); }
+.acx-tabs button.is-on { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+.acx-tabs small { min-width: 20px; padding: 1px 7px; border-radius: 999px; background: var(--bg-canvas); font-size: 11px; font-weight: 700; text-align: center; }
+.acx-tabs button.is-on small { background: var(--st-tint, rgba(var(--color-primary-rgb), .09)); }
+
+.acx-item { display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-top: 1px solid var(--border-subtle); }
+.acx-item:first-child { border-top: 0; }
+.acx-item__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.acx-item__title { font-size: 15px; font-weight: 700; color: var(--text-primary); overflow-wrap: anywhere; }
+.acx-item__body { margin: 0; font-size: 13.5px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text-primary); }
+.acx-code { display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 6px; background: var(--st-tint, rgba(var(--color-primary-rgb), .09)); color: var(--color-primary); font-size: 11.5px; font-weight: 700; }
+.acx-muted { font-size: 12px; color: var(--text-secondary); line-height: 1.55; }
+.acx-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.acx-pills { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.acx-empty { padding: 8px 18px 18px; }
+.acx-empty .st-empty { border: 0; background: none; padding: 32px 16px; }
+
+/* single big value (university email) */
+.acx-hero { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.acx-hero__value { font-size: 20px; font-weight: 800; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.acx-stack { display: grid; gap: 12px; }
+
+/* ---- attendance course cards ---- */
+.acx-courses { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.acx-course { display: flex; flex-direction: column; gap: 10px; padding: 16px; min-width: 0; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--st-radius, 14px); box-shadow: var(--st-shadow, none); }
+.acx-course.is-warning { border-color: rgba(var(--color-warning-rgb), .55); }
+.acx-course.is-deprived { border-color: rgba(var(--color-danger-rgb), .55); background: rgba(var(--color-danger-rgb), .04); }
+.acx-course__name { font-size: 15px; font-weight: 700; color: var(--text-primary); overflow-wrap: anywhere; }
+.acx-live { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--color-success); }
+.acx-bar { height: 8px; border-radius: 999px; background: var(--bg-canvas); overflow: hidden; }
+.acx-bar > i { display: block; height: 100%; border-radius: inherit; background: var(--color-success); }
+.acx-course.is-warning .acx-bar > i { background: var(--color-warning); }
+.acx-course.is-deprived .acx-bar > i { background: var(--color-danger); }
+
+/* ---- live attendance QR (staff) ---- */
+.acx-qr { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 18px; text-align: center; border-bottom: 1px solid var(--border-subtle); }
+.acx-qr img { width: min(100%, 320px); height: auto; padding: 10px; border-radius: var(--st-radius, 14px); background: #fff; border: 1px solid var(--border-subtle); }
+.acx-qr__count { font-size: 34px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.acx-qr__count small { font-size: 16px; font-weight: 600; color: var(--text-secondary); }
+
+/* ---- course cards (courses manager, all roles) ---- */
+.acx-courses--wide { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.acx-course.is-archived { opacity: .78; }
+.acx-facts { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--text-secondary); }
+.acx-facts li { display: flex; align-items: flex-start; gap: 8px; min-width: 0; }
+.acx-facts li svg { flex: none; margin-top: 2px; }
+.acx-facts li span { min-width: 0; overflow-wrap: anywhere; }
+.acx-facts li.is-warn { color: var(--color-warning); }

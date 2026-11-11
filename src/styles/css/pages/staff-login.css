@@ -1,0 +1,362 @@
+/* Staff access — a staff pass: ink side with the aperture, paper side with the form. */
+.sl-page {
+  --sl-ink: #131a3f;
+  --sl-ink-2: #1c2552;
+  --sl-paper: #eef0f6;
+  --sl-card: #ffffff;
+  --sl-line: #dde1ee;
+  --sl-text: #131a3f;
+  --sl-muted: #5b6485;
+  --sl-accent: #4b55f5;
+  --sl-danger: #c93b4a;
+  --sl-field: #f6f7fb;
+  --sl-field-focus: #ffffff;
+  --sl-hover: #f6f7ff;
+  --sl-btn: #131a3f;
+  --sl-btn-hover: #4b55f5;
+  --sl-glow: #dfe3f7;
+  --sl-placeholder: #98a0bd;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 56px 20px 40px;
+  background:
+    radial-gradient(1200px 500px at 50% -10%, var(--sl-glow) 0%, transparent 60%),
+    var(--sl-paper);
+  color: var(--sl-text);
+  font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  position: relative;
+}
+.sl-page[dir='rtl'] { font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif; }
+
+/* Dark mode: same pass, lit from the other side. */
+.sl-page[data-theme='dark'] {
+  --sl-paper: #090d22; --sl-card: #141a3b; --sl-line: #272f5e; --sl-text: #eceefc; --sl-muted: #a0a9d1;
+  --sl-accent: #8b94ff; --sl-danger: #ff8593;
+  --sl-field: #0e1330; --sl-field-focus: #0b0f28; --sl-hover: #1b2352;
+  --sl-btn: #4b55f5; --sl-btn-hover: #6870ff; --sl-glow: #19205a; --sl-placeholder: #6f78a6;
+  color-scheme: dark;
+}
+.sl-page[data-theme='dark'] .sl-badge { box-shadow: 0 0 0 1px var(--sl-line), 0 40px 80px -40px rgba(0, 0, 0, 0.8); }
+.sl-page[data-theme='dark'] .sl-slot { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6); }
+
+.sl-clock { position: absolute; top: 16px; inset-inline-start: 22px; display: flex; flex-direction: column; gap: 2px; line-height: 1.2; }
+.sl-clock__time { font-size: 18px; font-weight: 600; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; color: var(--sl-text); }
+.sl-clock__date { font-size: 12.5px; color: var(--sl-muted); }
+.sl-tools { position: absolute; top: 18px; inset-inline-end: 22px; display: flex; gap: 8px; }
+.sl-lang {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: 999px; border: 1px solid var(--sl-line);
+  background: var(--sl-card); color: var(--sl-muted); font: inherit; font-size: 13px; cursor: var(--cur-pointer, pointer);
+}
+.sl-lang--icon { padding: 7px 9px; }
+.sl-lang:hover { color: var(--sl-text); border-color: var(--sl-accent); }
+
+.sl-badge {
+  position: relative;
+  width: min(1020px, 100%);
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  border-radius: 28px;
+  background: var(--sl-card);
+  box-shadow: 0 1px 0 #fff inset, 0 40px 80px -40px rgba(19, 26, 63, 0.45), 0 2px 6px rgba(19, 26, 63, 0.08);
+  overflow: hidden;
+}
+/* Lanyard slot */
+.sl-slot {
+  position: absolute; top: 14px; inset-inline-start: 50%; transform: translateX(-50%);
+  width: 64px; height: 12px; border-radius: 999px; z-index: 3;
+  background: var(--sl-paper);
+  box-shadow: inset 0 2px 4px rgba(19, 26, 63, 0.25);
+}
+[dir='rtl'] .sl-slot { transform: translateX(50%); }
+
+/* ---- ink side ---- */
+.sl-side {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: flex; flex-direction: column; gap: 36px;
+  padding: 52px 44px 36px;
+  background: linear-gradient(160deg, var(--sl-ink-2) 0%, var(--sl-ink) 70%);
+  color: #e9ecfb;
+}
+.sl-side__top { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 20px; letter-spacing: 0.04em; }
+.sl-side__top img { border-radius: 10px; }
+
+.sl-aperture {
+  position: absolute; z-index: -1; width: 520px; height: 520px;
+  inset-inline-end: -170px; bottom: -190px; opacity: 0.9;
+}
+.sl-ring { stroke: #7c86ff; stroke-width: 1.4; stroke-opacity: 0.38; }
+.sl-ring--1 { stroke-dasharray: 280 140; stroke-opacity: 0.8; }
+.sl-ring--2 { stroke-dasharray: 520 130; }
+.sl-ring--3 { stroke-dasharray: 700 205; }
+.sl-ring--4 { stroke-dasharray: 900 258; stroke-opacity: 0.22; }
+.sl-dot { fill: #9ba3ff; }
+
+.sl-lanes { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 22px; }
+.sl-lanes li { display: flex; gap: 14px; align-items: flex-start; }
+.sl-lanes__icon {
+  flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px;
+  background: rgba(124, 134, 255, 0.16); color: #aeb5ff;
+}
+.sl-lanes strong { display: block; font-size: 16px; font-weight: 600; color: #fff; }
+.sl-lanes small { display: block; margin-top: 3px; font-size: 14px; line-height: 1.5; color: #aab1d6; max-width: 34ch; }
+
+.sl-note {
+  margin: auto 0 0; display: flex; align-items: center; gap: 9px;
+  font-size: 13.5px; color: #c4c9e6; max-width: 38ch; line-height: 1.5;
+}
+.sl-note svg { flex: none; color: #9ba3ff; }
+
+/* ---- form side ---- */
+.sl-form { padding: 64px 52px 40px; display: flex; flex-direction: column; justify-content: center; }
+.sl-form h1 { margin: 0; font-size: 32px; line-height: 1.15; font-weight: 700; letter-spacing: -0.01em; }
+.sl-form__lead { margin: 10px 0 28px; color: var(--sl-muted); font-size: 15px; line-height: 1.55; max-width: 38ch; }
+
+.sl-error {
+  display: flex; gap: 10px; align-items: flex-start; margin-bottom: 18px; padding: 12px 14px;
+  border-radius: 12px; background: rgba(201, 59, 74, 0.08); color: var(--sl-danger); font-size: 14px; line-height: 1.45;
+  border: 1px solid rgba(201, 59, 74, 0.25);
+}
+.sl-error svg { flex: none; margin-top: 1px; }
+
+.sl-field { display: block; margin-bottom: 18px; }
+.sl-field > span:first-child { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 600; }
+.sl-field__row { display: flex !important; justify-content: space-between; align-items: baseline; }
+.sl-field__row a { font-weight: 500; font-size: 13px; color: var(--sl-accent); text-decoration: none; }
+.sl-field__row a:hover { text-decoration: underline; }
+
+.sl-field input {
+  width: 100%; height: 50px; padding: 0 16px; border-radius: 12px; box-sizing: border-box;
+  border: 1px solid var(--sl-line); background: var(--sl-field); color: var(--sl-text);
+  font: inherit; font-size: 15px; transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.sl-field input::placeholder { color: var(--sl-placeholder); }
+.sl-field input:focus { outline: none; background: var(--sl-field-focus); border-color: var(--sl-accent); box-shadow: 0 0 0 4px rgba(75, 85, 245, 0.16); }
+
+/* The password box is always left-to-right (it holds a secret, not prose), so its eye button sits on the right in both languages. */
+.sl-pass { position: relative; display: block; direction: ltr; }
+.sl-pass input { padding-right: 48px; }
+.sl-pass button {
+  position: absolute; top: 0; bottom: 0; right: 4px; width: 42px; display: grid; place-items: center;
+  border: 0; background: none; color: var(--sl-muted); cursor: var(--cur-pointer, pointer); border-radius: 10px;
+}
+.sl-pass button:hover { color: var(--sl-text); }
+.sl-pass button:focus-visible, .sl-lang:focus-visible, .sl-submit:focus-visible, .sl-field__row a:focus-visible {
+  outline: 3px solid rgba(75, 85, 245, 0.45); outline-offset: 2px;
+}
+
+.sl-submit {
+  width: 100%; height: 52px; margin-top: 6px; border: 0; border-radius: 12px; cursor: var(--cur-pointer, pointer);
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--sl-btn); color: #fff; font: inherit; font-size: 16px; font-weight: 600;
+  transition: background .15s, transform .15s;
+}
+.sl-submit:hover:not(:disabled) { background: var(--sl-btn-hover); }
+.sl-submit:active:not(:disabled) { transform: translateY(1px); }
+.sl-submit:disabled { opacity: 0.7; cursor: progress; }
+[dir='rtl'] .sl-submit svg { transform: scaleX(-1); }
+
+.sl-foot { margin: 22px 0 0; padding-top: 20px; border-top: 1px solid var(--sl-line); }
+.sl-foot p { margin: 0 0 12px; font-size: 13px; line-height: 1.55; color: var(--sl-muted); }
+.sl-alt {
+  display: flex; align-items: center; justify-content: center; gap: 8px; height: 46px; border-radius: 12px;
+  border: 1px solid var(--sl-line); background: var(--sl-card); color: var(--sl-text); text-decoration: none;
+  font-size: 14.5px; font-weight: 600; transition: border-color .15s, background .15s;
+}
+.sl-alt:hover { border-color: var(--sl-accent); background: var(--sl-hover); }
+.sl-alt:focus-visible { outline: 3px solid rgba(75, 85, 245, 0.45); outline-offset: 2px; }
+[dir='rtl'] .sl-alt svg { transform: scaleX(-1); }
+
+/* ---- notices, back link, link-styled buttons (forgot / reset pages) ---- */
+.sl-success {
+  display: flex; gap: 10px; align-items: flex-start; margin-bottom: 18px; padding: 12px 14px; border-radius: 12px;
+  background: rgba(20, 150, 110, 0.10); color: #0e7a5a; font-size: 14px; line-height: 1.45; border: 1px solid rgba(20, 150, 110, 0.28);
+  word-break: break-word;
+}
+.sl-success svg { flex: none; margin-top: 1px; }
+.sl-page[data-theme='dark'] .sl-success { color: #5fe0b4; background: rgba(40, 200, 150, 0.12); border-color: rgba(40, 200, 150, 0.3); }
+.sl-back { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--sl-accent); text-decoration: none; }
+.sl-back:hover { text-decoration: underline; }
+[dir='rtl'] .sl-back svg { transform: scaleX(-1); }
+.sl-alt--btn { width: 100%; font: inherit; font-size: 14.5px; font-weight: 600; cursor: var(--cur-pointer, pointer); margin-top: 4px; }
+.sl-submit--link { text-decoration: none; }
+.sl-field.has-error input { border-color: var(--sl-danger); }
+.sl-hint-error { display: block; margin-top: 6px; font-size: 13px; color: var(--sl-danger); }
+
+/* ---- the one moment: the aperture opens once ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .sl-ring { transform-origin: 200px 200px; animation: sl-open 1.6s cubic-bezier(.2,.7,.2,1) both; }
+  .sl-ring--1 { animation-delay: .05s; }
+  .sl-ring--2 { animation-delay: .15s; }
+  .sl-ring--3 { animation-delay: .25s; }
+  .sl-ring--4 { animation-delay: .35s; }
+  .sl-dot { animation: sl-dot .6s .1s ease-out both; }
+}
+@keyframes sl-open {
+  from { opacity: 0; transform: rotate(-140deg) scale(.82); }
+  to   { opacity: 1; transform: rotate(0) scale(1); }
+}
+@keyframes sl-dot { from { opacity: 0; transform: scale(0); transform-origin: 200px 200px; } to { opacity: 1; } }
+
+/* ---- small screens: the pass stacks, form first in reading order after a slim header ---- */
+@media (max-width: 860px) {
+  .sl-page { padding: 72px 14px 28px; align-items: start; }
+  .sl-clock { inset-inline-start: 16px; }
+  .sl-clock__time { font-size: 16px; }
+  .sl-clock__date { font-size: 11.5px; }
+  .sl-tools { inset-inline-end: 14px; }
+  .sl-badge { grid-template-columns: 1fr; border-radius: 22px; }
+  .sl-side { padding: 44px 24px 22px; gap: 20px; }
+  .sl-lanes { display: none; }
+  .sl-note { margin-top: 0; }
+  .sl-aperture { width: 360px; height: 360px; inset-inline-end: -120px; bottom: -140px; }
+  .sl-form { padding: 30px 24px 28px; }
+  .sl-form h1 { font-size: 27px; }
+}
+
+/* ==========================================================================
+   Motion + colour pass — same family as the main sign-in (auth.css):
+   indigo → violet gradient, drifting orbs, dot grid, one staggered entrance.
+   Applies to every StaffShell page (access code, sign-in, forgot / reset).
+   ========================================================================== */
+.sl-page {
+  --sl-grad: linear-gradient(120deg, #515fff 0%, #7a5cff 100%);
+  --sl-btn-shadow: 0 14px 28px -10px rgba(63, 82, 255, 0.55);
+  --sl-orb-1: rgba(90, 120, 255, 0.28);
+  --sl-orb-2: rgba(150, 110, 255, 0.20);
+  --sl-dot: rgba(60, 80, 170, 0.16);
+  --sl-shape: #5a55f5;
+  isolation: isolate;
+  overflow: hidden;
+}
+.sl-page[data-theme='dark'] {
+  --sl-orb-1: rgba(80, 100, 255, 0.22);
+  --sl-orb-2: rgba(140, 90, 255, 0.16);
+  --sl-dot: rgba(150, 165, 255, 0.14);
+  --sl-shape: #8b94ff;
+  --sl-btn-shadow: 0 14px 30px -12px rgba(104, 112, 255, 0.6);
+}
+
+/* ---- background ---- */
+.sl-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.sl-bg__orb { position: absolute; border-radius: 50%; filter: blur(8px); }
+.sl-bg__orb--1 { width: 560px; height: 560px; background: var(--sl-orb-1); inset-block-start: -200px; inset-inline-start: -150px; }
+.sl-bg__orb--2 { width: 520px; height: 520px; background: var(--sl-orb-2); inset-block-end: -200px; inset-inline-end: -130px; }
+.sl-bg__orb--3 { width: 380px; height: 380px; background: var(--sl-orb-2); inset-block-start: 40%; inset-inline-start: 42%; opacity: 0.5; }
+.sl-bg__grid {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(var(--sl-dot) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 0%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 0%, transparent 70%);
+}
+/* Little shapes that rise slowly behind the pass. Hidden unless motion is allowed. */
+.sl-bg__shape { position: absolute; inset-block-end: -40px; inset-inline-start: var(--x); width: var(--s); height: var(--s); opacity: 0; color: var(--sl-shape); }
+.sl-bg__shape--ring { border: 2px solid currentColor; border-radius: 50%; }
+.sl-bg__shape--dot { background: currentColor; border-radius: 50%; }
+.sl-bg__shape--square { border: 2px solid currentColor; border-radius: 6px; }
+.sl-bg__shape--plus::before, .sl-bg__shape--plus::after { content: ''; position: absolute; background: currentColor; border-radius: 2px; }
+.sl-bg__shape--plus::before { inset-inline: 0; top: 50%; height: 2.5px; transform: translateY(-50%); }
+.sl-bg__shape--plus::after { inset-block: 0; left: 50%; width: 2.5px; transform: translateX(-50%); }
+
+/* ---- colour: gradient primary button, brighter focus, gradient lane icons ---- */
+.sl-submit { position: relative; overflow: hidden; background: var(--sl-grad); box-shadow: var(--sl-btn-shadow); transition: transform .15s, box-shadow .2s, filter .15s; }
+.sl-submit:hover:not(:disabled) { background: var(--sl-grad); filter: brightness(1.07); transform: translateY(-1px); }
+.sl-submit:active:not(:disabled) { transform: translateY(0); }
+.sl-submit:disabled { box-shadow: none; filter: grayscale(.35); }
+.sl-submit svg { transition: transform .2s; }
+.sl-submit:hover:not(:disabled) svg { transform: translateX(3px); }
+[dir='rtl'] .sl-submit svg { transform: scaleX(-1); }
+[dir='rtl'] .sl-submit:hover:not(:disabled) svg { transform: scaleX(-1) translateX(3px); }
+
+.sl-side { background: radial-gradient(420px 260px at 85% 105%, rgba(124, 134, 255, 0.28), transparent 70%), linear-gradient(160deg, var(--sl-ink-2) 0%, var(--sl-ink) 70%); }
+.sl-lanes__icon { background: linear-gradient(135deg, rgba(124, 134, 255, 0.28), rgba(150, 110, 255, 0.14)); color: #c3c8ff; transition: transform .25s, background .25s; }
+.sl-field input { transition: border-color .2s, box-shadow .2s, background .2s, transform .2s; }
+.sl-field:focus-within > span:first-child { color: var(--sl-accent); }
+.sl-field > span:first-child { transition: color .2s; }
+.sl-alt { transition: border-color .2s, background .2s, transform .2s, box-shadow .2s; }
+.sl-alt svg { transition: transform .2s; }
+.sl-alt:hover { box-shadow: 0 10px 22px -14px rgba(75, 85, 245, 0.55); }
+.sl-alt:hover svg { transform: translateX(3px); }
+[dir='rtl'] .sl-alt svg { transform: scaleX(-1); }
+[dir='rtl'] .sl-alt:hover svg { transform: scaleX(-1) translateX(3px); }
+
+/* ---- motion ---- */
+@media (prefers-reduced-motion: no-preference) {
+  /* drifting orbs + panning grid + rising shapes */
+  .sl-bg__orb--1 { animation: sl-drift-a 22s ease-in-out infinite alternate; }
+  .sl-bg__orb--2 { animation: sl-drift-b 26s ease-in-out infinite alternate; }
+  .sl-bg__orb--3 { animation: sl-drift-c 30s ease-in-out infinite alternate; }
+  .sl-bg__grid { animation: sl-grid-pan 40s linear infinite; }
+  .sl-bg__shape { animation: sl-rise var(--t, 18s) linear var(--d, 0s) infinite; }
+  @keyframes sl-drift-a { to { transform: translate(90px, 70px) scale(1.08); } }
+  @keyframes sl-drift-b { to { transform: translate(-80px, -60px) scale(1.1); } }
+  @keyframes sl-drift-c { to { transform: translate(-60px, 50px) scale(.92); } }
+  @keyframes sl-grid-pan { to { background-position: 26px 26px; } }
+  @keyframes sl-rise {
+    0%   { opacity: 0; transform: translateY(0) rotate(0); }
+    12%  { opacity: .5; }
+    85%  { opacity: .35; }
+    100% { opacity: 0; transform: translateY(-105vh) rotate(200deg); }
+  }
+
+  /* entrance: badge rises in, then the pieces inside settle one after another */
+  .sl-clock { animation: sl-fade-down .6s cubic-bezier(.2,.7,.2,1) both; }
+  .sl-tools { animation: sl-fade-down .6s cubic-bezier(.2,.7,.2,1) .08s both; }
+  .sl-badge { animation: sl-card-in .8s cubic-bezier(.2,.7,.2,1) .05s both; }
+  .sl-side__top { animation: sl-fade-up .6s cubic-bezier(.2,.7,.2,1) .3s both; }
+  .sl-lanes li { animation: sl-fade-up .6s cubic-bezier(.2,.7,.2,1) backwards; }
+  .sl-lanes li:nth-child(1) { animation-delay: .42s; }
+  .sl-lanes li:nth-child(2) { animation-delay: .54s; }
+  .sl-lanes li:nth-child(3) { animation-delay: .66s; }
+  .sl-note { animation: sl-fade-up .6s ease .78s both; }
+  .sl-form__in > * { animation: sl-fade-up .55s cubic-bezier(.2,.7,.2,1) backwards; }
+  .sl-form__in > :nth-child(1) { animation-delay: .25s; }
+  .sl-form__in > :nth-child(2) { animation-delay: .33s; }
+  .sl-form__in > :nth-child(3) { animation-delay: .41s; }
+  .sl-form__in > :nth-child(4) { animation-delay: .49s; }
+  .sl-form__in > :nth-child(5) { animation-delay: .57s; }
+  .sl-form__in > :nth-child(6) { animation-delay: .65s; }
+  @keyframes sl-fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  @keyframes sl-fade-down { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+  @keyframes sl-card-in { from { opacity: 0; transform: translateY(26px) scale(.97); } to { opacity: 1; transform: none; } }
+
+  /* slot "clicks" in */
+  .sl-slot { animation: sl-slot .7s cubic-bezier(.3,1.4,.5,1) .55s both; }
+  @keyframes sl-slot { from { opacity: 0; width: 20px; } to { opacity: 1; width: 64px; } }
+
+  /* aperture: after it opens it keeps a slow breath + the dot pulses */
+  .sl-aperture { animation: sl-breathe 14s ease-in-out 1.8s infinite alternate; }
+  @keyframes sl-breathe { to { transform: rotate(14deg) scale(1.04); } }
+  .sl-dot { animation: sl-dot .6s .1s ease-out both, sl-pulse 2.6s ease-in-out 1.2s infinite; }
+  @keyframes sl-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+
+  /* lanes: the icon lifts, the row nudges toward the reading direction */
+  .sl-lanes li { transition: transform .25s; }
+  .sl-lanes li:hover { transform: translateX(5px); }
+  [dir='rtl'] .sl-lanes li:hover { transform: translateX(-5px); }
+  .sl-lanes li:hover .sl-lanes__icon { transform: translateY(-2px) scale(1.06); }
+
+  /* primary button: a soft shine sweeps across on hover */
+  .sl-submit::after {
+    content: ''; position: absolute; inset-block: 0; inset-inline-start: -60%; width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .35), transparent);
+    transform: skewX(-20deg); pointer-events: none; opacity: 0;
+  }
+  .sl-submit:hover:not(:disabled)::after { opacity: 1; animation: sl-shine .8s ease; }
+  @keyframes sl-shine { to { inset-inline-start: 130%; } }
+
+  /* field + alerts react to what the person does */
+  .sl-field input:focus { transform: translateY(-1px); }
+  .sl-error, .sl-success { animation: sl-fade-up .35s ease both; }
+  .sl-pass.is-shaking { animation: sl-shake .45s cubic-bezier(.36,.07,.19,.97) both; }
+  @keyframes sl-shake { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(4px); } 30%, 50%, 70% { transform: translateX(-7px); } 40%, 60% { transform: translateX(7px); } }
+  .sl-pass.is-shaking input { border-color: var(--sl-danger); }
+}
+
+@media (max-width: 860px) {
+  .sl-bg__orb--1 { width: 380px; height: 380px; }
+  .sl-bg__orb--2 { width: 360px; height: 360px; }
+  .sl-bg__orb--3 { display: none; }
+}

@@ -1,0 +1,40 @@
+/* attendance.css — الحضور والغياب (att-*). Token driven, RTL/LTR safe. */
+.att-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; padding: 4px 16px 18px; }
+.att-course { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.att-course.is-warning { border-color: rgba(var(--color-warning-rgb), .6); }
+.att-course.is-deprived { border-color: rgba(var(--color-danger-rgb), .6); background: rgba(var(--color-danger-rgb), .04); }
+.att-course__code { font-size: 11px; font-weight: 700; color: var(--color-primary); letter-spacing: .03em; }
+.att-course__name { font-weight: 700; color: var(--text-primary); }
+.att-bar { height: 8px; border-radius: 999px; background: var(--bg-muted, rgba(0,0,0,.06)); overflow: hidden; position: relative; }
+.att-bar > i { display: block; height: 100%; background: var(--color-success); }
+.att-course.is-warning .att-bar > i { background: var(--color-warning); }
+.att-course.is-deprived .att-bar > i { background: var(--color-danger); }
+.att-nums { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--text-secondary); }
+.att-nums b { color: var(--text-primary); }
+.att-live { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--color-success); }
+
+.att-qr { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px; }
+.att-qr img { width: min(320px, 80vw); height: auto; background: #fff; padding: 12px; border-radius: 14px; image-rendering: pixelated; }
+.att-timer { width: min(320px, 80vw); }
+.att-count { font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.att-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; }
+.att-pill--present { background: rgba(var(--color-success-rgb), .14); color: var(--color-success); }
+.att-pill--late { background: rgba(var(--color-warning-rgb), .16); color: var(--color-warning); }
+.att-pill--absent { background: rgba(var(--color-danger-rgb), .12); color: var(--color-danger); }
+.att-pill--excused { background: rgba(var(--color-primary-rgb), .12); color: var(--color-primary); }
+.att-pill--pending { background: var(--bg-muted, rgba(0,0,0,.06)); color: var(--text-secondary); }
+.att-scan { position: relative; width: 100%; max-width: 420px; margin: 0 auto; aspect-ratio: 1; background: #000; border-radius: 14px; overflow: hidden; }
+.att-scan video { width: 100%; height: 100%; object-fit: cover; }
+.att-scan::after { content: ''; position: absolute; inset: 18%; border: 3px solid rgba(255,255,255,.85); border-radius: 16px; pointer-events: none; }
+.att-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 16px; }
+.att-tabs { display: flex; gap: 6px; padding: 12px 16px 0; flex-wrap: wrap; }
+.att-tabs button { border: 1px solid var(--border-strong, var(--border-subtle)); background: var(--bg-surface); color: var(--text-primary); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.att-tabs button.is-on { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+/* assignments (as-*) */
+.as-list { display: grid; gap: 12px; padding: 14px 16px 18px; }
+.as-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.as-card__head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.as-body { margin: 0; font-size: 13px; color: var(--text-secondary); white-space: pre-wrap; overflow-wrap: anywhere; }
+.as-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.as-sub { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--bg-muted, rgba(0,0,0,.04)); border-radius: 10px; padding: 10px 12px; font-size: 13px; max-height: 220px; overflow: auto; }

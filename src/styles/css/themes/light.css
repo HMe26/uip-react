@@ -1,0 +1,3 @@
+/* themes/light.css — Light mode: flat, calm canvas (no ambient gradients),
+   matching the Insight Platform design. */
+[data-theme="light"] body { background: var(--bg-canvas); }

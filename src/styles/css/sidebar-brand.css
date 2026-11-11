@@ -1,0 +1,145 @@
+/* ==========================================================================
+   sidebar-brand.css — polished brand header for the shared sidebar (every portal).
+
+   Before: a small wordmark hugging one edge, a floating gold subtitle, two stacked
+   rules (brand border + first section rule) and a scrollbar that was always visible.
+   Now:    centred wordmark on a soft gold halo, the portal name as a quiet pill under it,
+           one hairline that fades out at both ends, and a scrollbar that only shows on hover.
+
+   Markup is unchanged (components/Sidebar.jsx). Loaded after brand-logo.css on purpose: it
+   replaces the sidebar rules there (including their !important width).
+   ========================================================================== */
+
+/* ---- Brand block ---------------------------------------------------------- */
+.app-shell.app-shell--insight .sidebar .sidebar__brand {
+  position: relative;
+  justify-content: center;
+  gap: 0;
+  margin: 0 0 4px;
+  padding: 8px 8px 20px;
+  border-bottom: 0;
+}
+
+/* hairline that fades out at both ends (replaces the hard full-width border) */
+.app-shell.app-shell--insight .sidebar .sidebar__brand::after {
+  content: '';
+  position: absolute;
+  inset-inline: 4px;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--sb-gold-rgb), .42) 50%, transparent);
+  pointer-events: none;
+}
+
+.app-shell.app-shell--insight .sidebar .sidebar__brand-id {
+  position: relative;
+  isolation: isolate;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 11px;
+  text-align: center;
+}
+
+/* soft gold halo behind the logo (opacity-only paint, no blur filter) */
+.app-shell.app-shell--insight .sidebar .sidebar__brand-id::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: -6px;
+  width: 210px;
+  height: 96px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(var(--sb-gold-rgb), .20), rgba(var(--sb-gold-rgb), .06) 55%, transparent 76%);
+  pointer-events: none;
+}
+
+/* wordmark: bigger, centred, crisp shadow */
+.app-shell.app-shell--insight .sidebar .sidebar__brand-id .bw {
+  width: 150px !important;
+  max-width: 100%;
+  margin-inline: auto;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__brand-id .bw img {
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .34));
+}
+
+.app-shell.app-shell--insight .sidebar .sidebar__brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-inline-start: 0;
+  min-width: 0;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__brand-name {
+  margin-bottom: 7px;
+  text-align: center;
+}
+
+/* portal name = small pill with a gold dot (e.g. "بوابة الطالب" / "Student Portal") */
+.app-shell.app-shell--insight .sidebar .sidebar__brand-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--sb-gold-rgb), .30);
+  background: linear-gradient(180deg, rgba(var(--sb-gold-rgb), .15), rgba(var(--sb-gold-rgb), .06));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+  color: var(--sb-gold-soft);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: .16em;
+  white-space: nowrap;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__brand-sub::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sb-gold);
+  box-shadow: 0 0 0 3px rgba(var(--sb-gold-rgb), .20);
+}
+[dir="rtl"] .app-shell.app-shell--insight .sidebar .sidebar__brand-sub {
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+/* mobile drawer: the close button no longer steals width from the centred logo */
+.app-shell.app-shell--insight .sidebar .sidebar__close-btn {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}
+
+/* collapsed rail: just the mark, centred */
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__brand { padding: 8px 0 16px; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__brand-id { flex: 0 0 auto; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__brand-id::before { width: 76px; height: 76px; top: -14px; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__brand::after { inset-inline: 14px; }
+.app-shell.app-shell--insight .sidebar.is-collapsed .sidebar__logo--mark { margin-inline: auto; }
+
+/* ---- Nav ------------------------------------------------------------------ */
+/* the brand hairline is the divider; the first section title no longer draws a second rule right under it */
+.app-shell.app-shell--insight .sidebar .sidebar__nav > div:first-child .sidebar__section-title { padding-top: 12px; }
+.app-shell.app-shell--insight .sidebar .sidebar__nav > div:first-child .sidebar__section-title::after { display: none; }
+
+/* scrollbar: invisible until the pointer is over the menu (no more grey bar next to the links) */
+.app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar { width: 8px; }
+.app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-track { background: transparent; }
+.app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-thumb {
+  background: transparent;
+  background-clip: content-box;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  transition: background-color .2s ease;
+}
+.app-shell.app-shell--insight .sidebar .sidebar__nav:hover::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, .20); }
+.app-shell.app-shell--insight .sidebar .sidebar__nav::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--sb-gold-rgb), .55); }
+@supports not selector(::-webkit-scrollbar) {
+  .app-shell.app-shell--insight .sidebar .sidebar__nav { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+  .app-shell.app-shell--insight .sidebar .sidebar__nav:hover { scrollbar-color: rgba(255, 255, 255, .22) transparent; }
+}

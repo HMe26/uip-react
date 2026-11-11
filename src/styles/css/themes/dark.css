@@ -1,0 +1,24 @@
+/* themes/dark.css — Dark mode surface & glass mapping (Security portal design) */
+[data-theme="dark"] {
+  --bg-canvas: #101420;
+  --bg-sidebar: #121826;
+  --bg-surface: #171E2E;
+  --text-primary: #F3F5FA;
+  --text-secondary: #8F9AB5;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
+
+  --color-primary: #5A67FF;
+  --color-primary-hover: #7480FF;
+  --color-primary-rgb: 90, 103, 255;
+  --color-on-primary: #FFFFFF;
+
+  --sev-critical: #FF6B6B;
+  --sev-high: #FF8A2B;
+  --sev-medium: #F0B33A;
+  --sev-low: #22C997;
+}
+
+[data-theme="dark"] body { background: var(--bg-canvas); }

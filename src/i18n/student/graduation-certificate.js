@@ -1,0 +1,26 @@
+// Auto-extracted from api/app/Views/student/graduation-certificate.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'Scan to verify this certificate': 'امسح الرمز للتحقق من الشهادة',
+  'This is to certify that': 'تشهد إدارة الجامعة بأن',
+  'Authorized Academic Signature': 'توقيع المسؤول الأكاديمي',
+  'Certificate No.': 'رقم الشهادة',
+  'Certificate data could not be found.': 'تعذر العثور على بيانات الشهادة.',
+  'Certificate of Graduation': 'شهادة تخرج',
+  'Dean / Registrar': 'عميد الكلية',
+  'Final GPA': 'المعدل التراكمي النهائي',
+  'Graduation Certificate': 'شهادة التخرج',
+  'Graduation Date': 'تاريخ التخرج',
+  'Issue Date': 'تاريخ الإصدار',
+  'Official Accredited Graduation Certificate': 'شهادة تخرج رسمية معتمدة',
+  'The University': 'الجامعة',
+  'This certificate can be verified electronically at: ': 'يمكن التحقق من صحة هذه الشهادة إلكترونيًا عبر: ',
+  'University Seal & Signature': 'ختم وتوقيع الجامعة',
+  'flex-start': 'flex-end',
+  'has successfully fulfilled all prescribed academic requirements and has accordingly been conferred the degree of': 'قد أتم/ت بنجاح كافة المتطلبات الأكاديمية المقررة، وحصل/ت بذلك على درجة',
+  'has successfully fulfilled all prescribed graduation requirements.': 'قد أتم/ت بنجاح كافة متطلبات التخرج المقررة.',
+  'ltr': 'rtl',
+  'right': 'left',
+  '🖨 Print Certificate': '🖨 طباعة الشهادة',
+  'VERIFIED': 'موثّقة',
+};

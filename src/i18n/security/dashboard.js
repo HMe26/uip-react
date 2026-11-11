@@ -1,0 +1,26 @@
+// Auto-extracted from api/app/Views/security/dashboard.php ($locale === 'ar' ? AR : EN pairs).
+// Shape matches useTranslations(dict) in context/LanguageContext.jsx.
+export default {
+  'A live overview of incidents, vulnerabilities, active sessions, and risk.': 'نظرة عامة حية على حوادث الأمان والثغرات والجلسات النشطة والمخاطر.',
+  'All Logs': 'كل السجلات',
+  'Events': 'الأحداث',
+  'Incidents': 'الحوادث',
+  'Incidents by Severity': 'توزيع الحوادث حسب الخطورة',
+  'Manage Sessions': 'إدارة الجلسات',
+  'Manage Vulnerabilities': 'إدارة الثغرات',
+  'No incidents recorded.': 'لا توجد حوادث مسجَّلة.',
+  'No notifications.': 'لا توجد تنبيهات.',
+  'No recent events.': 'لا توجد أحداث حديثة.',
+  'No risk scores calculated yet.': 'لا توجد درجات مخاطر محسوبة بعد.',
+  'Recalculate Risk': 'إعادة حساب المخاطر',
+  'Recent Incidents': 'أحدث الحوادث',
+  'Recent Security Events': 'أحداث الأمان الأخيرة',
+  'Security Dashboard': 'لوحة الأمان',
+  'Security Notifications': 'تنبيهات الأمان',
+  'Security Policies': 'سياسات الأمان',
+  'Security Reports': 'تقارير الأمان',
+  'Severity': 'الخطورة',
+  'Top Risk Scores': 'أعلى درجات المخاطر',
+  'Unassigned': 'غير مُسند',
+  'View all': 'عرض الكل',
+};
